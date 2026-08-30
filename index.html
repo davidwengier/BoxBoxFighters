@@ -621,48 +621,60 @@
       filter: grayscale(0.65) brightness(0.7);
     }
 
-    .scrub-meter {
+    .wash-area {
       position: relative;
       width: min(32rem, calc(100% - 2rem));
-      height: 2.4rem;
+      height: 11rem;
       margin: 1rem auto;
       overflow: hidden;
       border: 2px solid #57534e;
-      border-radius: 999px;
-      background: #111118;
+      border-radius: 1rem;
+      background:
+        repeating-linear-gradient(135deg, rgb(56 189 248 / 8%) 0 1rem, transparent 1rem 2rem),
+        #111118;
+      cursor: grab;
+      touch-action: none;
+      user-select: none;
     }
 
-    .scrub-target {
+    .wash-area.washing {
+      cursor: grabbing;
+    }
+
+    .wash-area .gear-icon {
       position: absolute;
-      top: 0;
-      bottom: 0;
-      left: var(--target-start);
-      width: 18%;
-      background: linear-gradient(90deg, #15803d, #4ade80, #15803d);
-      opacity: 0.75;
+      inset: 50% auto auto 50%;
+      margin: 0;
+      transform: translate(-50%, -50%);
+      pointer-events: none;
     }
 
-    .scrub-marker {
+    .wash-sponge {
       position: absolute;
-      top: 0.15rem;
-      bottom: 0.15rem;
-      left: var(--marker-position);
-      width: 0.35rem;
+      left: var(--sponge-x, 10%);
+      top: 50%;
+      z-index: 1;
+      font-size: 2.8rem;
+      filter: drop-shadow(0 0.3rem 0.3rem rgb(0 0 0 / 45%));
+      transform: translate(-50%, -50%);
+      pointer-events: none;
+    }
+
+    .wash-progress {
+      width: min(32rem, calc(100% - 2rem));
+      height: 1rem;
+      margin: 0.6rem auto;
+      overflow: hidden;
       border-radius: 999px;
-      background: white;
-      box-shadow: 0 0 0.8rem white;
-      transform: translateX(-50%);
+      background: #3f3f46;
     }
 
-    .scrub-button {
-      width: min(18rem, 100%);
-      margin: 0 auto;
-    }
-
-    .cleaning-feedback {
-      min-height: 1.5rem;
-      color: #fde68a;
-      font-weight: 800;
+    .wash-progress span {
+      display: block;
+      width: var(--wash-progress);
+      height: 100%;
+      border-radius: inherit;
+      background: linear-gradient(90deg, #0284c7, #67e8f9);
     }
 
     .upgrade-level {
@@ -1013,19 +1025,19 @@
           <div class="hero-content">
             <div class="eyebrow">Choose your next pack</div>
             <h2>Find heroes. Fight monsters. Claim loot.</h2>
-            <p>Open Hero Packs to grow your team, then challenge the monsters hiding inside Fight Packs. Victories earn stronger equipment, but every battle gives you something.</p>
+            <p>Open Hero Packs to grow your team, then challenge the monsters hiding inside Fight Packs. Victories improve your loot odds, but stronger equipment is never guaranteed.</p>
           </div>
         </div>
 
         <div class="section-head">
           <h2>Hero Packs</h2>
-          <p>Find new heroes or pull duplicates to level up heroes you already own.</p>
+          <p>Each fighter belongs to one specific pack. Pull duplicates to level up fighters you already own.</p>
         </div>
         <div id="heroPacks" class="pack-grid"></div>
 
         <div class="section-head">
           <h2>Fight Packs</h2>
-          <p>Your active hero fights one monster. Win for better loot or lose and receive basic loot.</p>
+          <p>Your active hero fights one monster. Winning improves the loot odds; losing gives basic Common loot.</p>
         </div>
         <div id="fightPacks" class="pack-grid"></div>
       </section>
@@ -1041,10 +1053,16 @@
       <section id="collection" class="screen">
         <div class="section-head">
           <h2>Hero collection</h2>
-          <p>See every available hero. Heroes you own appear first.</p>
+          <p>See every available hero and every piece of equipment you have discovered.</p>
         </div>
         <div id="collectionSummary" class="collection-summary"></div>
         <div id="heroCollection" class="hero-grid"></div>
+        <div class="section-head">
+          <h2>Swords and gear collection</h2>
+          <p>Discovered equipment stays recorded even after it is forged or used.</p>
+        </div>
+        <div id="equipmentCollectionSummary" class="collection-summary"></div>
+        <div id="equipmentCollection" class="gear-grid"></div>
       </section>
 
       <section id="equipment" class="screen">
@@ -1070,7 +1088,7 @@
       <section id="cleaning" class="screen">
         <div class="section-head">
           <h2>Gear cleaning</h2>
-          <p>Stop the moving scrubber inside the green zone three times to clean an item.</p>
+          <p>Drag the sponge back and forth across dirty gear until the wash meter is full.</p>
         </div>
         <div id="cleaningStatus" class="facility-panel"></div>
         <div id="cleaningGame" class="cleaning-game" hidden></div>
@@ -1094,15 +1112,15 @@
         <button id="helpClose" class="secondary" type="button">Close</button>
       </div>
       <ul>
-        <li><strong>Hero Packs:</strong> spend coins to unlock stronger heroes. Pulling a hero again increases their level.</li>
-        <li><strong>Fight Packs:</strong> choose a challenge, reveal its monster, and control your active hero in a turn-based battle.</li>
+        <li><strong>Hero Packs:</strong> every fighter belongs to one specific pack. Pulling that fighter again increases their level.</li>
+        <li><strong>Fight Packs:</strong> choose a challenge, reveal its monster, and control your active hero in a turn-based battle. The free Wilds starter pack can only be claimed once.</li>
         <li><strong>During battle:</strong> use Attack for reliable damage, Power Strike for risky heavy damage, or Guard for light damage and protection.</li>
         <li><strong>Winning:</strong> improves your chances of stronger loot, but every rarity roll can still give Common gear. Losing always gives basic Common equipment. Fight Packs do not pay coins.</li>
         <li><strong>Fighters:</strong> choose which hero enters battles and see their total stats.</li>
-        <li><strong>Collection:</strong> track every available hero, with collected heroes shown first.</li>
+        <li><strong>Collection:</strong> track every available hero and every sword, armor, and shield you have discovered.</li>
         <li><strong>Swords:</strong> equip one sword to each hero for bonus attack. Forging keeps your strongest sword, destroys every other sword, and adds part of their combined attack to it.</li>
         <li><strong>Training Facility:</strong> load clean armor or shields into an open station. A customer arrives, pays halfway through training, then leaves the used gear dirty.</li>
-        <li><strong>Clean Gear:</strong> stop the moving scrubber inside the green zone three times to clean an item.</li>
+        <li><strong>Clean Gear:</strong> drag the sponge back and forth across dirty equipment until its wash meter is full.</li>
         <li><strong>Upgrades:</strong> improve customer speed, hire an automatic cleaning crew, and increase the chance of better Hero Pack and victory-loot rarities.</li>
       </ul>
     </div>
@@ -1186,6 +1204,46 @@
       {
         id: "sunChampion", name: "Sun Champion", rarity: "Legendary", attack: 45, health: 118, defense: 16,
         skin: "#70402f", hair: "#1c1917", outfit: "#9a3412", accent: "#fbbf24", hairStyle: "short"
+      },
+      {
+        id: "tempestScout", name: "Tempest Scout", rarity: "Uncommon", attack: 21, health: 73, defense: 6,
+        skin: "#d59a72", hair: "#55301f", outfit: "#0f766e", accent: "#5eead4", hairStyle: "mohawk"
+      },
+      {
+        id: "crystalOracle", name: "Crystal Oracle", rarity: "Rare", attack: 29, health: 70, defense: 7,
+        skin: "#8d573f", hair: "#e9d5ff", outfit: "#7e22ce", accent: "#d8b4fe", hairStyle: "long"
+      },
+      {
+        id: "emberWitch", name: "Ember Witch", rarity: "Epic", attack: 37, health: 88, defense: 9,
+        skin: "#c9875f", hair: "#7c2d12", outfit: "#9f1239", accent: "#fb7185", hairStyle: "hood"
+      },
+      {
+        id: "ironTitan", name: "Iron Titan", rarity: "Epic", attack: 32, health: 128, defense: 15,
+        skin: "#6b4231", hair: "#111827", outfit: "#334155", accent: "#94a3b8", hairStyle: "helmet"
+      },
+      {
+        id: "shadowEmpress", name: "Shadow Empress", rarity: "Legendary", attack: 49, health: 112, defense: 14,
+        skin: "#e0a77e", hair: "#18181b", outfit: "#581c87", accent: "#e879f9", hairStyle: "long"
+      },
+      {
+        id: "starCaptain", name: "Star Captain", rarity: "Rare", attack: 30, health: 82, defense: 8,
+        skin: "#b97850", hair: "#f8fafc", outfit: "#1d4ed8", accent: "#93c5fd", hairStyle: "short"
+      },
+      {
+        id: "voidWalker", name: "Void Walker", rarity: "Epic", attack: 40, health: 86, defense: 10,
+        skin: "#70402f", hair: "#020617", outfit: "#312e81", accent: "#818cf8", hairStyle: "hood"
+      },
+      {
+        id: "chronoKnight", name: "Chrono Knight", rarity: "Epic", attack: 35, health: 116, defense: 14,
+        skin: "#edb98a", hair: "#a16207", outfit: "#155e75", accent: "#67e8f9", hairStyle: "helmet"
+      },
+      {
+        id: "nebulaSage", name: "Nebula Sage", rarity: "Legendary", attack: 52, health: 104, defense: 13,
+        skin: "#9b6248", hair: "#c4b5fd", outfit: "#4c1d95", accent: "#f0abfc", hairStyle: "bald"
+      },
+      {
+        id: "cometRider", name: "Comet Rider", rarity: "Legendary", attack: 48, health: 122, defense: 15,
+        skin: "#d18b63", hair: "#172554", outfit: "#c2410c", accent: "#fdba74", hairStyle: "mohawk"
       }
     ];
 
@@ -1195,32 +1253,54 @@
         name: "Recruit Hero Pack",
         icon: "🎒",
         cost: 120,
-        description: "A dependable pack with Common, Uncommon, and Rare heroes.",
-        rarities: ["Common", "Common", "Common", "Uncommon", "Uncommon", "Rare"]
+        description: "The exclusive home of Rex, Bella, Bo, and Gus.",
+        heroIds: ["rookie", "blade", "brawler", "guardian"],
+        rarities: ["Common", "Common", "Common", "Uncommon"]
       },
       {
-        id: "elite",
-        name: "Elite Hero Pack",
-        icon: "💎",
-        cost: 450,
-        description: "Improved odds for Rare and Epic heroes, with a chance at Legendary.",
-        rarities: ["Uncommon", "Rare", "Rare", "Rare", "Epic", "Epic", "Legendary"]
+        id: "wildguard",
+        name: "Wildguard Hero Pack",
+        icon: "🏹",
+        cost: 280,
+        description: "The exclusive home of Ava, Monk, Ranger, and Tempest Scout.",
+        heroIds: ["archer", "monk", "ranger", "tempestScout"],
+        rarities: ["Uncommon", "Uncommon", "Uncommon", "Rare"]
+      },
+      {
+        id: "mystic",
+        name: "Mystic Hero Pack",
+        icon: "🔮",
+        cost: 600,
+        description: "The exclusive home of Max, Ninja, Crystal Oracle, and Ember Witch.",
+        heroIds: ["mage", "ninja", "crystalOracle", "emberWitch"],
+        rarities: ["Rare", "Rare", "Rare", "Epic"]
       },
       {
         id: "champion",
         name: "Champion Hero Pack",
         icon: "🏆",
-        cost: 900,
-        description: "Only Rare, Epic, and Legendary heroes can appear.",
-        rarities: ["Rare", "Rare", "Epic", "Epic", "Epic", "Legendary"]
+        cost: 1050,
+        description: "The exclusive home of Valkyrie, Paladin, Cyber Sam, and Iron Titan.",
+        heroIds: ["valkyrie", "paladin", "cyber", "ironTitan"],
+        rarities: ["Epic", "Epic", "Epic", "Epic"]
       },
       {
         id: "legend",
         name: "Legend Hero Pack",
         icon: "🌟",
-        cost: 1800,
-        description: "The strongest Hero Pack, packed with Epic and Legendary fighters.",
-        rarities: ["Epic", "Epic", "Epic", "Legendary", "Legendary"]
+        cost: 2000,
+        description: "The exclusive home of Dragon Knight, Frost Queen, Sun Champion, and Shadow Empress.",
+        heroIds: ["dragonKnight", "frostQueen", "sunChampion", "shadowEmpress"],
+        rarities: ["Legendary", "Legendary", "Legendary", "Legendary"]
+      },
+      {
+        id: "cosmic",
+        name: "Cosmic Hero Pack",
+        icon: "🚀",
+        cost: 2600,
+        description: "Five exclusive fighters from beyond the arena.",
+        heroIds: ["starCaptain", "voidWalker", "chronoKnight", "nebulaSage", "cometRider"],
+        rarities: ["Rare", "Epic", "Epic", "Legendary", "Legendary"]
       }
     ];
 
@@ -1249,7 +1329,7 @@
         icon: "🌲",
         cost: 0,
         tier: 1,
-        description: "A free fight against a basic monster. A safe place to build your hero."
+        description: "A free starter fight against a basic monster. This pack can only be claimed once."
       },
       {
         id: "dungeon",
@@ -1344,6 +1424,8 @@
       activeHeroId: "rookie",
       inventory: [],
       equipment: {},
+      discoveredEquipment: {},
+      starterFightClaimed: false,
       upgrades: {
         customerSpeed: 0,
         autoClean: 0,
@@ -1366,6 +1448,8 @@
     const heroRoster = document.querySelector("#heroRoster");
     const collectionSummary = document.querySelector("#collectionSummary");
     const heroCollection = document.querySelector("#heroCollection");
+    const equipmentCollectionSummary = document.querySelector("#equipmentCollectionSummary");
+    const equipmentCollection = document.querySelector("#equipmentCollection");
     const activeLoadout = document.querySelector("#activeLoadout");
     const swordMerge = document.querySelector("#swordMerge");
     const gearInventory = document.querySelector("#gearInventory");
@@ -1384,11 +1468,10 @@
     let currentBattle = null;
     let modalLocked = false;
     let cleaningItemId = null;
-    let cleaningHits = 0;
-    let cleaningMarkerPosition = 0;
-    let cleaningMarkerDirection = 1;
-    let cleaningTargetStart = 40;
-    let cleaningFeedback = "";
+    let cleaningProgress = 0;
+    let cleaningDragging = false;
+    let cleaningLastX = null;
+    const cleaningTarget = 700;
 
     function saveGame() {
       localStorage.setItem("boxBoxFightersSave", JSON.stringify(state));
@@ -1404,6 +1487,7 @@
         state.coins = Number.isFinite(parsed.coins) ? Math.max(0, parsed.coins) : state.coins;
         state.wins = Number.isInteger(parsed.wins) ? Math.max(0, parsed.wins) : 0;
         state.losses = Number.isInteger(parsed.losses) ? Math.max(0, parsed.losses) : 0;
+        state.starterFightClaimed = Boolean(parsed.starterFightClaimed);
         state.heroes = Object.fromEntries(heroDefinitions
           .filter(hero => Number.isInteger(parsed.heroes?.[hero.id]) && parsed.heroes[hero.id] > 0)
           .map(hero => [hero.id, parsed.heroes[hero.id]]));
@@ -1444,6 +1528,16 @@
                 : 0
             }))
           : [];
+        state.discoveredEquipment = {};
+        Object.keys(parsed.discoveredEquipment || {}).forEach(key => {
+          const [type, rarity] = key.split(":");
+          if (equipmentNames[type]?.[rarity] && parsed.discoveredEquipment[key]) {
+            state.discoveredEquipment[key] = true;
+          }
+        });
+        state.inventory.forEach(item => {
+          state.discoveredEquipment[equipmentCollectionKey(item.type, item.rarity)] = true;
+        });
         const inventoryIds = new Set(state.inventory.map(item => item.id));
         state.equipment = {};
         Object.keys(state.heroes).forEach(heroId => {
@@ -1503,7 +1597,12 @@
       return heroDefinitions.find(hero => hero.id === heroId);
     }
 
+    function equipmentCollectionKey(type, rarity) {
+      return `${type}:${rarity}`;
+    }
+
     function heroPortrait(hero, missing = false) {
+      const heroIndex = heroDefinitions.findIndex(candidate => candidate.id === hero.id);
       const details = {
         rookie: {
           face: "square",
@@ -1649,8 +1748,15 @@
             <circle cx="60" cy="20" r="7" fill="#f97316"/>
           `
         }
-      }[hero.id];
-      const heroIndex = heroDefinitions.findIndex(candidate => candidate.id === hero.id);
+      }[hero.id] || {
+        face: ["square", "narrow", "round", "wide"][heroIndex % 4],
+        eyes: ["focused", "glow", "calm", "default"][heroIndex % 4],
+        back: `
+          <circle cx="${20 + heroIndex % 4 * 26}" cy="${24 + heroIndex % 3 * 18}" r="${8 + heroIndex % 5}" fill="none" stroke="${hero.accent}" stroke-width="3"/>
+          <path d="M8 ${105 + heroIndex % 4 * 5}L112 ${25 + heroIndex % 5 * 8}" stroke="${hero.accent}" stroke-width="4" opacity=".35"/>
+        `,
+        front: `<path d="M35 35q25-${18 + heroIndex % 12} 50 0" fill="none" stroke="${hero.accent}" stroke-width="6"/>`
+      };
       const faceShape = {
         narrow: `<ellipse cx="60" cy="57" rx="23" ry="39" fill="${hero.skin}"/>`,
         round: `<ellipse cx="60" cy="56" rx="29" ry="35" fill="${hero.skin}"/>`,
@@ -1757,7 +1863,7 @@
 
     function renderHeroPacks() {
       heroPacks.innerHTML = heroPackDefinitions.map(pack => {
-        const possibleHeroes = heroDefinitions.filter(hero => pack.rarities.includes(hero.rarity));
+        const possibleHeroes = heroDefinitions.filter(hero => pack.heroIds.includes(hero.id));
         const collectedCount = possibleHeroes.filter(hero => state.heroes[hero.id]).length;
         return `
           <article class="pack-card hero-pack">
@@ -1780,18 +1886,21 @@
 
     function renderFightPacks() {
       const activeHero = heroDefinition(state.activeHeroId);
-      fightPacks.innerHTML = fightPackDefinitions.map(pack => `
-        <article class="pack-card fight-pack">
+      fightPacks.innerHTML = fightPackDefinitions.map(pack => {
+        const starterClaimed = pack.id === "wilds" && state.starterFightClaimed;
+        return `
+        <article class="pack-card fight-pack ${starterClaimed ? "claimed" : ""}">
           <span class="pack-label">Fight Pack · Tier ${pack.tier}</span>
           <div class="pack-icon">${pack.icon}</div>
           <h3>${pack.name}</h3>
           <p>${pack.description}</p>
           <p><strong>Fighting:</strong> ${activeHero.name} · Power ${Math.round(heroPower(activeHero.id))}</p>
-          <button class="primary" type="button" data-fight-pack="${pack.id}" ${state.coins < pack.cost ? "disabled" : ""}>
-            ${pack.cost === 0 ? "Open free fight" : `Fight · ${pack.cost.toLocaleString()} coins`}
+          <button class="primary" type="button" data-fight-pack="${pack.id}" ${state.coins < pack.cost || starterClaimed ? "disabled" : ""}>
+            ${starterClaimed ? "Free fight already claimed" : pack.cost === 0 ? "Claim free fight" : `Fight · ${pack.cost.toLocaleString()} coins`}
           </button>
         </article>
-      `).join("");
+      `;
+      }).join("");
       fightPacks.querySelectorAll("[data-fight-pack]").forEach(button => {
         button.addEventListener("click", () => openFightPack(button.dataset.fightPack));
       });
@@ -1853,7 +1962,7 @@
       heroCollection.innerHTML = sortedHeroes.map(hero => {
         const level = state.heroes[hero.id] || 0;
         const packNames = heroPackDefinitions
-          .filter(pack => pack.rarities.includes(hero.rarity))
+          .filter(pack => pack.heroIds.includes(hero.id))
           .map(pack => pack.name.replace(" Hero Pack", ""))
           .join(", ");
         return `
@@ -1866,6 +1975,36 @@
           </article>
         `;
       }).join("");
+
+      const allEquipment = Object.keys(equipmentNames).flatMap(type =>
+        rarityOrder.map(rarity => ({
+          type,
+          rarity,
+          name: equipmentNames[type][rarity],
+          discovered: Boolean(state.discoveredEquipment[equipmentCollectionKey(type, rarity)])
+        }))
+      );
+      const discoveredCount = allEquipment.filter(item => item.discovered).length;
+      equipmentCollectionSummary.innerHTML = `
+        <div>
+          <strong>${discoveredCount} / ${allEquipment.length}</strong>
+          <div>Equipment discovered</div>
+        </div>
+        <span>${allEquipment.length - discoveredCount} still missing</span>
+      `;
+      allEquipment.sort((left, right) =>
+        Number(right.discovered) - Number(left.discovered) ||
+        rarityInfo[left.rarity].rank - rarityInfo[right.rarity].rank ||
+        left.type.localeCompare(right.type)
+      );
+      equipmentCollection.innerHTML = allEquipment.map(item => `
+        <article class="gear-card collection-card ${item.discovered ? "" : "missing"}" style="--rarity:${rarityInfo[item.rarity].color}">
+          <span class="rarity">${item.rarity}</span>
+          <div class="gear-icon">${item.discovered ? equipmentIcons[item.type] : "❔"}</div>
+          <h3>${item.discovered ? item.name : `Unknown ${item.type}`}</h3>
+          <p>${item.discovered ? "Discovered" : "Not discovered"}</p>
+        </article>
+      `).join("");
     }
 
     function itemEquippedHero(itemId) {
@@ -2038,7 +2177,7 @@
       const autoCleanSeconds = autoCleanDuration();
       cleaningStatus.innerHTML = `
         <h3>Cleaning station</h3>
-        <p>${dirtyItems.length} dirty item${dirtyItems.length === 1 ? "" : "s"} waiting. Select one and land three timed scrubs in the green zone.</p>
+        <p>${dirtyItems.length} dirty item${dirtyItems.length === 1 ? "" : "s"} waiting. Select one, then drag the sponge back and forth to wash it.</p>
         <p>${crewLevel > 0
           ? `Auto-clean crew level ${crewLevel}: next item in ${Math.max(0, autoCleanSeconds - state.facility.autoCleanProgress)} seconds.`
           : "No auto-clean crew hired yet."}</p>
@@ -2062,7 +2201,7 @@
           <div class="gear-icon">${equipmentIcons[item.type]}</div>
           <h3>${item.name}</h3>
           <span class="gear-condition dirty">Dirty</span>
-          <p>Complete three accurate scrubs to restore this item.</p>
+          <p>Wash this item until its cleaning meter is full.</p>
           <button class="primary" type="button" data-start-cleaning="${item.id}">
             ${cleaningItemId === item.id ? "Currently cleaning" : "Clean this gear"}
           </button>
@@ -2225,7 +2364,10 @@
       }
       state.coins -= pack.cost;
       const rarity = applyLuck(weightedRarity(pack.rarities), [...new Set(pack.rarities)]);
-      const candidates = heroDefinitions.filter(hero => hero.rarity === rarity);
+      const candidates = heroDefinitions.filter(hero =>
+        pack.heroIds.includes(hero.id) &&
+        hero.rarity === rarity
+      );
       const hero = candidates[Math.floor(Math.random() * candidates.length)];
       const alreadyOwned = Boolean(state.heroes[hero.id]);
       state.heroes[hero.id] = (state.heroes[hero.id] || 0) + 1;
@@ -2290,7 +2432,15 @@
         showToast("You do not have enough coins for that fight.");
         return;
       }
+      if (pack.id === "wilds" && state.starterFightClaimed) {
+        showToast("The free Wilds Fight Pack can only be claimed once.");
+        return;
+      }
       state.coins -= pack.cost;
+      if (pack.id === "wilds") {
+        state.starterFightClaimed = true;
+      }
+      saveGame();
       render();
       const monsters = monsterDefinitions.filter(monster => monster.tier === pack.tier);
       const monster = monsters[Math.floor(Math.random() * monsters.length)];
@@ -2447,6 +2597,7 @@
         : "Common";
       const loot = createLoot(rarity);
       state.inventory.push(loot);
+      state.discoveredEquipment[equipmentCollectionKey(loot.type, loot.rarity)] = true;
       if (won) {
         state.wins += 1;
       } else {
@@ -2635,11 +2786,9 @@
         return;
       }
       cleaningItemId = item.id;
-      cleaningHits = 0;
-      cleaningMarkerPosition = 0;
-      cleaningMarkerDirection = 1;
-      cleaningTargetStart = 5 + Math.random() * 72;
-      cleaningFeedback = "Press Scrub when the white marker is in the green zone.";
+      cleaningProgress = 0;
+      cleaningDragging = false;
+      cleaningLastX = null;
       renderCleaning();
     }
 
@@ -2647,7 +2796,9 @@
       const item = state.inventory.find(candidate => candidate.id === cleaningItemId && candidate.dirty);
       if (!item) {
         cleaningItemId = null;
-        cleaningHits = 0;
+        cleaningProgress = 0;
+        cleaningDragging = false;
+        cleaningLastX = null;
         cleaningGame.hidden = true;
         cleaningGame.innerHTML = "";
         return;
@@ -2657,60 +2808,69 @@
         <div class="cleaning-game-content">
           <span class="rarity" style="--rarity:${rarityInfo[item.rarity].color}">${item.rarity}</span>
           <h3>Cleaning ${item.name}</h3>
-          <p>${cleaningHits} / 3 accurate scrubs</p>
-          <div class="gear-icon">${equipmentIcons[item.type]}</div>
-          <div class="scrub-meter" style="--target-start:${cleaningTargetStart}%;--marker-position:${cleaningMarkerPosition}%">
-            <div class="scrub-target"></div>
-            <div class="scrub-marker"></div>
+          <p>Hold and drag the sponge from side to side across the gear.</p>
+          <div class="wash-area" data-wash-area>
+            <div class="gear-icon">${equipmentIcons[item.type]}</div>
+            <div class="wash-sponge">🧽</div>
           </div>
-          <p class="cleaning-feedback">${cleaningFeedback}</p>
-          <button class="primary scrub-button" type="button" data-scrub>Scrub</button>
+          <div class="wash-progress" aria-label="Cleaning progress">
+            <span style="--wash-progress:${Math.min(100, cleaningProgress / cleaningTarget * 100)}%"></span>
+          </div>
+          <strong data-wash-label>${Math.floor(cleaningProgress / cleaningTarget * 100)}% clean</strong>
         </div>
       `;
-      cleaningGame.querySelector("[data-scrub]").addEventListener("click", scrubGear);
+      const washArea = cleaningGame.querySelector("[data-wash-area]");
+      washArea.addEventListener("pointerdown", beginWashing);
+      washArea.addEventListener("pointermove", washGear);
+      washArea.addEventListener("pointerup", stopWashing);
+      washArea.addEventListener("pointercancel", stopWashing);
     }
 
-    function advanceCleaningMarker() {
-      if (!cleaningItemId || cleaningGame.hidden) {
+    function beginWashing(event) {
+      cleaningDragging = true;
+      cleaningLastX = event.clientX;
+      event.currentTarget.classList.add("washing");
+      event.currentTarget.setPointerCapture?.(event.pointerId);
+    }
+
+    function stopWashing(event) {
+      cleaningDragging = false;
+      cleaningLastX = null;
+      event.currentTarget.classList.remove("washing");
+    }
+
+    function washGear(event) {
+      if (!cleaningDragging || cleaningLastX === null) {
         return;
       }
-      cleaningMarkerPosition += cleaningMarkerDirection * 1.4;
-      if (cleaningMarkerPosition >= 100 || cleaningMarkerPosition <= 0) {
-        cleaningMarkerPosition = Math.min(100, Math.max(0, cleaningMarkerPosition));
-        cleaningMarkerDirection *= -1;
-      }
-      const marker = cleaningGame.querySelector(".scrub-marker");
-      if (marker) {
-        marker.style.left = `${cleaningMarkerPosition}%`;
-      }
-    }
-
-    function scrubGear() {
       const item = state.inventory.find(candidate => candidate.id === cleaningItemId && candidate.dirty);
       if (!item) {
         return;
       }
-      const hit = cleaningMarkerPosition >= cleaningTargetStart &&
-        cleaningMarkerPosition <= cleaningTargetStart + 18;
-      if (!hit) {
-        cleaningFeedback = "Missed! Wait for the white marker to enter the green zone.";
-        renderCleaningGame();
-        return;
-      }
-      cleaningHits += 1;
-      if (cleaningHits === 3) {
+      const distance = Math.min(80, Math.abs(event.clientX - cleaningLastX));
+      cleaningLastX = event.clientX;
+      cleaningProgress = Math.min(cleaningTarget, cleaningProgress + distance);
+      const washArea = event.currentTarget;
+      const bounds = washArea.getBoundingClientRect();
+      const spongeX = Math.min(100, Math.max(0, (event.clientX - bounds.left) / bounds.width * 100));
+      washArea.style.setProperty("--sponge-x", `${spongeX}%`);
+      cleaningGame.querySelector(".wash-progress span").style.setProperty(
+        "--wash-progress",
+        `${cleaningProgress / cleaningTarget * 100}%`
+      );
+      cleaningGame.querySelector("[data-wash-label]").textContent =
+        `${Math.floor(cleaningProgress / cleaningTarget * 100)}% clean`;
+      if (cleaningProgress >= cleaningTarget) {
         item.dirty = false;
         cleaningItemId = null;
-        cleaningHits = 0;
+        cleaningProgress = 0;
+        cleaningDragging = false;
+        cleaningLastX = null;
         saveGame();
         renderTraining();
         renderCleaning();
         showToast(`${item.name} is spotless and ready for customers.`);
-        return;
       }
-      cleaningTargetStart = 5 + Math.random() * 72;
-      cleaningFeedback = "Great scrub! The green zone moved.";
-      renderCleaningGame();
     }
 
     function toggleEquipment(itemId) {
@@ -2785,7 +2945,6 @@
     loadGame();
     render();
     setInterval(advanceTrainingFacility, 1000);
-    setInterval(advanceCleaningMarker, 30);
   </script>
 </body>
 </html>
