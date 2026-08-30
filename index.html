@@ -2989,7 +2989,7 @@
     }
 
     function renderHeroPacks() {
-      heroPacks.innerHTML = heroPackDefinitions.map(pack => {
+      heroPacks.innerHTML = [...heroPackDefinitions].sort((left, right) => left.cost - right.cost).map(pack => {
         const possibleHeroes = pack.heroIds.map(heroDefinition);
         const collectedCount = possibleHeroes.filter(hero => state.heroes[hero.id]).length;
         return `
@@ -3022,7 +3022,7 @@
 
     function renderFightPacks() {
       const activeHero = heroDefinition(state.activeHeroId);
-      fightPacks.innerHTML = fightPackDefinitions.map(pack => {
+      fightPacks.innerHTML = [...fightPackDefinitions].sort((left, right) => left.cost - right.cost).map(pack => {
         const starterClaimed = pack.id === "wilds" && state.starterFightClaimed;
         return `
         <article class="pack-card fight-pack fight-tier-${pack.tier} ${starterClaimed ? "claimed" : ""}">
