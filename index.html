@@ -857,6 +857,397 @@
       line-height: 1.5;
     }
 
+    /* Layered arena styling keeps each screen readable while giving rare content its own identity. */
+    body {
+      background:
+        radial-gradient(circle at 8% -5%, rgb(220 38 38 / 22%), transparent 30rem),
+        radial-gradient(circle at 100% 20%, rgb(249 115 22 / 16%), transparent 34rem),
+        radial-gradient(circle at 52% 105%, rgb(30 64 175 / 13%), transparent 38rem),
+        linear-gradient(180deg, #09090d, #07070b 60%, #09090d);
+      background-attachment: fixed;
+    }
+
+    body::before {
+      position: fixed;
+      inset: 0;
+      z-index: -1;
+      background-image:
+        linear-gradient(rgb(255 255 255 / 1.8%) 1px, transparent 1px),
+        linear-gradient(90deg, rgb(255 255 255 / 1.8%) 1px, transparent 1px);
+      background-size: 3.5rem 3.5rem;
+      content: "";
+      mask-image: linear-gradient(to bottom, transparent, black 35%, transparent);
+      pointer-events: none;
+    }
+
+    .app {
+      width: min(92rem, 100%);
+      padding: 1rem clamp(0.75rem, 2vw, 1.5rem) 4rem;
+    }
+
+    header {
+      padding: 0.25rem 0 1.2rem;
+    }
+
+    .logo-image {
+      filter: drop-shadow(0 0.8rem 1.4rem rgb(0 0 0 / 42%));
+      transition: transform 180ms ease;
+    }
+
+    .logo-image:hover {
+      transform: translateY(-2px) rotate(-1deg);
+    }
+
+    .stat {
+      border-color: #49313a;
+      background:
+        linear-gradient(145deg, rgb(29 25 34 / 96%), rgb(13 14 20 / 96%));
+      box-shadow:
+        0 0.7rem 1.5rem rgb(0 0 0 / 20%),
+        inset 0 1px rgb(255 255 255 / 6%);
+    }
+
+    .stat strong {
+      color: #fbbf24;
+      text-shadow: 0 0 1rem rgb(251 191 36 / 28%);
+    }
+
+    .primary {
+      background: linear-gradient(135deg, #dc2626, #ea580c);
+      box-shadow:
+        0 0.55rem 1.1rem rgb(185 28 28 / 22%),
+        inset 0 1px rgb(255 255 255 / 15%);
+      transition: transform 150ms ease, filter 150ms ease, box-shadow 150ms ease;
+    }
+
+    .primary:hover {
+      background: linear-gradient(135deg, #ef4444, #f97316);
+      box-shadow: 0 0.75rem 1.5rem rgb(220 38 38 / 30%);
+      filter: brightness(1.08);
+      transform: translateY(-1px);
+    }
+
+    .secondary {
+      background: linear-gradient(145deg, #42394e, #302b3a);
+      box-shadow: inset 0 1px rgb(255 255 255 / 8%);
+    }
+
+    .danger:hover {
+      border-color: #fb7185;
+      background: rgb(127 29 29 / 22%);
+    }
+
+    nav {
+      position: sticky;
+      top: 0.65rem;
+      z-index: 10;
+      border-color: #34313d;
+      background: rgb(13 14 20 / 88%);
+      box-shadow:
+        0 0.8rem 2rem rgb(0 0 0 / 30%),
+        inset 0 1px rgb(255 255 255 / 5%);
+      backdrop-filter: blur(16px);
+    }
+
+    nav button {
+      color: #aaa7b5;
+      letter-spacing: 0.045em;
+      transition: color 150ms ease, background 150ms ease, transform 150ms ease;
+    }
+
+    nav button:hover:not(.active) {
+      background: rgb(255 255 255 / 5%);
+      color: white;
+      transform: translateY(-1px);
+    }
+
+    nav button.active {
+      background: linear-gradient(135deg, #dc2626, #ea580c);
+      box-shadow:
+        0 0.5rem 1.1rem rgb(220 38 38 / 28%),
+        inset 0 1px rgb(255 255 255 / 18%);
+    }
+
+    .hero {
+      min-height: 24rem;
+      border-color: #573036;
+      border-radius: 1.4rem;
+      background:
+        radial-gradient(circle at 82% 48%, rgb(248 113 113 / 22%), transparent 16rem),
+        linear-gradient(100deg, rgb(8 8 13 / 98%) 12%, rgb(15 10 15 / 68%) 58%, rgb(67 20 7 / 62%)),
+        linear-gradient(135deg, #7f1d1d, #18181b 55%, #9a3412);
+      box-shadow:
+        0 1.5rem 4rem rgb(0 0 0 / 40%),
+        inset 0 1px rgb(255 255 255 / 7%),
+        inset 0 -5rem 8rem rgb(127 29 29 / 12%);
+    }
+
+    .hero::before {
+      position: absolute;
+      right: clamp(2rem, 10vw, 9rem);
+      bottom: -8rem;
+      width: 22rem;
+      height: 22rem;
+      border: 1.2rem solid rgb(251 146 60 / 8%);
+      border-radius: 50%;
+      content: "";
+      box-shadow:
+        0 0 0 2.4rem rgb(239 68 68 / 4%),
+        0 0 6rem rgb(239 68 68 / 12%);
+    }
+
+    .hero::after {
+      right: 9%;
+      bottom: -26%;
+      color: rgb(255 255 255 / 12%);
+      filter: drop-shadow(0 1rem 1rem rgb(0 0 0 / 30%));
+    }
+
+    .hero h2 {
+      max-width: 48rem;
+      letter-spacing: -0.055em;
+      text-shadow: 0 0.2rem 1.5rem rgb(0 0 0 / 38%);
+    }
+
+    .hero p {
+      max-width: 42rem;
+      color: #d2ced8;
+      font-size: 1rem;
+    }
+
+    .section-head {
+      display: flex;
+      align-items: end;
+      justify-content: space-between;
+      gap: 1.5rem;
+      margin-top: 2.3rem;
+    }
+
+    .section-head p {
+      max-width: 48rem;
+      margin-bottom: 0.2rem;
+      text-align: right;
+    }
+
+    .section-head h2 {
+      letter-spacing: -0.025em;
+      text-shadow: 0 0.3rem 1rem rgb(0 0 0 / 30%);
+    }
+
+    .pack-card,
+    .hero-card,
+    .gear-card,
+    .feature-card,
+    .training-station,
+    .facility-panel,
+    .active-loadout,
+    .collection-summary {
+      box-shadow:
+        0 0.9rem 2rem rgb(0 0 0 / 22%),
+        inset 0 1px rgb(255 255 255 / 6%);
+    }
+
+    .pack-card,
+    .hero-card,
+    .gear-card,
+    .feature-card {
+      transition: border-color 180ms ease, transform 180ms ease, box-shadow 180ms ease;
+    }
+
+    .pack-card:hover,
+    .hero-card:hover,
+    .gear-card:hover,
+    .feature-card:hover {
+      transform: translateY(-4px);
+      box-shadow:
+        0 1.2rem 2.8rem rgb(0 0 0 / 34%),
+        inset 0 1px rgb(255 255 255 / 9%);
+    }
+
+    .pack-card {
+      position: relative;
+      min-height: 26rem;
+      overflow: hidden;
+      border-width: 1px;
+      border-color: var(--pack-color, #7c3aed);
+      background:
+        radial-gradient(circle at 90% 2%, color-mix(in srgb, var(--pack-color, #7c3aed) 35%, transparent), transparent 11rem),
+        linear-gradient(150deg, color-mix(in srgb, var(--pack-color, #7c3aed) 24%, #17131d), #0d0e14 72%);
+    }
+
+    .pack-card::before {
+      position: absolute;
+      inset: -45%;
+      background: linear-gradient(110deg, transparent 43%, rgb(255 255 255 / 8%) 50%, transparent 57%);
+      content: "";
+      pointer-events: none;
+      transform: rotate(12deg);
+      transition: transform 500ms ease;
+    }
+
+    .pack-card:hover::before {
+      transform: translateX(18%) rotate(12deg);
+    }
+
+    .pack-card > * {
+      position: relative;
+    }
+
+    .pack-card.hero-pack,
+    .pack-card.fight-pack {
+      border-color: var(--pack-color);
+      background:
+        radial-gradient(circle at 88% 4%, color-mix(in srgb, var(--pack-color) 38%, transparent), transparent 11rem),
+        linear-gradient(150deg, color-mix(in srgb, var(--pack-color) 25%, #17131d), #0d0e14 72%);
+    }
+
+    .pack-recruit { --pack-color: #94a3b8; }
+    .pack-wildguard { --pack-color: #4ade80; }
+    .pack-mystic { --pack-color: #a78bfa; }
+    .pack-champion { --pack-color: #c084fc; }
+    .pack-legend { --pack-color: #fbbf24; }
+    .pack-cosmic { --pack-color: #818cf8; }
+    .pack-mythic { --pack-color: #fb7185; }
+    .pack-limited { --pack-color: #22d3ee; }
+
+    .fight-tier-1 { --pack-color: #4ade80; }
+    .fight-tier-2 { --pack-color: #60a5fa; }
+    .fight-tier-3 { --pack-color: #c084fc; }
+    .fight-tier-4 { --pack-color: #f97316; }
+    .fight-tier-5 { --pack-color: #fbbf24; }
+    .fight-tier-6 { --pack-color: #fb7185; }
+    .fight-tier-7 { --pack-color: #22d3ee; }
+
+    .pack-limited,
+    .fight-tier-7 {
+      border-color: transparent !important;
+      background:
+        linear-gradient(150deg, #17131d, #0d0e14 72%) padding-box,
+        linear-gradient(90deg, #ef4444, #facc15, #22c55e, #38bdf8, #a855f7, #ef4444) border-box !important;
+      box-shadow:
+        0 1rem 2.5rem rgb(0 0 0 / 28%),
+        0 0 1.5rem rgb(34 211 238 / 14%);
+    }
+
+    .pack-icon {
+      display: grid;
+      width: 5.5rem;
+      height: 5.5rem;
+      margin: 0.8rem 0 0.2rem;
+      place-items: center;
+      border: 1px solid color-mix(in srgb, var(--pack-color, #fb923c) 55%, transparent);
+      border-radius: 1.3rem;
+      background: color-mix(in srgb, var(--pack-color, #fb923c) 16%, rgb(0 0 0 / 38%));
+      box-shadow:
+        0 0.8rem 1.2rem rgb(0 0 0 / 22%),
+        inset 0 1px rgb(255 255 255 / 10%);
+      filter: drop-shadow(0 0.6rem 0.7rem rgb(0 0 0 / 25%));
+      font-size: 3.2rem;
+      transform: rotate(-4deg);
+    }
+
+    .pack-card h3 {
+      font-size: 1.5rem;
+      font-style: italic;
+    }
+
+    .pack-label {
+      border: 1px solid color-mix(in srgb, var(--pack-color, #fb923c) 50%, transparent);
+      color: color-mix(in srgb, var(--pack-color, #fb923c) 78%, white);
+    }
+
+    .pack-chances {
+      border: 1px solid color-mix(in srgb, var(--pack-color, #7c3aed) 25%, #3f3f46);
+      background: rgb(4 5 10 / 52%);
+    }
+
+    .hero-card,
+    .gear-card {
+      background:
+        radial-gradient(circle at 100% 0%, color-mix(in srgb, var(--rarity) 18%, transparent), transparent 9rem),
+        linear-gradient(145deg, #18151d, #0e0f15);
+    }
+
+    .hero-card.rarity-limited,
+    .gear-card.rarity-limited {
+      border: 2px solid transparent;
+      background:
+        linear-gradient(145deg, #18151d, #0e0f15) padding-box,
+        linear-gradient(90deg, #ef4444, #facc15, #22c55e, #38bdf8, #a855f7, #ef4444) border-box;
+      box-shadow:
+        0 1rem 2.2rem rgb(0 0 0 / 26%),
+        0 0 1.4rem rgb(34 211 238 / 15%);
+    }
+
+    .hero-portrait {
+      border-width: 2px;
+      box-shadow:
+        0 0.8rem 1.5rem rgb(0 0 0 / 25%),
+        0 0 1.1rem color-mix(in srgb, var(--rarity, #fb923c) 16%, transparent);
+    }
+
+    .rarity {
+      border: 1px solid color-mix(in srgb, var(--rarity, #fb923c) 48%, transparent);
+      background: color-mix(in srgb, var(--rarity, #fb923c) 12%, rgb(0 0 0 / 45%));
+    }
+
+    .feature-card,
+    .facility-panel,
+    .collection-summary {
+      border-color: #423c4a;
+      background:
+        radial-gradient(circle at 100% 0%, rgb(249 115 22 / 8%), transparent 11rem),
+        linear-gradient(145deg, #17151d, #0e0f15);
+    }
+
+    .training-station {
+      border-color: #423c4a;
+      background:
+        radial-gradient(circle at 50% 0%, rgb(251 146 60 / 10%), transparent 8rem),
+        linear-gradient(145deg, #18161e, #0d0e14);
+    }
+
+    .training-station.active {
+      border-color: #fb923c;
+      box-shadow:
+        0 1rem 2.2rem rgb(0 0 0 / 28%),
+        0 0 1.4rem rgb(251 146 60 / 16%),
+        inset 0 1px rgb(255 255 255 / 7%);
+    }
+
+    .station-progress span {
+      background: linear-gradient(90deg, #dc2626, #f97316, #facc15);
+      box-shadow: 0 0 0.8rem rgb(249 115 22 / 35%);
+    }
+
+    .collection-summary strong,
+    .upgrade-level {
+      color: #fbbf24;
+    }
+
+    .modal {
+      background:
+        radial-gradient(circle at 50% 40%, rgb(127 29 29 / 18%), transparent 30rem),
+        rgb(0 0 0 / 82%);
+      backdrop-filter: blur(8px);
+    }
+
+    .modal-card {
+      border-color: #514451;
+      background:
+        radial-gradient(circle at 100% 0%, rgb(220 38 38 / 10%), transparent 18rem),
+        linear-gradient(145deg, #191720, #0e0f15);
+      box-shadow:
+        0 2rem 5rem rgb(0 0 0 / 65%),
+        inset 0 1px rgb(255 255 255 / 7%);
+    }
+
+    #toast {
+      border-color: #7c3f35;
+      background: linear-gradient(145deg, #2b1b1d, #15151d);
+      box-shadow: 0 1rem 2.5rem rgb(0 0 0 / 45%);
+    }
+
     @keyframes screen-in {
       from {
         opacity: 0;
@@ -866,7 +1257,14 @@
 
     @media (prefers-reduced-motion: reduce) {
       .screen.active,
-      .reveal-card {
+      .reveal-card,
+      .pack-card,
+      .hero-card,
+      .gear-card,
+      .feature-card,
+      .logo-image,
+      .primary,
+      nav button {
         animation: none;
         transition: none;
       }
@@ -893,6 +1291,35 @@
         flex: 1;
       }
 
+      nav {
+        top: 0.35rem;
+      }
+
+      .hero {
+        min-height: 21rem;
+        padding: 2rem 1.25rem;
+      }
+
+      .hero::after {
+        right: -8%;
+        bottom: -12%;
+        opacity: 0.55;
+      }
+
+      .section-head {
+        align-items: flex-start;
+        flex-direction: column;
+        gap: 0.15rem;
+      }
+
+      .section-head p {
+        text-align: left;
+      }
+
+      .pack-card {
+        min-height: 24rem;
+      }
+
       .feature-grid,
       .pack-grid,
       .hero-grid,
@@ -908,6 +1335,33 @@
 
       .battle-actions {
         grid-template-columns: 1fr;
+      }
+    }
+
+    @media (max-width: 520px) {
+      .stats {
+        display: grid;
+        width: 100%;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+      }
+
+      .stat {
+        min-width: 0;
+        padding-inline: 0.4rem;
+      }
+
+      nav button {
+        min-width: 0;
+        flex: 0 0 calc(50% - 0.2rem);
+      }
+
+      .hero-content {
+        max-width: 20rem;
+      }
+
+      .hero h2 {
+        font-size: 2.4rem;
+        letter-spacing: -0.045em;
       }
     }
   </style>
@@ -1875,7 +2329,7 @@
         const possibleHeroes = pack.heroIds.map(heroDefinition);
         const collectedCount = possibleHeroes.filter(hero => state.heroes[hero.id]).length;
         return `
-          <article class="pack-card hero-pack">
+          <article class="pack-card hero-pack pack-${pack.id}">
             <span class="pack-label">Hero Pack</span>
             <div class="pack-icon">${pack.icon}</div>
             <h3>${pack.name}</h3>
@@ -1907,7 +2361,7 @@
       fightPacks.innerHTML = fightPackDefinitions.map(pack => {
         const starterClaimed = pack.id === "wilds" && state.starterFightClaimed;
         return `
-        <article class="pack-card fight-pack ${starterClaimed ? "claimed" : ""}">
+        <article class="pack-card fight-pack fight-tier-${pack.tier} ${starterClaimed ? "claimed" : ""}">
           <span class="pack-label">Fight Pack · Tier ${pack.tier}</span>
           <div class="pack-icon">${pack.icon}</div>
           <h3>${pack.name}</h3>
@@ -1933,7 +2387,7 @@
         const stats = heroStats(hero.id);
         const sword = equippedItem(hero.id, "sword");
         return `
-          <article class="hero-card ${hero.id === state.activeHeroId ? "active" : ""}" style="--rarity:${rarityInfo[hero.rarity].color}">
+          <article class="hero-card rarity-${hero.rarity.toLowerCase()} ${hero.id === state.activeHeroId ? "active" : ""}" style="--rarity:${rarityInfo[hero.rarity].color}">
             <span class="rarity">${hero.rarity}</span>
             ${heroPortrait(hero)}
             <h3>${hero.name}</h3>
@@ -1984,7 +2438,7 @@
           .map(pack => pack.name.replace(" Hero Pack", ""))
           .join(", ");
         return `
-          <article class="hero-card collection-card ${level ? "" : "missing"}" style="--rarity:${rarityInfo[hero.rarity].color}">
+          <article class="hero-card collection-card rarity-${hero.rarity.toLowerCase()} ${level ? "" : "missing"}" style="--rarity:${rarityInfo[hero.rarity].color}">
             <span class="rarity">${hero.rarity}</span>
             ${heroPortrait(hero, !level)}
             <h3>${hero.name}</h3>
@@ -2016,7 +2470,7 @@
         left.type.localeCompare(right.type)
       );
       equipmentCollection.innerHTML = allEquipment.map(item => `
-        <article class="gear-card collection-card ${item.discovered ? "" : "missing"}" style="--rarity:${rarityInfo[item.rarity].color}">
+        <article class="gear-card collection-card rarity-${item.rarity.toLowerCase()} ${item.discovered ? "" : "missing"}" style="--rarity:${rarityInfo[item.rarity].color}">
           <span class="rarity">${item.rarity}</span>
           <div class="gear-icon">${item.discovered ? equipmentIcons[item.type] : "❔"}</div>
           <h3>${item.discovered ? item.name : `Unknown ${item.type}`}</h3>
@@ -2089,7 +2543,7 @@
         const equippedHero = equippedHeroId ? heroDefinition(equippedHeroId) : null;
         const equippedToActive = equippedHeroId === state.activeHeroId;
         return `
-          <article class="gear-card ${equippedHero ? "equipped" : ""}" style="--rarity:${rarityInfo[item.rarity].color}">
+          <article class="gear-card rarity-${item.rarity.toLowerCase()} ${equippedHero ? "equipped" : ""}" style="--rarity:${rarityInfo[item.rarity].color}">
             <span class="rarity">${item.rarity}</span>
             <div class="gear-icon">${equipmentIcons[item.type]}</div>
             <h3>${swordDisplayName(item)}</h3>
@@ -2166,7 +2620,7 @@
         const stationIndex = stationForGear(item.id);
         const stationFull = !state.facility.stations.some(station => !station.gearId);
         return `
-          <article class="gear-card ${stationIndex !== null ? "equipped" : ""}" style="--rarity:${rarityInfo[item.rarity].color}">
+          <article class="gear-card rarity-${item.rarity.toLowerCase()} ${stationIndex !== null ? "equipped" : ""}" style="--rarity:${rarityInfo[item.rarity].color}">
             <span class="rarity">${item.rarity}</span>
             <div class="gear-icon">${equipmentIcons[item.type]}</div>
             <h3>${item.name}</h3>
