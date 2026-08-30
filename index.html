@@ -493,11 +493,6 @@
       background: linear-gradient(145deg, #293414, #101118);
     }
 
-    .gear-card.dirty {
-      border-top-color: #78716c;
-      background: linear-gradient(145deg, #292524, #101118);
-    }
-
     .gear-card button {
       margin-top: 0.5rem;
     }
@@ -588,93 +583,6 @@
       font-size: 0.68rem;
       font-weight: 850;
       text-transform: uppercase;
-    }
-
-    .gear-condition.dirty {
-      background: #44403c;
-      color: #d6d3d1;
-    }
-
-    .cleaning-game {
-      position: relative;
-      min-height: 21rem;
-      margin-bottom: 1rem;
-      overflow: hidden;
-      border: 1px solid #57534e;
-      border-radius: 0.9rem;
-      background:
-        radial-gradient(circle at 25% 30%, rgb(120 53 15 / 25%), transparent 22%),
-        radial-gradient(circle at 75% 65%, rgb(68 64 60 / 30%), transparent 25%),
-        linear-gradient(145deg, #292524, #111118);
-      text-align: center;
-    }
-
-    .cleaning-game-content {
-      position: relative;
-      min-height: 21rem;
-      padding: 1rem;
-    }
-
-    .cleaning-game .gear-icon {
-      margin-top: 1rem;
-      font-size: 6rem;
-      filter: grayscale(0.65) brightness(0.7);
-    }
-
-    .wash-area {
-      position: relative;
-      width: min(32rem, calc(100% - 2rem));
-      height: 11rem;
-      margin: 1rem auto;
-      overflow: hidden;
-      border: 2px solid #57534e;
-      border-radius: 1rem;
-      background:
-        repeating-linear-gradient(135deg, rgb(56 189 248 / 8%) 0 1rem, transparent 1rem 2rem),
-        #111118;
-      cursor: grab;
-      touch-action: none;
-      user-select: none;
-    }
-
-    .wash-area.washing {
-      cursor: grabbing;
-    }
-
-    .wash-area .gear-icon {
-      position: absolute;
-      inset: 50% auto auto 50%;
-      margin: 0;
-      transform: translate(-50%, -50%);
-      pointer-events: none;
-    }
-
-    .wash-sponge {
-      position: absolute;
-      left: var(--sponge-x, 10%);
-      top: 50%;
-      z-index: 1;
-      font-size: 2.8rem;
-      filter: drop-shadow(0 0.3rem 0.3rem rgb(0 0 0 / 45%));
-      transform: translate(-50%, -50%);
-      pointer-events: none;
-    }
-
-    .wash-progress {
-      width: min(32rem, calc(100% - 2rem));
-      height: 1rem;
-      margin: 0.6rem auto;
-      overflow: hidden;
-      border-radius: 999px;
-      background: #3f3f46;
-    }
-
-    .wash-progress span {
-      display: block;
-      width: var(--wash-progress);
-      height: 100%;
-      border-radius: inherit;
-      background: linear-gradient(90deg, #0284c7, #67e8f9);
     }
 
     .upgrade-level {
@@ -1015,7 +923,6 @@
       <button type="button" data-screen="collection">Collection</button>
       <button type="button" data-screen="equipment">Swords</button>
       <button type="button" data-screen="training">Training Facility</button>
-      <button type="button" data-screen="cleaning">Clean Gear</button>
       <button type="button" data-screen="upgrades">Upgrades</button>
     </nav>
 
@@ -1078,27 +985,17 @@
       <section id="training" class="screen">
         <div class="section-head">
           <h2>Training facility</h2>
-          <p>Load clean armor and shields into stations. Customers train, pay halfway through, then leave the gear dirty.</p>
+          <p>Load armor and shields into stations. Customers train, pay halfway through, then return the gear for its next session.</p>
         </div>
         <div id="trainingStatus" class="facility-panel"></div>
         <div id="trainingStations" class="station-grid"></div>
         <div id="trainingGear" class="gear-grid"></div>
       </section>
 
-      <section id="cleaning" class="screen">
-        <div class="section-head">
-          <h2>Gear cleaning</h2>
-          <p>Drag the sponge back and forth across dirty gear until the wash meter is full.</p>
-        </div>
-        <div id="cleaningStatus" class="facility-panel"></div>
-        <div id="cleaningGame" class="cleaning-game" hidden></div>
-        <div id="dirtyGear" class="gear-grid"></div>
-      </section>
-
       <section id="upgrades" class="screen">
         <div class="section-head">
           <h2>Facility upgrades</h2>
-          <p>Spend training income to serve customers faster, automate cleaning, and improve pack luck.</p>
+          <p>Spend training income to serve customers faster, load gear automatically, and improve pack luck.</p>
         </div>
         <div id="upgradeGrid" class="feature-grid"></div>
       </section>
@@ -1119,9 +1016,8 @@
         <li><strong>Fighters:</strong> choose which hero enters battles and see their total stats.</li>
         <li><strong>Collection:</strong> track every available hero and every sword, armor, and shield you have discovered.</li>
         <li><strong>Swords:</strong> equip one sword to each hero for bonus attack. Forging keeps your strongest sword, destroys every other sword, and adds part of their combined attack to it.</li>
-        <li><strong>Training Facility:</strong> load clean armor or shields into an open station. A customer arrives, pays halfway through training, then leaves the used gear dirty.</li>
-        <li><strong>Clean Gear:</strong> drag the sponge back and forth across dirty equipment until its wash meter is full.</li>
-        <li><strong>Upgrades:</strong> improve customer speed, hire an automatic cleaning crew, and increase the chance of better Hero Pack and victory-loot rarities.</li>
+        <li><strong>Training Facility:</strong> load armor or shields into an open station. A customer arrives, pays halfway through training, then returns the gear for reuse.</li>
+        <li><strong>Upgrades:</strong> improve customer speed, automatically load gear with Auto Trainer, and increase the chance of better Hero Pack and victory-loot rarities.</li>
       </ul>
     </div>
   </div>
@@ -1141,7 +1037,9 @@
       Uncommon: { color: "#4ade80", rank: 1 },
       Rare: { color: "#60a5fa", rank: 2 },
       Epic: { color: "#c084fc", rank: 3 },
-      Legendary: { color: "#fbbf24", rank: 4 }
+      Legendary: { color: "#fbbf24", rank: 4 },
+      Mythic: { color: "#fb7185", rank: 5 },
+      Limited: { color: "#22d3ee", rank: 6 }
     };
 
     const heroDefinitions = [
@@ -1244,6 +1142,38 @@
       {
         id: "cometRider", name: "Comet Rider", rarity: "Legendary", attack: 48, health: 122, defense: 15,
         skin: "#d18b63", hair: "#172554", outfit: "#c2410c", accent: "#fdba74", hairStyle: "mohawk"
+      },
+      {
+        id: "phoenixWarden", name: "Phoenix Warden", rarity: "Mythic", attack: 60, health: 140, defense: 18,
+        skin: "#b97850", hair: "#7c2d12", outfit: "#be123c", accent: "#fda4af", hairStyle: "mohawk"
+      },
+      {
+        id: "leviathanLord", name: "Leviathan Lord", rarity: "Mythic", attack: 57, health: 155, defense: 21,
+        skin: "#70402f", hair: "#0c4a6e", outfit: "#155e75", accent: "#67e8f9", hairStyle: "helmet"
+      },
+      {
+        id: "runeWeaver", name: "Rune Weaver", rarity: "Mythic", attack: 64, health: 125, defense: 17,
+        skin: "#e0a77e", hair: "#ddd6fe", outfit: "#6b21a8", accent: "#f0abfc", hairStyle: "long"
+      },
+      {
+        id: "celestialMonk", name: "Celestial Monk", rarity: "Mythic", attack: 59, health: 145, defense: 20,
+        skin: "#9b6248", hair: "#fef3c7", outfit: "#9a3412", accent: "#fde68a", hairStyle: "bald"
+      },
+      {
+        id: "neonVanguard", name: "Neon Vanguard", rarity: "Limited", attack: 72, health: 165, defense: 23,
+        skin: "#d18b63", hair: "#082f49", outfit: "#0e7490", accent: "#22d3ee", hairStyle: "mohawk"
+      },
+      {
+        id: "eclipseQueen", name: "Eclipse Queen", rarity: "Limited", attack: 76, health: 150, defense: 22,
+        skin: "#8d573f", hair: "#111827", outfit: "#312e81", accent: "#a5f3fc", hairStyle: "long"
+      },
+      {
+        id: "infinityKnight", name: "Infinity Knight", rarity: "Limited", attack: 70, health: 180, defense: 26,
+        skin: "#edb98a", hair: "#164e63", outfit: "#1e3a8a", accent: "#67e8f9", hairStyle: "helmet"
+      },
+      {
+        id: "anniversaryAce", name: "Anniversary Ace", rarity: "Limited", attack: 80, health: 155, defense: 21,
+        skin: "#c9875f", hair: "#f8fafc", outfit: "#0f766e", accent: "#cffafe", hairStyle: "short"
       }
     ];
 
@@ -1301,6 +1231,24 @@
         description: "Five exclusive fighters from beyond the arena.",
         heroIds: ["starCaptain", "voidWalker", "chronoKnight", "nebulaSage", "cometRider"],
         rarities: ["Rare", "Epic", "Epic", "Legendary", "Legendary"]
+      },
+      {
+        id: "mythic",
+        name: "Mythic Hero Pack",
+        icon: "🔥",
+        cost: 4500,
+        description: "The exclusive home of four reality-shaping Mythic fighters.",
+        heroIds: ["phoenixWarden", "leviathanLord", "runeWeaver", "celestialMonk"],
+        rarities: ["Mythic", "Mythic", "Mythic", "Mythic"]
+      },
+      {
+        id: "limited",
+        name: "Limited Hero Pack",
+        icon: "💠",
+        cost: 8000,
+        description: "The exclusive home of the rarest Limited fighters.",
+        heroIds: ["neonVanguard", "eclipseQueen", "infinityKnight", "anniversaryAce"],
+        rarities: ["Limited", "Limited", "Limited", "Limited"]
       }
     ];
 
@@ -1319,7 +1267,13 @@
       { id: "warMachine", name: "War Machine", icon: "🤖", tier: 4, power: 315 },
       { id: "voidTitan", name: "Void Titan", icon: "🌑", tier: 5, power: 350 },
       { id: "stormLord", name: "Storm Lord", icon: "🌪️", tier: 5, power: 385 },
-      { id: "worldEater", name: "World Eater", icon: "☄️", tier: 5, power: 420 }
+      { id: "worldEater", name: "World Eater", icon: "☄️", tier: 5, power: 420 },
+      { id: "phoenix", name: "Eternal Phoenix", icon: "🔥", tier: 6, power: 480 },
+      { id: "kraken", name: "Astral Kraken", icon: "🐙", tier: 6, power: 515 },
+      { id: "timeGiant", name: "Time Giant", icon: "⌛", tier: 6, power: 550 },
+      { id: "glitchKing", name: "Glitch King", icon: "👾", tier: 7, power: 620 },
+      { id: "eclipseDragon", name: "Eclipse Dragon", icon: "🐲", tier: 7, power: 670 },
+      { id: "infinityBeast", name: "Infinity Beast", icon: "♾️", tier: 7, power: 720 }
     ];
 
     const fightPackDefinitions = [
@@ -1361,7 +1315,23 @@
         icon: "🌀",
         cost: 1400,
         tier: 5,
-        description: "The ultimate challenge, with the best chances of Epic or Legendary equipment."
+        description: "A celestial challenge with strong chances of Epic or Legendary equipment."
+      },
+      {
+        id: "mythicVault",
+        name: "Mythic Vault Fight Pack",
+        icon: "🔥",
+        cost: 3000,
+        tier: 6,
+        description: "Face Mythic monsters for improved chances of Mythic equipment."
+      },
+      {
+        id: "limitedArena",
+        name: "Limited Arena Fight Pack",
+        icon: "💠",
+        cost: 6000,
+        tier: 7,
+        description: "The hardest battles and the best chance of Limited equipment."
       }
     ];
 
@@ -1371,21 +1341,27 @@
         Uncommon: "Steel Sword",
         Rare: "Knight's Blade",
         Epic: "Flame Sword",
-        Legendary: "Dragon Slayer"
+        Legendary: "Dragon Slayer",
+        Mythic: "Phoenix Edge",
+        Limited: "Infinity Saber"
       },
       armor: {
         Common: "Cloth Armor",
         Uncommon: "Chain Armor",
         Rare: "Knight's Armor",
         Epic: "Titan Armor",
-        Legendary: "Dragon Plate"
+        Legendary: "Dragon Plate",
+        Mythic: "Celestial Plate",
+        Limited: "Eternity Armor"
       },
       shield: {
         Common: "Wooden Shield",
         Uncommon: "Steel Shield",
         Rare: "Guardian Shield",
         Epic: "Aegis Shield",
-        Legendary: "Dragon Guard"
+        Legendary: "Dragon Guard",
+        Mythic: "Phoenix Barrier",
+        Limited: "Infinity Guard"
       }
     };
 
@@ -1396,14 +1372,18 @@
       Uncommon: { sword: 6, armor: 20, shield: 4 },
       Rare: { sword: 10, armor: 35, shield: 7 },
       Epic: { sword: 16, armor: 55, shield: 11 },
-      Legendary: { sword: 25, armor: 85, shield: 17 }
+      Legendary: { sword: 25, armor: 85, shield: 17 },
+      Mythic: { sword: 40, armor: 125, shield: 25 },
+      Limited: { sword: 60, armor: 180, shield: 36 }
     };
     const trainingPayments = {
       Common: 35,
       Uncommon: 80,
       Rare: 180,
       Epic: 400,
-      Legendary: 900
+      Legendary: 900,
+      Mythic: 1900,
+      Limited: 4000
     };
     const baseTrainingDuration = 12;
     const rarityOrder = Object.keys(rarityInfo);
@@ -1428,13 +1408,13 @@
       starterFightClaimed: false,
       upgrades: {
         customerSpeed: 0,
-        autoClean: 0,
+        autoTrainer: 0,
         luck: 0
       },
       facility: {
         earnings: 0,
         customersServed: 0,
-        autoCleanProgress: 0,
+        autoTrainerProgress: 0,
         stations: [
           { gearId: null, visitorIndex: null, progress: 0, paid: false },
           { gearId: null, visitorIndex: null, progress: 0, paid: false },
@@ -1456,9 +1436,6 @@
     const trainingStatus = document.querySelector("#trainingStatus");
     const trainingStations = document.querySelector("#trainingStations");
     const trainingGear = document.querySelector("#trainingGear");
-    const cleaningStatus = document.querySelector("#cleaningStatus");
-    const cleaningGame = document.querySelector("#cleaningGame");
-    const dirtyGear = document.querySelector("#dirtyGear");
     const upgradeGrid = document.querySelector("#upgradeGrid");
     const resultModal = document.querySelector("#resultModal");
     const resultContent = document.querySelector("#resultContent");
@@ -1467,11 +1444,6 @@
     let toastTimer;
     let currentBattle = null;
     let modalLocked = false;
-    let cleaningItemId = null;
-    let cleaningProgress = 0;
-    let cleaningDragging = false;
-    let cleaningLastX = null;
-    const cleaningTarget = 700;
 
     function saveGame() {
       localStorage.setItem("boxBoxFightersSave", JSON.stringify(state));
@@ -1501,9 +1473,11 @@
           customerSpeed: Number.isInteger(parsed.upgrades?.customerSpeed)
             ? Math.min(5, Math.max(0, parsed.upgrades.customerSpeed))
             : 0,
-          autoClean: Number.isInteger(parsed.upgrades?.autoClean)
-            ? Math.min(5, Math.max(0, parsed.upgrades.autoClean))
-            : 0,
+          autoTrainer: Number.isInteger(parsed.upgrades?.autoTrainer)
+            ? Math.min(5, Math.max(0, parsed.upgrades.autoTrainer))
+            : Number.isInteger(parsed.upgrades?.autoClean)
+              ? Math.min(5, Math.max(0, parsed.upgrades.autoClean))
+              : 0,
           luck: Number.isInteger(parsed.upgrades?.luck)
             ? Math.min(5, Math.max(0, parsed.upgrades.luck))
             : 0
@@ -1520,9 +1494,11 @@
                 : item.value === baseValue;
             })
             .map(item => ({
-              ...item,
+              id: item.id,
+              type: item.type,
+              rarity: item.rarity,
               name: equipmentNames[item.type][item.rarity],
-              dirty: item.type === "sword" ? false : Boolean(item.dirty),
+              value: item.value,
               forgeLevel: item.type === "sword" && Number.isInteger(item.forgeLevel)
                 ? Math.max(0, item.forgeLevel)
                 : 0
@@ -1560,15 +1536,16 @@
           customersServed: Number.isInteger(parsed.facility?.customersServed)
             ? Math.max(0, parsed.facility.customersServed)
             : 0,
-          autoCleanProgress: Number.isInteger(parsed.facility?.autoCleanProgress)
-            ? Math.max(0, parsed.facility.autoCleanProgress)
-            : 0,
+          autoTrainerProgress: Number.isInteger(parsed.facility?.autoTrainerProgress)
+            ? Math.max(0, parsed.facility.autoTrainerProgress)
+            : Number.isInteger(parsed.facility?.autoCleanProgress)
+              ? Math.max(0, parsed.facility.autoCleanProgress)
+              : 0,
           stations: Array.from({ length: 3 }, (_, index) => {
             const savedStation = parsed.facility?.stations?.[index];
             const item = state.inventory.find(candidate =>
               candidate.id === savedStation?.gearId &&
               candidate.type !== "sword" &&
-              !candidate.dirty &&
               !usedStationGear.has(candidate.id)
             );
             if (!item) {
@@ -2090,9 +2067,13 @@
 
     function renderTraining() {
       const occupiedCount = state.facility.stations.filter(station => station.gearId).length;
+      const trainerLevel = state.upgrades.autoTrainer;
       trainingStatus.innerHTML = `
         <h3>Training facility</h3>
         <p>${occupiedCount} / 3 stations loaded · ${state.facility.customersServed} customers served · ${state.facility.earnings.toLocaleString()} coins earned.</p>
+        <p>${trainerLevel > 0
+          ? `Auto Trainer level ${trainerLevel}: loads the next available item every ${autoTrainerDuration()} seconds.`
+          : "Auto Trainer is not active. Load gear manually or purchase the upgrade."}</p>
       `;
 
       trainingStations.innerHTML = state.facility.stations.map((station, index) => {
@@ -2102,7 +2083,7 @@
             <article class="training-station">
               <div class="gear-icon">➕</div>
               <h3>Station ${index + 1}</h3>
-              <p>Load clean armor or a shield below to attract a customer.</p>
+              <p>Load armor or a shield below to attract a customer.</p>
             </article>
           `;
         }
@@ -2125,8 +2106,8 @@
       const trainingItems = state.inventory
         .filter(item => item.type === "armor" || item.type === "shield")
         .sort((left, right) =>
-          Number(left.dirty || Boolean(stationForGear(left.id))) -
-            Number(right.dirty || Boolean(stationForGear(right.id))) ||
+          Number(Boolean(stationForGear(left.id))) -
+            Number(Boolean(stationForGear(right.id))) ||
           rarityInfo[right.rarity].rank - rarityInfo[left.rarity].rank
         );
       if (trainingItems.length === 0) {
@@ -2144,71 +2125,26 @@
         const stationIndex = stationForGear(item.id);
         const stationFull = !state.facility.stations.some(station => !station.gearId);
         return `
-          <article class="gear-card ${item.dirty ? "dirty" : stationIndex !== null ? "equipped" : ""}" style="--rarity:${rarityInfo[item.rarity].color}">
+          <article class="gear-card ${stationIndex !== null ? "equipped" : ""}" style="--rarity:${rarityInfo[item.rarity].color}">
             <span class="rarity">${item.rarity}</span>
             <div class="gear-icon">${equipmentIcons[item.type]}</div>
             <h3>${item.name}</h3>
             <p>A customer pays ${trainingPayment(item)} coins while using this ${item.type}.</p>
-            <span class="gear-condition ${item.dirty ? "dirty" : ""}">
-              ${item.dirty ? "Dirty" : stationIndex !== null ? `Loaded in station ${stationIndex + 1}` : "Clean and ready"}
+            <span class="gear-condition">
+              ${stationIndex !== null ? `Loaded in station ${stationIndex + 1}` : "Ready for training"}
             </span>
-            <button class="primary" type="button" data-load-gear="${item.id}" ${item.dirty || stationIndex !== null || stationFull ? "disabled" : ""}>
-              ${item.dirty
-                ? "Clean before reuse"
-                : stationIndex !== null
-                  ? "Already in training"
-                  : stationFull
-                    ? "All stations full"
-                    : "Load into open station"}
+            <button class="primary" type="button" data-load-gear="${item.id}" ${stationIndex !== null || stationFull ? "disabled" : ""}>
+              ${stationIndex !== null
+                ? "Already in training"
+                : stationFull
+                  ? "All stations full"
+                  : "Load into open station"}
             </button>
           </article>
         `;
       }).join("");
       trainingGear.querySelectorAll("[data-load-gear]").forEach(button => {
         button.addEventListener("click", () => loadTrainingGear(button.dataset.loadGear));
-      });
-    }
-
-    function renderCleaning() {
-      const dirtyItems = state.inventory
-        .filter(item => item.type !== "sword" && item.dirty)
-        .sort((left, right) => rarityInfo[right.rarity].rank - rarityInfo[left.rarity].rank);
-      const crewLevel = state.upgrades.autoClean;
-      const autoCleanSeconds = autoCleanDuration();
-      cleaningStatus.innerHTML = `
-        <h3>Cleaning station</h3>
-        <p>${dirtyItems.length} dirty item${dirtyItems.length === 1 ? "" : "s"} waiting. Select one, then drag the sponge back and forth to wash it.</p>
-        <p>${crewLevel > 0
-          ? `Auto-clean crew level ${crewLevel}: next item in ${Math.max(0, autoCleanSeconds - state.facility.autoCleanProgress)} seconds.`
-          : "No auto-clean crew hired yet."}</p>
-      `;
-
-      renderCleaningGame();
-
-      if (dirtyItems.length === 0) {
-        dirtyGear.innerHTML = `
-          <div class="empty-state">
-            <div class="icon">✨</div>
-            <h2>Everything is clean</h2>
-            <p>Armor and shields become dirty after being used for training.</p>
-          </div>
-        `;
-        return;
-      }
-      dirtyGear.innerHTML = dirtyItems.map(item => `
-        <article class="gear-card dirty" style="--rarity:${rarityInfo[item.rarity].color}">
-          <span class="rarity">${item.rarity}</span>
-          <div class="gear-icon">${equipmentIcons[item.type]}</div>
-          <h3>${item.name}</h3>
-          <span class="gear-condition dirty">Dirty</span>
-          <p>Wash this item until its cleaning meter is full.</p>
-          <button class="primary" type="button" data-start-cleaning="${item.id}">
-            ${cleaningItemId === item.id ? "Currently cleaning" : "Clean this gear"}
-          </button>
-        </article>
-      `).join("");
-      dirtyGear.querySelectorAll("[data-start-cleaning]").forEach(button => {
-        button.addEventListener("click", () => startCleaning(button.dataset.startCleaning));
       });
     }
 
@@ -2224,15 +2160,15 @@
             : "Customers are at maximum speed."
         },
         {
-          id: "autoClean",
-          icon: "🧼",
-          name: "Auto-Clean Crew",
-          description: state.upgrades.autoClean > 0
-            ? `The crew cleans one waiting item every ${autoCleanDuration()} seconds.`
-            : "Hire a crew to clean dirty gear automatically.",
-          next: state.upgrades.autoClean < 5
-            ? `Next level: one item every ${autoCleanDuration(state.upgrades.autoClean + 1)} seconds`
-            : "The cleaning crew is fully upgraded."
+          id: "autoTrainer",
+          icon: "🏋️",
+          name: "Auto Trainer",
+          description: state.upgrades.autoTrainer > 0
+            ? `Automatically loads one available item every ${autoTrainerDuration()} seconds.`
+            : "Automatically load armor or shields into open training stations.",
+          next: state.upgrades.autoTrainer < 5
+            ? `Next level: one item every ${autoTrainerDuration(state.upgrades.autoTrainer + 1)} seconds`
+            : "Auto Trainer is fully upgraded."
         },
         {
           id: "luck",
@@ -2273,7 +2209,6 @@
       renderCollection();
       renderEquipment();
       renderTraining();
-      renderCleaning();
       renderUpgrades();
     }
 
@@ -2293,14 +2228,14 @@
       return baseTrainingDuration - level;
     }
 
-    function autoCleanDuration(level = state.upgrades.autoClean) {
-      return level > 0 ? 36 - level * 6 : 0;
+    function autoTrainerDuration(level = state.upgrades.autoTrainer) {
+      return level > 0 ? 12 - level * 2 : 0;
     }
 
     function upgradeCost(upgradeId) {
       const costs = {
         customerSpeed: [250, 500, 1000, 2000, 4000],
-        autoClean: [600, 1200, 2400, 4800, 9600],
+        autoTrainer: [600, 1200, 2400, 4800, 9600],
         luck: [450, 900, 1800, 3600, 7200]
       };
       return costs[upgradeId]?.[state.upgrades[upgradeId]] ?? 0;
@@ -2318,7 +2253,7 @@
       }
       state.coins -= cost;
       state.upgrades[upgradeId] += 1;
-      state.facility.autoCleanProgress = 0;
+      state.facility.autoTrainerProgress = 0;
       saveGame();
       render();
       showToast("Upgrade purchased!");
@@ -2389,6 +2324,12 @@
     }
 
     function victoryRarities(tier) {
+      if (tier >= 7) {
+        return ["Common", "Uncommon", "Rare", "Epic", "Epic", "Legendary", "Legendary", "Legendary", "Mythic", "Mythic", "Mythic", "Mythic", "Limited", "Limited", "Limited", "Limited", "Limited"];
+      }
+      if (tier === 6) {
+        return ["Common", "Uncommon", "Rare", "Rare", "Epic", "Epic", "Epic", "Legendary", "Legendary", "Legendary", "Legendary", "Mythic", "Mythic", "Mythic", "Mythic", "Limited"];
+      }
       if (tier >= 5) {
         return ["Common", "Uncommon", "Rare", "Rare", "Epic", "Epic", "Epic", "Legendary", "Legendary", "Legendary", "Legendary"];
       }
@@ -2413,7 +2354,6 @@
         rarity,
         name: equipmentNames[type][rarity],
         value: equipmentValues[rarity][type],
-        dirty: false,
         forgeLevel: 0
       };
     }
@@ -2704,7 +2644,7 @@
     function loadTrainingGear(itemId) {
       const item = state.inventory.find(candidate => candidate.id === itemId);
       const openStation = state.facility.stations.find(station => !station.gearId);
-      if (!item || item.type === "sword" || item.dirty || stationForGear(item.id) !== null || !openStation) {
+      if (!item || item.type === "sword" || stationForGear(item.id) !== null || !openStation) {
         showToast("That gear cannot be loaded into a training station.");
         return;
       }
@@ -2724,7 +2664,7 @@
           return;
         }
         const item = state.inventory.find(candidate => candidate.id === station.gearId);
-        if (!item || item.dirty) {
+        if (!item) {
           station.gearId = null;
           station.visitorIndex = null;
           station.progress = 0;
@@ -2746,131 +2686,37 @@
           showToast(`${visitorProfiles[station.visitorIndex].name} paid ${payment} coins while training.`);
         }
         if (station.progress >= trainingDuration) {
-          item.dirty = true;
           state.facility.customersServed += 1;
+          state.inventory = state.inventory.filter(candidate => candidate.id !== item.id);
+          state.inventory.push(item);
           station.gearId = null;
           station.visitorIndex = null;
           station.progress = 0;
           station.paid = false;
         }
       });
-      const dirtyItems = state.inventory.filter(item =>
-        item.type !== "sword" &&
-        item.dirty &&
-        item.id !== cleaningItemId
-      );
-      if (state.upgrades.autoClean > 0 && dirtyItems.length > 0) {
-        state.facility.autoCleanProgress += 1;
-        if (state.facility.autoCleanProgress >= autoCleanDuration()) {
-          const cleanedItem = dirtyItems[0];
-          cleanedItem.dirty = false;
-          state.facility.autoCleanProgress = 0;
-          showToast(`Your cleaning crew cleaned ${cleanedItem.name}.`);
+      const openStation = state.facility.stations.find(station => !station.gearId);
+      const nextItem = state.inventory
+        .find(item => item.type !== "sword" && stationForGear(item.id) === null);
+      if (state.upgrades.autoTrainer > 0 && openStation && nextItem) {
+        state.facility.autoTrainerProgress += 1;
+        if (state.facility.autoTrainerProgress >= autoTrainerDuration()) {
+          openStation.gearId = nextItem.id;
+          openStation.visitorIndex = null;
+          openStation.progress = 0;
+          openStation.paid = false;
+          state.facility.autoTrainerProgress = 0;
+          showToast(`Auto Trainer loaded ${nextItem.name}.`);
         }
       } else {
-        state.facility.autoCleanProgress = 0;
+        state.facility.autoTrainerProgress = 0;
       }
       saveGame();
       renderStats();
       renderHeroPacks();
       renderFightPacks();
       renderTraining();
-      renderCleaning();
       renderUpgrades();
-    }
-
-    function startCleaning(itemId) {
-      const item = state.inventory.find(candidate => candidate.id === itemId);
-      if (!item || item.type === "sword" || !item.dirty) {
-        showToast("That item does not need cleaning.");
-        return;
-      }
-      cleaningItemId = item.id;
-      cleaningProgress = 0;
-      cleaningDragging = false;
-      cleaningLastX = null;
-      renderCleaning();
-    }
-
-    function renderCleaningGame() {
-      const item = state.inventory.find(candidate => candidate.id === cleaningItemId && candidate.dirty);
-      if (!item) {
-        cleaningItemId = null;
-        cleaningProgress = 0;
-        cleaningDragging = false;
-        cleaningLastX = null;
-        cleaningGame.hidden = true;
-        cleaningGame.innerHTML = "";
-        return;
-      }
-      cleaningGame.hidden = false;
-      cleaningGame.innerHTML = `
-        <div class="cleaning-game-content">
-          <span class="rarity" style="--rarity:${rarityInfo[item.rarity].color}">${item.rarity}</span>
-          <h3>Cleaning ${item.name}</h3>
-          <p>Hold and drag the sponge from side to side across the gear.</p>
-          <div class="wash-area" data-wash-area>
-            <div class="gear-icon">${equipmentIcons[item.type]}</div>
-            <div class="wash-sponge">🧽</div>
-          </div>
-          <div class="wash-progress" aria-label="Cleaning progress">
-            <span style="--wash-progress:${Math.min(100, cleaningProgress / cleaningTarget * 100)}%"></span>
-          </div>
-          <strong data-wash-label>${Math.floor(cleaningProgress / cleaningTarget * 100)}% clean</strong>
-        </div>
-      `;
-      const washArea = cleaningGame.querySelector("[data-wash-area]");
-      washArea.addEventListener("pointerdown", beginWashing);
-      washArea.addEventListener("pointermove", washGear);
-      washArea.addEventListener("pointerup", stopWashing);
-      washArea.addEventListener("pointercancel", stopWashing);
-    }
-
-    function beginWashing(event) {
-      cleaningDragging = true;
-      cleaningLastX = event.clientX;
-      event.currentTarget.classList.add("washing");
-      event.currentTarget.setPointerCapture?.(event.pointerId);
-    }
-
-    function stopWashing(event) {
-      cleaningDragging = false;
-      cleaningLastX = null;
-      event.currentTarget.classList.remove("washing");
-    }
-
-    function washGear(event) {
-      if (!cleaningDragging || cleaningLastX === null) {
-        return;
-      }
-      const item = state.inventory.find(candidate => candidate.id === cleaningItemId && candidate.dirty);
-      if (!item) {
-        return;
-      }
-      const distance = Math.min(80, Math.abs(event.clientX - cleaningLastX));
-      cleaningLastX = event.clientX;
-      cleaningProgress = Math.min(cleaningTarget, cleaningProgress + distance);
-      const washArea = event.currentTarget;
-      const bounds = washArea.getBoundingClientRect();
-      const spongeX = Math.min(100, Math.max(0, (event.clientX - bounds.left) / bounds.width * 100));
-      washArea.style.setProperty("--sponge-x", `${spongeX}%`);
-      cleaningGame.querySelector(".wash-progress span").style.setProperty(
-        "--wash-progress",
-        `${cleaningProgress / cleaningTarget * 100}%`
-      );
-      cleaningGame.querySelector("[data-wash-label]").textContent =
-        `${Math.floor(cleaningProgress / cleaningTarget * 100)}% clean`;
-      if (cleaningProgress >= cleaningTarget) {
-        item.dirty = false;
-        cleaningItemId = null;
-        cleaningProgress = 0;
-        cleaningDragging = false;
-        cleaningLastX = null;
-        saveGame();
-        renderTraining();
-        renderCleaning();
-        showToast(`${item.name} is spotless and ready for customers.`);
-      }
     }
 
     function toggleEquipment(itemId) {
