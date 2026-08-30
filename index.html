@@ -601,6 +601,42 @@
       text-transform: uppercase;
     }
 
+    .dug-reward {
+      display: grid;
+      grid-template-columns: auto 1fr auto;
+      align-items: center;
+      gap: 1rem;
+      margin: 1rem 0;
+      border-color: #f472b6;
+      background:
+        radial-gradient(circle at 10% 50%, rgb(244 114 182 / 20%), transparent 12rem),
+        linear-gradient(145deg, #21131d, #0d0e14);
+    }
+
+    .dug-reward.locked {
+      border-color: #423c4a;
+      filter: grayscale(0.8);
+    }
+
+    .dug-image {
+      width: 5.5rem;
+      height: 5.5rem;
+      object-fit: contain;
+      filter: drop-shadow(0 0.6rem 0.8rem rgb(0 0 0 / 45%));
+    }
+
+    .gear-card .dug-image {
+      display: block;
+      width: 7rem;
+      height: 7rem;
+      margin: 0.5rem auto;
+    }
+
+    .dug-reward .primary {
+      width: auto;
+      min-width: 9rem;
+    }
+
     .upgrade-level {
       margin: 0.6rem 0;
       color: #fb923c;
@@ -1606,6 +1642,19 @@
         flex-direction: column;
       }
 
+      .dug-reward {
+        grid-template-columns: 1fr;
+        text-align: center;
+      }
+
+      .dug-image {
+        margin: 0 auto;
+      }
+
+      .dug-reward .primary {
+        width: 100%;
+      }
+
       .battle-actions {
         grid-template-columns: 1fr;
       }
@@ -1713,6 +1762,7 @@
           <p>Discovered equipment stays recorded even after it is forged or used.</p>
         </div>
         <div id="equipmentCollectionSummary" class="collection-summary"></div>
+        <div id="dugReward" class="facility-panel dug-reward"></div>
         <div id="equipmentCollection" class="gear-grid"></div>
       </section>
 
@@ -1824,7 +1874,8 @@
       Epic: { color: "#c084fc", rank: 3 },
       Legendary: { color: "#fbbf24", rank: 4 },
       Mythic: { color: "#fb7185", rank: 5 },
-      Limited: { color: "#22d3ee", rank: 6 }
+      Limited: { color: "#22d3ee", rank: 6 },
+      Secret: { color: "#f472b6", rank: 7 }
     };
 
     const heroDefinitions = [
@@ -2388,7 +2439,8 @@
         Epic: ["Flame Sword", "Storm Katana", "Royal Claymore"],
         Legendary: ["Dragon Slayer", "Sunforged Blade", "Abyss Trident"],
         Mythic: ["Phoenix Edge", "Titan Breaker", "Fatecutter"],
-        Limited: ["Infinity Saber", "Prismatic Edge", "Anniversary Blade"]
+        Limited: ["Infinity Saber", "Prismatic Edge", "Anniversary Blade"],
+        Secret: ["Dug Sword"]
       },
       armor: {
         Common: ["Cloth Armor", "Padded Vest", "Recruit Uniform"],
@@ -2419,7 +2471,8 @@
       Epic: { sword: 16, armor: 55, shield: 11 },
       Legendary: { sword: 25, armor: 85, shield: 17 },
       Mythic: { sword: 40, armor: 125, shield: 25 },
-      Limited: { sword: 60, armor: 180, shield: 36 }
+      Limited: { sword: 60, armor: 180, shield: 36 },
+      Secret: { sword: 100 }
     };
     const trainingPayments = {
       Common: 30,
@@ -2431,7 +2484,7 @@
       Limited: 3000
     };
     const baseTrainingDuration = 12;
-    const rarityOrder = Object.keys(rarityInfo);
+    const rarityOrder = Object.keys(rarityInfo).filter(rarity => rarity !== "Secret");
     const visitorProfiles = [
       { name: "Maya", skin: "#d49a73", hair: "#2b1a13", shirt: "#be123c" },
       { name: "Leo", skin: "#8d573f", hair: "#111827", shirt: "#0369a1" },
@@ -2516,6 +2569,7 @@
     const collectionSummary = document.querySelector("#collectionSummary");
     const heroCollection = document.querySelector("#heroCollection");
     const equipmentCollectionSummary = document.querySelector("#equipmentCollectionSummary");
+    const dugReward = document.querySelector("#dugReward");
     const equipmentCollection = document.querySelector("#equipmentCollection");
     const activeLoadout = document.querySelector("#activeLoadout");
     const swordMerge = document.querySelector("#swordMerge");
@@ -2730,6 +2784,24 @@
 
     function equipmentCollectionKey(type, rarity, name) {
       return `${type}:${rarity}:${name}`;
+    }
+
+    function normalEquipmentCollection() {
+      return Object.keys(equipmentNames).flatMap(type =>
+        rarityOrder.flatMap(rarity =>
+          equipmentNames[type][rarity].map(name => ({
+            type,
+            rarity,
+            name,
+            discovered: Boolean(state.discoveredEquipment[equipmentCollectionKey(type, rarity, name)])
+          }))
+        )
+      );
+    }
+
+    function fullCollectionCompleted() {
+      return heroDefinitions.every(hero => state.heroes[hero.id]) &&
+        normalEquipmentCollection().every(item => item.discovered);
     }
 
     function heroPortrait(hero, missing = false) {
@@ -3117,16 +3189,7 @@
         `;
       }).join("");
 
-      const allEquipment = Object.keys(equipmentNames).flatMap(type =>
-        rarityOrder.flatMap(rarity =>
-          equipmentNames[type][rarity].map(name => ({
-            type,
-            rarity,
-            name,
-            discovered: Boolean(state.discoveredEquipment[equipmentCollectionKey(type, rarity, name)])
-          }))
-        )
-      );
+      const allEquipment = normalEquipmentCollection();
       const discoveredCount = allEquipment.filter(item => item.discovered).length;
       equipmentCollectionSummary.innerHTML = `
         <div>
@@ -3135,6 +3198,26 @@
         </div>
         <span>${allEquipment.length - discoveredCount} still missing</span>
       `;
+      const dugKey = equipmentCollectionKey("sword", "Secret", "Dug Sword");
+      const dugClaimed = Boolean(state.discoveredEquipment[dugKey]);
+      const collectionComplete = ownedCount === heroDefinitions.length && discoveredCount === allEquipment.length;
+      dugReward.classList.toggle("locked", !collectionComplete);
+      dugReward.innerHTML = `
+        <img class="dug-image" src="https://wengier.com/InfiniteGummies/Dug.png" alt="Dug">
+        <div>
+          <span class="rarity" style="--rarity:${rarityInfo.Secret.color}">Secret</span>
+          <h3>Dug Sword</h3>
+          <p>${dugClaimed
+            ? "Secret collection reward claimed."
+            : collectionComplete
+              ? "Collection complete! Your Secret reward is ready."
+              : "Collect every fighter and discover all normal gear to unlock this Secret sword."}</p>
+        </div>
+        <button class="primary" type="button" data-claim-dug ${!collectionComplete || dugClaimed ? "disabled" : ""}>
+          ${dugClaimed ? "Claimed" : collectionComplete ? "Claim Dug Sword" : "Collection incomplete"}
+        </button>
+      `;
+      dugReward.querySelector("[data-claim-dug]").addEventListener("click", claimDugSword);
       allEquipment.sort((left, right) =>
         Number(right.discovered) - Number(left.discovered) ||
         rarityInfo[left.rarity].rank - rarityInfo[right.rarity].rank ||
@@ -3148,6 +3231,31 @@
           <p>${item.discovered ? "Discovered" : "Not discovered"}</p>
         </article>
       `).join("");
+    }
+
+    function claimDugSword() {
+      const key = equipmentCollectionKey("sword", "Secret", "Dug Sword");
+      if (!fullCollectionCompleted()) {
+        showToast("Complete the full fighter and gear collection first.");
+        return;
+      }
+      if (state.discoveredEquipment[key]) {
+        showToast("The Dug Sword has already been claimed.");
+        return;
+      }
+      state.inventory.push({
+        id: `dug-sword-${Date.now()}`,
+        type: "sword",
+        rarity: "Secret",
+        name: "Dug Sword",
+        value: equipmentValues.Secret.sword,
+        forgeLevel: 0
+      });
+      state.discoveredEquipment[key] = true;
+      state.stats.gearLooted += 1;
+      saveGame();
+      render();
+      showToast("Secret unlocked! The Dug Sword has joined your armory.");
     }
 
     function itemEquippedHero(itemId) {
@@ -3216,7 +3324,9 @@
         return `
           <article class="gear-card rarity-${item.rarity.toLowerCase()} ${equippedHero ? "equipped" : ""}" style="--rarity:${rarityInfo[item.rarity].color}">
             <span class="rarity">${item.rarity}</span>
-            <div class="gear-icon">${equipmentIcons[item.type]}</div>
+            ${item.name === "Dug Sword"
+              ? '<img class="dug-image" src="https://wengier.com/InfiniteGummies/Dug.png" alt="Dug">'
+              : `<div class="gear-icon">${equipmentIcons[item.type]}</div>`}
             <h3>${swordDisplayName(item)}</h3>
             <p>+${item.value} ${equipmentStat[item.type]}</p>
             <p>${equippedHero ? `Equipped to ${equippedHero.name}` : "Not equipped"}</p>
@@ -4060,8 +4170,8 @@
         showToast("Find another sword before forging.");
         return;
       }
-      const bestSword = swords[0];
-      const sacrifices = swords.slice(1);
+      const bestSword = swords.find(sword => sword.rarity === "Secret") || swords[0];
+      const sacrifices = swords.filter(sword => sword.id !== bestSword.id);
       const consumedIds = new Set(sacrifices.map(sword => sword.id));
       const forgeBonus = Math.max(
         1,
