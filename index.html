@@ -403,6 +403,56 @@
       margin-top: 0.5rem;
     }
 
+    .hero-portrait {
+      display: block;
+      width: min(10rem, 100%);
+      height: auto;
+      margin: 0.7rem auto;
+      border: 1px solid color-mix(in srgb, var(--rarity, #fb923c) 65%, #3f3f46);
+      border-radius: 0.8rem;
+      background: #18181f;
+    }
+
+    .hero-portrait.missing {
+      opacity: 0.28;
+      filter: grayscale(1) brightness(0.5);
+    }
+
+    .battle-side .hero-portrait {
+      width: min(7rem, 100%);
+      margin: 0 auto 0.45rem;
+    }
+
+    .reveal-face .hero-portrait {
+      width: 10rem;
+      margin: 0.5rem auto;
+    }
+
+    .collection-summary {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1rem;
+      margin-bottom: 1rem;
+      padding: 1rem;
+      border: 1px solid #3f3f46;
+      border-radius: 0.8rem;
+      background: #111218;
+    }
+
+    .collection-summary strong {
+      color: #fb923c;
+      font-size: 1.5rem;
+    }
+
+    .collection-card.missing {
+      border-top-color: #52525b;
+    }
+
+    .collection-card.missing h3 {
+      color: #777480;
+    }
+
     .equipment-list {
       display: grid;
       gap: 0.35rem;
@@ -774,6 +824,7 @@
     <nav aria-label="Game sections">
       <button class="active" type="button" data-screen="packs">Packs</button>
       <button type="button" data-screen="roster">Fighters</button>
+      <button type="button" data-screen="collection">Collection</button>
       <button type="button" data-screen="equipment">Equipment</button>
     </nav>
 
@@ -808,6 +859,15 @@
         <div id="heroRoster" class="hero-grid"></div>
       </section>
 
+      <section id="collection" class="screen">
+        <div class="section-head">
+          <h2>Hero collection</h2>
+          <p>See every available hero. Heroes you own appear first.</p>
+        </div>
+        <div id="collectionSummary" class="collection-summary"></div>
+        <div id="heroCollection" class="hero-grid"></div>
+      </section>
+
       <section id="equipment" class="screen">
         <div class="section-head">
           <h2>Equipment</h2>
@@ -831,6 +891,7 @@
         <li><strong>During battle:</strong> use Attack for reliable damage, Power Strike for risky heavy damage, or Guard for light damage and protection.</li>
         <li><strong>Winning:</strong> earns more coins and stronger loot. Losing still gives basic equipment and a few coins.</li>
         <li><strong>Fighters:</strong> choose which hero enters battles and see their total stats.</li>
+        <li><strong>Collection:</strong> track every available hero, with collected heroes shown first.</li>
         <li><strong>Equipment:</strong> equip one sword, one armor, and one shield to each hero. Gear can be moved between heroes.</li>
         <li><strong>Swords</strong> add attack, <strong>armor</strong> adds health, and <strong>shields</strong> add defense.</li>
       </ul>
@@ -856,15 +917,66 @@
     };
 
     const heroDefinitions = [
-      { id: "rookie", name: "Rookie Rex", icon: "🥊", rarity: "Common", attack: 12, health: 70, defense: 4 },
-      { id: "blade", name: "Blade Bella", icon: "🤺", rarity: "Common", attack: 15, health: 62, defense: 3 },
-      { id: "guardian", name: "Guardian Gus", icon: "🛡️", rarity: "Uncommon", attack: 14, health: 85, defense: 8 },
-      { id: "archer", name: "Arrow Ava", icon: "🏹", rarity: "Uncommon", attack: 19, health: 68, defense: 5 },
-      { id: "mage", name: "Mystic Max", icon: "🧙", rarity: "Rare", attack: 25, health: 72, defense: 6 },
-      { id: "ninja", name: "Night Ninja", icon: "🥷", rarity: "Rare", attack: 28, health: 67, defense: 5 },
-      { id: "valkyrie", name: "Storm Valkyrie", icon: "⚡", rarity: "Epic", attack: 34, health: 92, defense: 9 },
-      { id: "paladin", name: "Golden Paladin", icon: "👑", rarity: "Epic", attack: 30, health: 110, defense: 13 },
-      { id: "dragonKnight", name: "Dragon Knight", icon: "🐲", rarity: "Legendary", attack: 43, health: 125, defense: 15 }
+      {
+        id: "rookie", name: "Rookie Rex", rarity: "Common", attack: 12, health: 70, defense: 4,
+        skin: "#b97850", hair: "#342018", outfit: "#b91c1c", accent: "#fb923c", hairStyle: "short"
+      },
+      {
+        id: "blade", name: "Blade Bella", rarity: "Common", attack: 15, health: 62, defense: 3,
+        skin: "#edb98a", hair: "#24170f", outfit: "#374151", accent: "#ef4444", hairStyle: "long"
+      },
+      {
+        id: "brawler", name: "Brawler Bo", rarity: "Common", attack: 16, health: 74, defense: 3,
+        skin: "#8f563b", hair: "#111827", outfit: "#7c2d12", accent: "#fbbf24", hairStyle: "mohawk"
+      },
+      {
+        id: "guardian", name: "Guardian Gus", rarity: "Uncommon", attack: 14, health: 85, defense: 8,
+        skin: "#d69b72", hair: "#6b3f24", outfit: "#1d4ed8", accent: "#93c5fd", hairStyle: "short"
+      },
+      {
+        id: "archer", name: "Arrow Ava", rarity: "Uncommon", attack: 19, health: 68, defense: 5,
+        skin: "#9b6248", hair: "#211812", outfit: "#166534", accent: "#86efac", hairStyle: "long"
+      },
+      {
+        id: "monk", name: "Mountain Monk", rarity: "Uncommon", attack: 18, health: 82, defense: 7,
+        skin: "#c9875f", hair: "#3f2b20", outfit: "#b45309", accent: "#fde68a", hairStyle: "bald"
+      },
+      {
+        id: "mage", name: "Mystic Max", rarity: "Rare", attack: 25, health: 72, defense: 6,
+        skin: "#e0a77e", hair: "#d1d5db", outfit: "#6d28d9", accent: "#c4b5fd", hairStyle: "long"
+      },
+      {
+        id: "ninja", name: "Night Ninja", rarity: "Rare", attack: 28, health: 67, defense: 5,
+        skin: "#c17f59", hair: "#111827", outfit: "#171717", accent: "#a855f7", hairStyle: "hood"
+      },
+      {
+        id: "ranger", name: "Desert Ranger", rarity: "Rare", attack: 27, health: 76, defense: 6,
+        skin: "#7c4933", hair: "#2b1a13", outfit: "#92400e", accent: "#fcd34d", hairStyle: "short"
+      },
+      {
+        id: "valkyrie", name: "Storm Valkyrie", rarity: "Epic", attack: 34, health: 92, defense: 9,
+        skin: "#f0bd94", hair: "#f4e2bb", outfit: "#1e3a8a", accent: "#60a5fa", hairStyle: "long"
+      },
+      {
+        id: "paladin", name: "Golden Paladin", rarity: "Epic", attack: 30, health: 110, defense: 13,
+        skin: "#9f6448", hair: "#271a14", outfit: "#854d0e", accent: "#facc15", hairStyle: "helmet"
+      },
+      {
+        id: "cyber", name: "Cyber Sam", rarity: "Epic", attack: 38, health: 84, defense: 10,
+        skin: "#d18b63", hair: "#0f172a", outfit: "#0e7490", accent: "#22d3ee", hairStyle: "mohawk"
+      },
+      {
+        id: "dragonKnight", name: "Dragon Knight", rarity: "Legendary", attack: 43, health: 125, defense: 15,
+        skin: "#8d573f", hair: "#171717", outfit: "#7f1d1d", accent: "#f97316", hairStyle: "helmet"
+      },
+      {
+        id: "frostQueen", name: "Frost Queen", rarity: "Legendary", attack: 47, health: 108, defense: 14,
+        skin: "#e6b18a", hair: "#e0f2fe", outfit: "#075985", accent: "#7dd3fc", hairStyle: "long"
+      },
+      {
+        id: "sunChampion", name: "Sun Champion", rarity: "Legendary", attack: 45, health: 118, defense: 16,
+        skin: "#70402f", hair: "#1c1917", outfit: "#9a3412", accent: "#fbbf24", hairStyle: "short"
+      }
     ];
 
     const heroPackDefinitions = [
@@ -883,6 +995,22 @@
         cost: 450,
         description: "Improved odds for Rare and Epic heroes, with a chance at Legendary.",
         rarities: ["Uncommon", "Rare", "Rare", "Rare", "Epic", "Epic", "Legendary"]
+      },
+      {
+        id: "champion",
+        name: "Champion Hero Pack",
+        icon: "🏆",
+        cost: 900,
+        description: "Only Rare, Epic, and Legendary heroes can appear.",
+        rarities: ["Rare", "Rare", "Epic", "Epic", "Epic", "Legendary"]
+      },
+      {
+        id: "legend",
+        name: "Legend Hero Pack",
+        icon: "🌟",
+        cost: 1800,
+        description: "The strongest Hero Pack, packed with Epic and Legendary fighters.",
+        rarities: ["Epic", "Epic", "Epic", "Legendary", "Legendary"]
       }
     ];
 
@@ -895,7 +1023,13 @@
       { id: "sorcerer", name: "Dark Sorcerer", icon: "🧛", tier: 2, power: 145 },
       { id: "golem", name: "Iron Golem", icon: "🗿", tier: 3, power: 170 },
       { id: "demon", name: "Flame Demon", icon: "😈", tier: 3, power: 195 },
-      { id: "dragon", name: "Ancient Dragon", icon: "🐉", tier: 3, power: 225 }
+      { id: "dragon", name: "Ancient Dragon", icon: "🐉", tier: 3, power: 225 },
+      { id: "lich", name: "Frozen Lich", icon: "🧟", tier: 4, power: 265 },
+      { id: "hydra", name: "Venom Hydra", icon: "🐍", tier: 4, power: 290 },
+      { id: "warMachine", name: "War Machine", icon: "🤖", tier: 4, power: 315 },
+      { id: "voidTitan", name: "Void Titan", icon: "🌑", tier: 5, power: 350 },
+      { id: "stormLord", name: "Storm Lord", icon: "🌪️", tier: 5, power: 385 },
+      { id: "worldEater", name: "World Eater", icon: "☄️", tier: 5, power: 420 }
     ];
 
     const fightPackDefinitions = [
@@ -927,7 +1061,27 @@
         tier: 3,
         winCoins: 650,
         loseCoins: 45,
-        description: "The strongest monsters and the best equipment rewards."
+        description: "Powerful monsters with Epic or Legendary victory loot."
+      },
+      {
+        id: "hauntedKeep",
+        name: "Haunted Keep Fight Pack",
+        icon: "👻",
+        cost: 600,
+        tier: 4,
+        winCoins: 1600,
+        loseCoins: 80,
+        description: "End-game monsters with a high chance of Legendary loot."
+      },
+      {
+        id: "celestialRift",
+        name: "Celestial Rift Fight Pack",
+        icon: "🌀",
+        cost: 1400,
+        tier: 5,
+        winCoins: 4000,
+        loseCoins: 150,
+        description: "The ultimate challenge. Victories always award Legendary equipment."
       }
     ];
 
@@ -978,6 +1132,8 @@
     const heroPacks = document.querySelector("#heroPacks");
     const fightPacks = document.querySelector("#fightPacks");
     const heroRoster = document.querySelector("#heroRoster");
+    const collectionSummary = document.querySelector("#collectionSummary");
+    const heroCollection = document.querySelector("#heroCollection");
     const activeLoadout = document.querySelector("#activeLoadout");
     const gearInventory = document.querySelector("#gearInventory");
     const resultModal = document.querySelector("#resultModal");
@@ -1044,6 +1200,56 @@
       return heroDefinitions.find(hero => hero.id === heroId);
     }
 
+    function heroPortrait(hero, missing = false) {
+      const hairBack = hero.hairStyle === "long"
+        ? `<path d="M29 48c0-25 13-38 31-38s31 13 31 38v38H29Z" fill="${hero.hair}"/>`
+        : "";
+      const hairFront = {
+        bald: `<path d="M43 22q17-10 34 0" fill="none" stroke="${hero.hair}" stroke-width="3"/>`,
+        helmet: `
+          <path d="M31 43c1-23 12-34 29-34s29 11 30 34L79 31H42Z" fill="${hero.accent}"/>
+          <path d="M39 18h42l-5 13H44Z" fill="${hero.outfit}"/>
+          <path d="M57 8h7v27h-7Z" fill="${hero.accent}"/>
+        `,
+        hood: `
+          <path d="M27 59c0-34 13-50 33-50s33 16 33 50l-12 23H39Z" fill="${hero.hair}"/>
+          <path d="M38 44q22-25 44 0l-6-19H44Z" fill="${hero.outfit}"/>
+        `,
+        long: `<path d="M34 36q7-27 27-27 22 0 28 30-10-9-16-18-17 13-22 20Z" fill="${hero.hair}"/>`,
+        mohawk: `
+          <path d="M47 24Q56 2 64 5q11 3 13 23Z" fill="${hero.hair}"/>
+          <path d="M36 35q8-23 25-23 18 0 25 23-14-8-25-11-11 3-25 11Z" fill="${hero.hair}"/>
+        `,
+        short: `<path d="M34 36q7-27 27-27 22 0 27 29-12-11-28-13-12 2-26 11Z" fill="${hero.hair}"/>`
+      }[hero.hairStyle];
+      return `
+        <svg
+          class="hero-portrait ${missing ? "missing" : ""}"
+          style="--rarity:${rarityInfo[hero.rarity].color}"
+          viewBox="0 0 120 140"
+          role="img"
+          aria-label="${missing ? `Missing hero ${hero.name}` : hero.name}"
+        >
+          <rect width="120" height="140" rx="12" fill="#17171f"/>
+          <circle cx="60" cy="52" r="48" fill="${hero.accent}" opacity="0.16"/>
+          ${hairBack}
+          <path d="M13 140q4-45 47-45t47 45Z" fill="${hero.outfit}"/>
+          <path d="M47 91h26v23H47Z" fill="${hero.skin}"/>
+          <circle cx="34" cy="54" r="7" fill="${hero.skin}"/>
+          <circle cx="86" cy="54" r="7" fill="${hero.skin}"/>
+          <rect x="34" y="17" width="52" height="78" rx="25" fill="${hero.skin}"/>
+          ${hairFront}
+          <path d="M43 49q6-4 12 0M65 49q6-4 12 0" fill="none" stroke="#3f2a22" stroke-width="2" stroke-linecap="round"/>
+          <circle cx="50" cy="56" r="2.4" fill="#171717"/>
+          <circle cx="71" cy="56" r="2.4" fill="#171717"/>
+          <path d="M61 58l-2 13h5" fill="none" stroke="#8d573f" stroke-width="1.8" stroke-linecap="round"/>
+          <path d="M50 79q11 8 22 0" fill="none" stroke="#7f1d1d" stroke-width="2.5" stroke-linecap="round"/>
+          <path d="M39 105l21 17 21-17 13 35H26Z" fill="${hero.accent}" opacity="0.78"/>
+          <path d="M52 96l8 26 8-26" fill="#f8fafc" opacity="0.82"/>
+        </svg>
+      `;
+    }
+
     function equippedItem(heroId, type) {
       const itemId = state.equipment[heroId]?.[type];
       return state.inventory.find(item => item.id === itemId);
@@ -1078,18 +1284,23 @@
     }
 
     function renderHeroPacks() {
-      heroPacks.innerHTML = heroPackDefinitions.map(pack => `
-        <article class="pack-card hero-pack">
-          <span class="pack-label">Hero Pack</span>
-          <div class="pack-icon">${pack.icon}</div>
-          <h3>${pack.name}</h3>
-          <p>${pack.description}</p>
-          <p><strong>Possible:</strong> ${[...new Set(pack.rarities)].join(", ")}</p>
-          <button class="primary" type="button" data-hero-pack="${pack.id}" ${state.coins < pack.cost ? "disabled" : ""}>
-            Open · ${pack.cost.toLocaleString()} coins
-          </button>
-        </article>
-      `).join("");
+      heroPacks.innerHTML = heroPackDefinitions.map(pack => {
+        const possibleHeroes = heroDefinitions.filter(hero => pack.rarities.includes(hero.rarity));
+        const collectedCount = possibleHeroes.filter(hero => state.heroes[hero.id]).length;
+        return `
+          <article class="pack-card hero-pack">
+            <span class="pack-label">Hero Pack</span>
+            <div class="pack-icon">${pack.icon}</div>
+            <h3>${pack.name}</h3>
+            <p>${pack.description}</p>
+            <p><strong>Possible:</strong> ${[...new Set(pack.rarities)].join(", ")}</p>
+            <p><strong>Collection:</strong> ${collectedCount} / ${possibleHeroes.length} possible heroes owned</p>
+            <button class="primary" type="button" data-hero-pack="${pack.id}" ${state.coins < pack.cost ? "disabled" : ""}>
+              Open · ${pack.cost.toLocaleString()} coins
+            </button>
+          </article>
+        `;
+      }).join("");
       heroPacks.querySelectorAll("[data-hero-pack]").forEach(button => {
         button.addEventListener("click", () => openHeroPack(button.dataset.heroPack));
       });
@@ -1129,7 +1340,7 @@
         return `
           <article class="hero-card ${hero.id === state.activeHeroId ? "active" : ""}" style="--rarity:${rarityInfo[hero.rarity].color}">
             <span class="rarity">${hero.rarity}</span>
-            <div class="hero-icon">${hero.icon}</div>
+            ${heroPortrait(hero)}
             <h3>${hero.name}</h3>
             <p>Level ${level} · Power ${Math.round(heroPower(hero.id))}</p>
             <div class="stat-row">
@@ -1154,6 +1365,39 @@
       });
     }
 
+    function renderCollection() {
+      const ownedCount = heroDefinitions.filter(hero => state.heroes[hero.id]).length;
+      collectionSummary.innerHTML = `
+        <div>
+          <strong>${ownedCount} / ${heroDefinitions.length}</strong>
+          <div>Heroes collected</div>
+        </div>
+        <span>${heroDefinitions.length - ownedCount} still missing</span>
+      `;
+      const sortedHeroes = [...heroDefinitions].sort((left, right) => {
+        const ownershipDifference = Number(Boolean(state.heroes[right.id])) - Number(Boolean(state.heroes[left.id]));
+        return ownershipDifference ||
+          rarityInfo[left.rarity].rank - rarityInfo[right.rarity].rank ||
+          left.name.localeCompare(right.name);
+      });
+      heroCollection.innerHTML = sortedHeroes.map(hero => {
+        const level = state.heroes[hero.id] || 0;
+        const packNames = heroPackDefinitions
+          .filter(pack => pack.rarities.includes(hero.rarity))
+          .map(pack => pack.name.replace(" Hero Pack", ""))
+          .join(", ");
+        return `
+          <article class="hero-card collection-card ${level ? "" : "missing"}" style="--rarity:${rarityInfo[hero.rarity].color}">
+            <span class="rarity">${hero.rarity}</span>
+            ${heroPortrait(hero, !level)}
+            <h3>${hero.name}</h3>
+            <p>${level ? `Collected · Level ${level}` : "Not collected"}</p>
+            <p>Available in: ${packNames}</p>
+          </article>
+        `;
+      }).join("");
+    }
+
     function itemEquippedHero(itemId) {
       return Object.keys(state.equipment).find(heroId =>
         Object.values(state.equipment[heroId]).includes(itemId)
@@ -1165,7 +1409,7 @@
       const stats = heroStats(hero.id);
       activeLoadout.innerHTML = `
         <div>
-          <h3>${hero.icon} Equipping ${hero.name}</h3>
+          <h3>Equipping ${hero.name}</h3>
           <p>Level ${state.heroes[hero.id]} · ${stats.attack} attack · ${stats.health} health · ${stats.defense} defense</p>
         </div>
         <button class="secondary" type="button" data-go-roster>Change fighter</button>
@@ -1213,6 +1457,7 @@
       renderHeroPacks();
       renderFightPacks();
       renderRoster();
+      renderCollection();
       renderEquipment();
     }
 
@@ -1270,7 +1515,7 @@
         pack.name,
         `
           <span class="rarity" style="--rarity:${rarityInfo[hero.rarity].color}">${hero.rarity} hero</span>
-          <div class="battle-icon">${hero.icon}</div>
+          ${heroPortrait(hero)}
           <h3>${hero.name}</h3>
           <p>${alreadyOwned
             ? `Duplicate! Upgraded to level ${state.heroes[hero.id]}.`
@@ -1282,6 +1527,12 @@
     }
 
     function victoryRarities(tier) {
+      if (tier >= 5) {
+        return ["Legendary"];
+      }
+      if (tier === 4) {
+        return ["Epic", "Epic", "Legendary", "Legendary"];
+      }
       if (tier === 3) {
         return ["Epic", "Epic", "Epic", "Legendary"];
       }
@@ -1365,7 +1616,7 @@
           <h2 id="resultTitle">Fight!</h2>
           <div class="battle-versus">
             <div class="battle-side">
-              <div class="battle-icon">${battle.hero.icon}</div>
+              ${heroPortrait(battle.hero)}
               <strong>${battle.hero.name}</strong>
               <small>${heroHealth} / ${battle.heroStats.health} health</small>
               <div class="health-bar"><span style="width:${heroHealth / battle.heroStats.health * 100}%"></span></div>
@@ -1487,7 +1738,7 @@
         <div class="battle-result ${won ? "win" : "loss"}">
           <div class="battle-versus">
             <div class="battle-side">
-              <div class="battle-icon">${battle.hero.icon}</div>
+              ${heroPortrait(battle.hero)}
               <strong>${battle.hero.name}</strong>
               <small>${Math.max(0, battle.heroHp)} health left</small>
             </div>
