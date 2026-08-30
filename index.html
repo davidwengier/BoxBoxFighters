@@ -459,6 +459,79 @@
       color: #f87171;
     }
 
+    .pack-opening {
+      text-align: center;
+      perspective: 70rem;
+    }
+
+    .pack-opening h2 {
+      margin-bottom: 1rem;
+    }
+
+    .reveal-card {
+      position: relative;
+      width: min(17rem, 100%);
+      min-height: 22rem;
+      margin: 0 auto 1rem;
+      border: 2px solid #7c2d12;
+      border-radius: 0.9rem;
+      background:
+        repeating-linear-gradient(45deg, transparent 0 0.8rem, rgb(255 255 255 / 5%) 0.8rem 1.6rem),
+        linear-gradient(145deg, #991b1b, #111827 60%, #c2410c);
+      box-shadow: 0 1rem 2.5rem rgb(0 0 0 / 45%);
+      transform-style: preserve-3d;
+      transition: transform 620ms cubic-bezier(0.2, 0.75, 0.2, 1);
+    }
+
+    .reveal-card::before {
+      position: absolute;
+      inset: 0;
+      display: grid;
+      place-items: center;
+      content: "🥊";
+      font-size: 5rem;
+      backface-visibility: hidden;
+    }
+
+    .reveal-card.revealed {
+      transform: rotateY(180deg);
+    }
+
+    .reveal-face {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 1rem;
+      border: 2px solid var(--rarity, #fb923c);
+      border-radius: 0.8rem;
+      background: linear-gradient(155deg, #22222c, #101118);
+      backface-visibility: hidden;
+      flex-direction: column;
+      transform: rotateY(180deg);
+    }
+
+    .reveal-face .battle-icon {
+      margin: 0.8rem 0;
+      font-size: 6rem;
+    }
+
+    .reveal-face h3 {
+      margin: 0.25rem 0;
+      font-family: Georgia, serif;
+      font-size: 1.6rem;
+    }
+
+    .reveal-face p {
+      margin: 0.35rem 0;
+      color: #aaa6b4;
+    }
+
+    .battle-arena {
+      text-align: center;
+    }
+
     .battle-versus {
       display: grid;
       grid-template-columns: 1fr auto 1fr;
@@ -481,6 +554,69 @@
     .battle-side small {
       margin-top: 0.25rem;
       color: #a1a1aa;
+    }
+
+    .health-bar {
+      height: 0.7rem;
+      margin-top: 0.6rem;
+      overflow: hidden;
+      border-radius: 999px;
+      background: #3f1d24;
+    }
+
+    .health-bar span {
+      display: block;
+      height: 100%;
+      border-radius: inherit;
+      background: linear-gradient(90deg, #16a34a, #4ade80);
+      transition: width 240ms ease;
+    }
+
+    .battle-actions {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 0.5rem;
+      margin-top: 1rem;
+    }
+
+    .battle-action {
+      min-height: 5.4rem;
+      padding: 0.65rem;
+      border: 1px solid #52525b;
+      border-radius: 0.65rem;
+      background: #292933;
+      color: white;
+      cursor: pointer;
+      font-weight: 850;
+    }
+
+    .battle-action:hover {
+      border-color: #fb923c;
+      background: #3b3030;
+    }
+
+    .battle-action span {
+      display: block;
+      margin-top: 0.25rem;
+      color: #b8b5c0;
+      font-size: 0.68rem;
+      font-weight: 500;
+    }
+
+    .battle-log {
+      min-height: 4.4rem;
+      margin-top: 0.8rem;
+      padding: 0.65rem;
+      border-radius: 0.6rem;
+      background: #0d0d12;
+      color: #c4c1ca;
+      font-size: 0.78rem;
+      line-height: 1.5;
+      text-align: left;
+    }
+
+    .battle-log p {
+      margin: 0.2rem 0;
     }
 
     .loot-reward {
@@ -568,8 +704,10 @@
     }
 
     @media (prefers-reduced-motion: reduce) {
-      .screen.active {
+      .screen.active,
+      .reveal-card {
         animation: none;
+        transition: none;
       }
     }
 
@@ -604,6 +742,10 @@
       .active-loadout {
         align-items: flex-start;
         flex-direction: column;
+      }
+
+      .battle-actions {
+        grid-template-columns: 1fr;
       }
     }
   </style>
@@ -685,7 +827,8 @@
       </div>
       <ul>
         <li><strong>Hero Packs:</strong> spend coins to unlock stronger heroes. Pulling a hero again increases their level.</li>
-        <li><strong>Fight Packs:</strong> choose a challenge and your active hero will automatically fight its monster.</li>
+        <li><strong>Fight Packs:</strong> choose a challenge, reveal its monster, and control your active hero in a turn-based battle.</li>
+        <li><strong>During battle:</strong> use Attack for reliable damage, Power Strike for risky heavy damage, or Guard for light damage and protection.</li>
         <li><strong>Winning:</strong> earns more coins and stronger loot. Losing still gives basic equipment and a few coins.</li>
         <li><strong>Fighters:</strong> choose which hero enters battles and see their total stats.</li>
         <li><strong>Equipment:</strong> equip one sword, one armor, and one shield to each hero. Gear can be moved between heroes.</li>
@@ -839,8 +982,11 @@
     const gearInventory = document.querySelector("#gearInventory");
     const resultModal = document.querySelector("#resultModal");
     const resultContent = document.querySelector("#resultContent");
+    const resultClose = document.querySelector("#resultClose");
     const toast = document.querySelector("#toast");
     let toastTimer;
+    let currentBattle = null;
+    let modalLocked = false;
 
     function saveGame() {
       localStorage.setItem("boxBoxFightersSave", JSON.stringify(state));
@@ -1074,6 +1220,38 @@
       return rarities[Math.floor(Math.random() * rarities.length)];
     }
 
+    function closeResultModal() {
+      resultModal.classList.remove("open");
+      modalLocked = false;
+      resultClose.onclick = null;
+    }
+
+    function showPackReveal(title, faceMarkup, nextLabel, nextAction) {
+      modalLocked = true;
+      resultContent.innerHTML = `
+        <div class="pack-opening">
+          <h2 id="resultTitle">${title}</h2>
+          <div class="reveal-card">
+            <div class="reveal-face">${faceMarkup}</div>
+          </div>
+        </div>
+      `;
+      resultClose.hidden = false;
+      resultClose.disabled = false;
+      resultClose.textContent = "Reveal";
+      resultClose.onclick = () => {
+        resultContent.querySelector(".reveal-card").classList.add("revealed");
+        resultClose.disabled = true;
+        resultClose.textContent = "Revealing...";
+        setTimeout(() => {
+          resultClose.disabled = false;
+          resultClose.textContent = nextLabel;
+          resultClose.onclick = nextAction;
+        }, 650);
+      };
+      resultModal.classList.add("open");
+    }
+
     function openHeroPack(packId) {
       const pack = heroPackDefinitions.find(candidate => candidate.id === packId);
       if (!pack || state.coins < pack.cost) {
@@ -1088,17 +1266,19 @@
       state.heroes[hero.id] = (state.heroes[hero.id] || 0) + 1;
       saveGame();
       render();
-      resultContent.innerHTML = `
-        <div class="battle-result">
+      showPackReveal(
+        pack.name,
+        `
           <span class="rarity" style="--rarity:${rarityInfo[hero.rarity].color}">${hero.rarity} hero</span>
           <div class="battle-icon">${hero.icon}</div>
-          <h2 id="resultTitle">${hero.name}</h2>
+          <h3>${hero.name}</h3>
           <p>${alreadyOwned
-            ? `Duplicate hero! ${hero.name} upgraded to level ${state.heroes[hero.id]}.`
-            : `${hero.name} joined your team at level 1.`}</p>
-        </div>
-      `;
-      resultModal.classList.add("open");
+            ? `Duplicate! Upgraded to level ${state.heroes[hero.id]}.`
+            : "New hero joined your team!"}</p>
+        `,
+        "Keep hero",
+        closeResultModal
+      );
     }
 
     function victoryRarities(tier) {
@@ -1123,6 +1303,14 @@
       };
     }
 
+    function monsterBattleStats(monster) {
+      return {
+        attack: Math.round(monster.power / 10),
+        health: Math.round(monster.power * 0.55),
+        defense: monster.tier * 3
+      };
+    }
+
     function openFightPack(packId) {
       const pack = fightPackDefinitions.find(candidate => candidate.id === packId);
       if (!pack || state.coins < pack.cost) {
@@ -1130,15 +1318,160 @@
         return;
       }
       state.coins -= pack.cost;
+      render();
       const monsters = monsterDefinitions.filter(monster => monster.tier === pack.tier);
       const monster = monsters[Math.floor(Math.random() * monsters.length)];
       const hero = heroDefinition(state.activeHeroId);
-      const heroRoll = heroPower(hero.id) * (0.88 + Math.random() * 0.24);
-      const monsterRoll = monster.power * (0.88 + Math.random() * 0.24);
-      const won = heroRoll >= monsterRoll;
-      const rarity = won ? weightedRarity(victoryRarities(pack.tier)) : "Common";
+      const heroBattleStats = heroStats(hero.id);
+      const monsterStats = monsterBattleStats(monster);
+      currentBattle = {
+        pack,
+        hero,
+        monster,
+        heroStats: heroBattleStats,
+        monsterStats,
+        heroHp: heroBattleStats.health,
+        monsterHp: monsterStats.health,
+        log: [`${hero.name} enters the arena against ${monster.name}.`]
+      };
+      showPackReveal(
+        pack.name,
+        `
+          <span class="rarity" style="--rarity:#fb923c">Tier ${pack.tier} monster</span>
+          <div class="battle-icon">${monster.icon}</div>
+          <h3>${monster.name}</h3>
+          <p>${monsterStats.attack} attack · ${monsterStats.health} health · ${monsterStats.defense} defense</p>
+        `,
+        "Start fight",
+        startBattle
+      );
+    }
+
+    function startBattle() {
+      resultClose.hidden = true;
+      resultClose.onclick = null;
+      renderBattle();
+    }
+
+    function renderBattle() {
+      if (!currentBattle) {
+        return;
+      }
+      const battle = currentBattle;
+      const heroHealth = Math.max(0, battle.heroHp);
+      const monsterHealth = Math.max(0, battle.monsterHp);
+      resultContent.innerHTML = `
+        <div class="battle-arena">
+          <h2 id="resultTitle">Fight!</h2>
+          <div class="battle-versus">
+            <div class="battle-side">
+              <div class="battle-icon">${battle.hero.icon}</div>
+              <strong>${battle.hero.name}</strong>
+              <small>${heroHealth} / ${battle.heroStats.health} health</small>
+              <div class="health-bar"><span style="width:${heroHealth / battle.heroStats.health * 100}%"></span></div>
+            </div>
+            <strong>VS</strong>
+            <div class="battle-side">
+              <div class="battle-icon">${battle.monster.icon}</div>
+              <strong>${battle.monster.name}</strong>
+              <small>${monsterHealth} / ${battle.monsterStats.health} health</small>
+              <div class="health-bar"><span style="width:${monsterHealth / battle.monsterStats.health * 100}%"></span></div>
+            </div>
+          </div>
+          <div class="battle-log">
+            ${battle.log.slice(-4).map(message => `<p>${message}</p>`).join("")}
+          </div>
+          <div class="battle-actions">
+            <button class="battle-action" type="button" data-battle-action="attack">
+              ⚔️ Attack
+              <span>Reliable normal damage</span>
+            </button>
+            <button class="battle-action" type="button" data-battle-action="power">
+              💥 Power Strike
+              <span>Heavy damage, 70% accuracy</span>
+            </button>
+            <button class="battle-action" type="button" data-battle-action="guard">
+              🛡️ Guard
+              <span>Light damage and block most of the counterattack</span>
+            </button>
+          </div>
+        </div>
+      `;
+      resultContent.querySelectorAll("[data-battle-action]").forEach(button => {
+        button.addEventListener("click", () => takeBattleTurn(button.dataset.battleAction));
+      });
+    }
+
+    function calculateDamage(attack, defense, multiplier = 1) {
+      const roll = 0.88 + Math.random() * 0.24;
+      return Math.max(1, Math.round(attack * multiplier * roll - defense * 0.55));
+    }
+
+    function takeBattleTurn(action) {
+      if (!currentBattle) {
+        return;
+      }
+      const battle = currentBattle;
+      let guarded = false;
+      let heroDamage = 0;
+
+      if (action === "power") {
+        if (Math.random() < 0.7) {
+          heroDamage = calculateDamage(
+            battle.heroStats.attack,
+            battle.monsterStats.defense,
+            1.9
+          );
+          battle.log.push(`${battle.hero.name} lands a Power Strike for ${heroDamage} damage!`);
+        } else {
+          battle.log.push(`${battle.hero.name}'s Power Strike misses!`);
+        }
+      } else if (action === "guard") {
+        guarded = true;
+        heroDamage = calculateDamage(
+          battle.heroStats.attack,
+          battle.monsterStats.defense,
+          0.55
+        );
+        battle.log.push(`${battle.hero.name} guards and counters for ${heroDamage} damage.`);
+      } else {
+        heroDamage = calculateDamage(
+          battle.heroStats.attack,
+          battle.monsterStats.defense,
+          1.2
+        );
+        battle.log.push(`${battle.hero.name} attacks for ${heroDamage} damage.`);
+      }
+
+      battle.monsterHp = Math.max(0, battle.monsterHp - heroDamage);
+      if (battle.monsterHp <= 0) {
+        finishBattle(true);
+        return;
+      }
+
+      let monsterDamage = calculateDamage(
+        battle.monsterStats.attack,
+        battle.heroStats.defense
+      );
+      if (guarded) {
+        monsterDamage = Math.max(1, Math.round(monsterDamage * 0.35));
+      }
+      battle.heroHp = Math.max(0, battle.heroHp - monsterDamage);
+      battle.log.push(
+        `${battle.monster.name} hits back for ${monsterDamage} damage${guarded ? " through your guard" : ""}.`
+      );
+      if (battle.heroHp <= 0) {
+        finishBattle(false);
+        return;
+      }
+      renderBattle();
+    }
+
+    function finishBattle(won) {
+      const battle = currentBattle;
+      const rarity = won ? weightedRarity(victoryRarities(battle.pack.tier)) : "Common";
       const loot = createLoot(rarity);
-      const coinsEarned = won ? pack.winCoins : pack.loseCoins;
+      const coinsEarned = won ? battle.pack.winCoins : battle.pack.loseCoins;
       state.coins += coinsEarned;
       state.inventory.push(loot);
       if (won) {
@@ -1146,27 +1479,29 @@
       } else {
         state.losses += 1;
       }
+      currentBattle = null;
+      modalLocked = false;
       saveGame();
       render();
       resultContent.innerHTML = `
         <div class="battle-result ${won ? "win" : "loss"}">
           <div class="battle-versus">
             <div class="battle-side">
-              <div class="battle-icon">${hero.icon}</div>
-              <strong>${hero.name}</strong>
-              <small>Battle power ${Math.round(heroRoll)}</small>
+              <div class="battle-icon">${battle.hero.icon}</div>
+              <strong>${battle.hero.name}</strong>
+              <small>${Math.max(0, battle.heroHp)} health left</small>
             </div>
             <strong>VS</strong>
             <div class="battle-side">
-              <div class="battle-icon">${monster.icon}</div>
-              <strong>${monster.name}</strong>
-              <small>Battle power ${Math.round(monsterRoll)}</small>
+              <div class="battle-icon">${battle.monster.icon}</div>
+              <strong>${battle.monster.name}</strong>
+              <small>${Math.max(0, battle.monsterHp)} health left</small>
             </div>
           </div>
           <h2 id="resultTitle">${won ? "Victory!" : "Defeat"}</h2>
           <p>${won
-            ? `${hero.name} defeated ${monster.name} and found improved loot.`
-            : `${monster.name} won, but you still receive basic loot for trying.`}</p>
+            ? `${battle.hero.name} defeated ${battle.monster.name} and found improved loot.`
+            : `${battle.monster.name} won, but you still receive basic loot for trying.`}</p>
           <div class="loot-reward" style="--rarity:${rarityInfo[loot.rarity].color}">
             <span class="rarity">${loot.rarity} loot</span>
             <strong>${equipmentIcons[loot.type]} ${loot.name}</strong>
@@ -1175,7 +1510,10 @@
           <p>Also received <strong>${coinsEarned} coins</strong>.</p>
         </div>
       `;
-      resultModal.classList.add("open");
+      resultClose.hidden = false;
+      resultClose.disabled = false;
+      resultClose.textContent = "Collect loot";
+      resultClose.onclick = closeResultModal;
     }
 
     function toggleEquipment(itemId) {
@@ -1227,15 +1565,14 @@
         helpOpen.focus();
       }
     });
-    document.querySelector("#resultClose").addEventListener("click", () => {
-      resultModal.classList.remove("open");
-    });
     document.addEventListener("keydown", event => {
       if (event.key !== "Escape") {
         return;
       }
       if (resultModal.classList.contains("open")) {
-        resultModal.classList.remove("open");
+        if (!modalLocked) {
+          closeResultModal();
+        }
       } else if (helpModal.classList.contains("open")) {
         helpModal.classList.remove("open");
         helpOpen.focus();
