@@ -3407,17 +3407,19 @@
         button.addEventListener("click", () => claimQuest(button.dataset.claimQuest));
       });
 
-      achievementGrid.innerHTML = achievementDefinitions.map(achievement => {
-        const unlocked = achievement.unlocked();
-        return `
-          <article class="feature-card achievement-card ${unlocked ? "unlocked" : "locked"}">
-            <div class="icon">${unlocked ? achievement.icon : "🔒"}</div>
-            <h3>${achievement.name}</h3>
-            <p>${achievement.description}</p>
-            <span class="achievement-state">${unlocked ? "Unlocked" : "Locked"}</span>
-          </article>
-        `;
-      }).join("");
+      achievementGrid.innerHTML = [...achievementDefinitions]
+        .sort((left, right) => Number(left.unlocked()) - Number(right.unlocked()))
+        .map(achievement => {
+          const unlocked = achievement.unlocked();
+          return `
+            <article class="feature-card achievement-card ${unlocked ? "unlocked" : "locked"}">
+              <div class="icon">${unlocked ? achievement.icon : "🔒"}</div>
+              <h3>${achievement.name}</h3>
+              <p>${achievement.description}</p>
+              <span class="achievement-state">${unlocked ? "Unlocked" : "Locked"}</span>
+            </article>
+          `;
+        }).join("");
 
       const statistics = [
         ["🎁", state.stats.heroPacksOpened, "Hero Packs opened"],
