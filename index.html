@@ -493,8 +493,76 @@
       background: linear-gradient(145deg, #293414, #101118);
     }
 
+    .gear-card.dirty {
+      border-top-color: #78716c;
+      background: linear-gradient(145deg, #292524, #101118);
+    }
+
     .gear-card button {
       margin-top: 0.5rem;
+    }
+
+    .facility-panel {
+      margin-bottom: 1rem;
+      padding: 1rem;
+      border: 1px solid #3f3f46;
+      border-radius: 0.85rem;
+      background: #111218;
+    }
+
+    .facility-panel h3 {
+      margin: 0;
+      font-family: Georgia, serif;
+      font-size: 1.35rem;
+    }
+
+    .facility-panel p {
+      margin: 0.35rem 0 0;
+      color: #aaa6b4;
+      line-height: 1.5;
+    }
+
+    .merge-grid {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 0.6rem;
+      margin-top: 0.8rem;
+    }
+
+    .merge-option {
+      padding: 0.7rem;
+      border: 1px solid var(--rarity);
+      border-radius: 0.65rem;
+      background: #191922;
+    }
+
+    .merge-option strong,
+    .merge-option small {
+      display: block;
+    }
+
+    .merge-option small {
+      min-height: 2.5rem;
+      margin: 0.3rem 0;
+      color: #aaa6b4;
+      line-height: 1.35;
+    }
+
+    .gear-condition {
+      display: inline-block;
+      margin-top: 0.35rem;
+      padding: 0.22rem 0.4rem;
+      border-radius: 999px;
+      background: #14532d;
+      color: #86efac;
+      font-size: 0.68rem;
+      font-weight: 850;
+      text-transform: uppercase;
+    }
+
+    .gear-condition.dirty {
+      background: #44403c;
+      color: #d6d3d1;
     }
 
     .battle-result {
@@ -785,7 +853,8 @@
       .feature-grid,
       .pack-grid,
       .hero-grid,
-      .gear-grid {
+      .gear-grid,
+      .merge-grid {
         grid-template-columns: 1fr;
       }
 
@@ -825,7 +894,9 @@
       <button class="active" type="button" data-screen="packs">Packs</button>
       <button type="button" data-screen="roster">Fighters</button>
       <button type="button" data-screen="collection">Collection</button>
-      <button type="button" data-screen="equipment">Equipment</button>
+      <button type="button" data-screen="equipment">Swords</button>
+      <button type="button" data-screen="training">Training Facility</button>
+      <button type="button" data-screen="cleaning">Clean Gear</button>
     </nav>
 
     <main>
@@ -870,11 +941,30 @@
 
       <section id="equipment" class="screen">
         <div class="section-head">
-          <h2>Equipment</h2>
-          <p>Equip swords, armor, and shields to improve your active hero.</p>
+          <h2>Swords and forging</h2>
+          <p>Equip swords to improve hero attack. Merge three matching swords into one stronger sword.</p>
         </div>
         <div id="activeLoadout" class="active-loadout"></div>
+        <div id="swordMerge" class="facility-panel"></div>
         <div id="gearInventory" class="gear-grid"></div>
+      </section>
+
+      <section id="training" class="screen">
+        <div class="section-head">
+          <h2>Training facility</h2>
+          <p>Use clean armor and shields to permanently train your active hero. Used gear becomes dirty.</p>
+        </div>
+        <div id="trainingStatus" class="facility-panel"></div>
+        <div id="trainingGear" class="gear-grid"></div>
+      </section>
+
+      <section id="cleaning" class="screen">
+        <div class="section-head">
+          <h2>Gear cleaning</h2>
+          <p>Clean used armor and shields so they can return to the training facility.</p>
+        </div>
+        <div id="cleaningStatus" class="facility-panel"></div>
+        <div id="dirtyGear" class="gear-grid"></div>
       </section>
     </main>
   </div>
@@ -892,8 +982,9 @@
         <li><strong>Winning:</strong> earns more coins and stronger loot. Losing still gives basic equipment and a few coins.</li>
         <li><strong>Fighters:</strong> choose which hero enters battles and see their total stats.</li>
         <li><strong>Collection:</strong> track every available hero, with collected heroes shown first.</li>
-        <li><strong>Equipment:</strong> equip one sword, one armor, and one shield to each hero. Gear can be moved between heroes.</li>
-        <li><strong>Swords</strong> add attack, <strong>armor</strong> adds health, and <strong>shields</strong> add defense.</li>
+        <li><strong>Swords:</strong> equip one sword to each hero for bonus attack. Merge three unequipped swords of the same rarity to forge the next rarity.</li>
+        <li><strong>Training Facility:</strong> use clean armor for permanent health training or clean shields for permanent defense training. The gear becomes dirty after use.</li>
+        <li><strong>Clean Gear:</strong> spend coins to clean dirty armor and shields so they can be used for training again.</li>
       </ul>
     </div>
   </div>
@@ -1118,6 +1209,14 @@
       Epic: { sword: 16, armor: 55, shield: 11 },
       Legendary: { sword: 25, armor: 85, shield: 17 }
     };
+    const cleaningCosts = {
+      Common: 15,
+      Uncommon: 40,
+      Rare: 100,
+      Epic: 250,
+      Legendary: 600
+    };
+    const rarityOrder = Object.keys(rarityInfo);
 
     const state = {
       coins: 400,
@@ -1126,7 +1225,8 @@
       heroes: { rookie: 1 },
       activeHeroId: "rookie",
       inventory: [],
-      equipment: {}
+      equipment: {},
+      training: {}
     };
 
     const heroPacks = document.querySelector("#heroPacks");
@@ -1135,7 +1235,12 @@
     const collectionSummary = document.querySelector("#collectionSummary");
     const heroCollection = document.querySelector("#heroCollection");
     const activeLoadout = document.querySelector("#activeLoadout");
+    const swordMerge = document.querySelector("#swordMerge");
     const gearInventory = document.querySelector("#gearInventory");
+    const trainingStatus = document.querySelector("#trainingStatus");
+    const trainingGear = document.querySelector("#trainingGear");
+    const cleaningStatus = document.querySelector("#cleaningStatus");
+    const dirtyGear = document.querySelector("#dirtyGear");
     const resultModal = document.querySelector("#resultModal");
     const resultContent = document.querySelector("#resultContent");
     const resultClose = document.querySelector("#resultClose");
@@ -1168,11 +1273,16 @@
           ? parsed.activeHeroId
           : Object.keys(state.heroes)[0];
         state.inventory = Array.isArray(parsed.inventory)
-          ? parsed.inventory.filter(item =>
-            typeof item?.id === "string" &&
-            equipmentNames[item.type]?.[item.rarity] &&
-            item.value === equipmentValues[item.rarity][item.type]
-          )
+          ? parsed.inventory
+            .filter(item =>
+              typeof item?.id === "string" &&
+              equipmentNames[item.type]?.[item.rarity] &&
+              item.value === equipmentValues[item.rarity][item.type]
+            )
+            .map(item => ({
+              ...item,
+              dirty: item.type === "sword" ? false : Boolean(item.dirty)
+            }))
           : [];
         const inventoryIds = new Set(state.inventory.map(item => item.id));
         state.equipment = {};
@@ -1181,16 +1291,20 @@
           if (!loadout || typeof loadout !== "object") {
             return;
           }
-          Object.keys(equipmentNames).forEach(type => {
-            const itemId = loadout[type];
-            const item = state.inventory.find(candidate => candidate.id === itemId);
-            if (inventoryIds.has(itemId) && item?.type === type) {
-              state.equipment[heroId] ||= {};
-              state.equipment[heroId][type] = itemId;
-              inventoryIds.delete(itemId);
-            }
-          });
+          const itemId = loadout.sword;
+          const item = state.inventory.find(candidate => candidate.id === itemId);
+          if (inventoryIds.has(itemId) && item?.type === "sword") {
+            state.equipment[heroId] = { sword: itemId };
+            inventoryIds.delete(itemId);
+          }
         });
+        state.training = Object.fromEntries(Object.keys(state.heroes).map(heroId => {
+          const training = parsed.training?.[heroId];
+          return [heroId, {
+            health: Number.isInteger(training?.health) ? Math.max(0, training.health) : 0,
+            defense: Number.isInteger(training?.defense) ? Math.max(0, training.defense) : 0
+          }];
+        }));
       } catch {
         localStorage.removeItem("boxBoxFightersSave");
       }
@@ -1427,10 +1541,11 @@
     function heroStats(heroId) {
       const hero = heroDefinition(heroId);
       const level = state.heroes[heroId];
+      const training = state.training[heroId] || { health: 0, defense: 0 };
       return {
         attack: hero.attack + (level - 1) * 3 + (equippedItem(heroId, "sword")?.value || 0),
-        health: hero.health + (level - 1) * 8 + (equippedItem(heroId, "armor")?.value || 0),
-        defense: hero.defense + (level - 1) * 2 + (equippedItem(heroId, "shield")?.value || 0)
+        health: hero.health + (level - 1) * 8 + training.health,
+        defense: hero.defense + (level - 1) * 2 + training.defense
       };
     }
 
@@ -1502,10 +1617,8 @@
       heroRoster.innerHTML = ownedHeroes.map(hero => {
         const level = state.heroes[hero.id];
         const stats = heroStats(hero.id);
-        const loadout = Object.keys(equipmentNames).map(type => {
-          const item = equippedItem(hero.id, type);
-          return `<span>${equipmentIcons[type]} ${item ? item.name : `No ${type}`}</span>`;
-        }).join("");
+        const sword = equippedItem(hero.id, "sword");
+        const training = state.training[hero.id] || { health: 0, defense: 0 };
         return `
           <article class="hero-card ${hero.id === state.activeHeroId ? "active" : ""}" style="--rarity:${rarityInfo[hero.rarity].color}">
             <span class="rarity">${hero.rarity}</span>
@@ -1517,7 +1630,10 @@
               <span>Health<strong>${stats.health}</strong></span>
               <span>Defense<strong>${stats.defense}</strong></span>
             </div>
-            <div class="equipment-list">${loadout}</div>
+            <div class="equipment-list">
+              <span>⚔️ ${sword ? sword.name : "No sword"}</span>
+              <span>🏋️ Training: +${training.health} health · +${training.defense} defense</span>
+            </div>
             <button class="primary" type="button" data-active-hero="${hero.id}" ${hero.id === state.activeHeroId ? "disabled" : ""}>
               ${hero.id === state.activeHeroId ? "Active fighter" : "Choose fighter"}
             </button>
@@ -1576,27 +1692,52 @@
     function renderEquipment() {
       const hero = heroDefinition(state.activeHeroId);
       const stats = heroStats(hero.id);
+      const equippedSword = equippedItem(hero.id, "sword");
       activeLoadout.innerHTML = `
         <div>
           <h3>Equipping ${hero.name}</h3>
-          <p>Level ${state.heroes[hero.id]} · ${stats.attack} attack · ${stats.health} health · ${stats.defense} defense</p>
+          <p>${equippedSword ? `Using ${equippedSword.name}` : "No sword equipped"} · ${stats.attack} total attack</p>
         </div>
         <button class="secondary" type="button" data-go-roster>Change fighter</button>
       `;
       activeLoadout.querySelector("[data-go-roster]").addEventListener("click", () => showScreen("roster"));
 
-      if (state.inventory.length === 0) {
+      swordMerge.innerHTML = `
+        <h3>Forge stronger swords</h3>
+        <p>Merge three unequipped swords of one rarity to create one sword of the next rarity.</p>
+        <div class="merge-grid">
+          ${rarityOrder.slice(0, -1).map(rarity => {
+            const availableCount = availableSwords(rarity).length;
+            const nextRarity = rarityOrder[rarityInfo[rarity].rank + 1];
+            return `
+              <div class="merge-option" style="--rarity:${rarityInfo[rarity].color}">
+                <strong>${rarity} → ${nextRarity}</strong>
+                <small>${availableCount} / 3 unequipped ${rarity} swords ready</small>
+                <button class="primary" type="button" data-merge-swords="${rarity}" ${availableCount < 3 ? "disabled" : ""}>
+                  Merge swords
+                </button>
+              </div>
+            `;
+          }).join("")}
+        </div>
+      `;
+      swordMerge.querySelectorAll("[data-merge-swords]").forEach(button => {
+        button.addEventListener("click", () => mergeSwords(button.dataset.mergeSwords));
+      });
+
+      const swords = state.inventory.filter(item => item.type === "sword");
+      if (swords.length === 0) {
         gearInventory.innerHTML = `
           <div class="empty-state">
-            <div class="icon">🎁</div>
-            <h2>No equipment yet</h2>
-            <p>Open a Fight Pack to earn your first sword, armor, or shield.</p>
+            <div class="icon">⚔️</div>
+            <h2>No swords yet</h2>
+            <p>Fight monsters until you find a sword to equip or merge.</p>
           </div>
         `;
         return;
       }
 
-      const sortedInventory = [...state.inventory].sort((left, right) =>
+      const sortedInventory = [...swords].sort((left, right) =>
         rarityInfo[right.rarity].rank - rarityInfo[left.rarity].rank
       );
       gearInventory.innerHTML = sortedInventory.map(item => {
@@ -1621,6 +1762,96 @@
       });
     }
 
+    function renderTraining() {
+      const hero = heroDefinition(state.activeHeroId);
+      const training = state.training[hero.id] || { health: 0, defense: 0 };
+      trainingStatus.innerHTML = `
+        <h3>Training ${hero.name}</h3>
+        <p>Permanent training bonuses: +${training.health} health and +${training.defense} defense.</p>
+        <button class="secondary" type="button" data-training-roster>Change fighter</button>
+      `;
+      trainingStatus.querySelector("[data-training-roster]").addEventListener("click", () => showScreen("roster"));
+
+      const trainingItems = state.inventory
+        .filter(item => item.type === "armor" || item.type === "shield")
+        .sort((left, right) =>
+          Number(left.dirty) - Number(right.dirty) ||
+          rarityInfo[right.rarity].rank - rarityInfo[left.rarity].rank
+        );
+      if (trainingItems.length === 0) {
+        trainingGear.innerHTML = `
+          <div class="empty-state">
+            <div class="icon">🏋️</div>
+            <h2>No training gear</h2>
+            <p>Armor and shields earned from Fight Packs appear here.</p>
+          </div>
+        `;
+        return;
+      }
+
+      trainingGear.innerHTML = trainingItems.map(item => {
+        const gain = trainingGain(item);
+        return `
+          <article class="gear-card ${item.dirty ? "dirty" : ""}" style="--rarity:${rarityInfo[item.rarity].color}">
+            <span class="rarity">${item.rarity}</span>
+            <div class="gear-icon">${equipmentIcons[item.type]}</div>
+            <h3>${item.name}</h3>
+            <p>Train ${hero.name} for +${gain} permanent ${equipmentStat[item.type]}.</p>
+            <span class="gear-condition ${item.dirty ? "dirty" : ""}">${item.dirty ? "Dirty" : "Clean and ready"}</span>
+            <button class="primary" type="button" data-train-gear="${item.id}" ${item.dirty ? "disabled" : ""}>
+              ${item.dirty ? "Clean before reuse" : "Use in training"}
+            </button>
+          </article>
+        `;
+      }).join("");
+      trainingGear.querySelectorAll("[data-train-gear]").forEach(button => {
+        button.addEventListener("click", () => trainWithGear(button.dataset.trainGear));
+      });
+    }
+
+    function renderCleaning() {
+      const dirtyItems = state.inventory
+        .filter(item => item.type !== "sword" && item.dirty)
+        .sort((left, right) => rarityInfo[right.rarity].rank - rarityInfo[left.rarity].rank);
+      const totalCost = dirtyItems.reduce((total, item) => total + cleaningCosts[item.rarity], 0);
+      cleaningStatus.innerHTML = `
+        <h3>Cleaning station</h3>
+        <p>${dirtyItems.length} dirty item${dirtyItems.length === 1 ? "" : "s"} waiting · ${totalCost.toLocaleString()} coins to clean everything.</p>
+        ${dirtyItems.length > 0 ? `
+          <button class="secondary" type="button" data-clean-all ${state.coins < totalCost ? "disabled" : ""}>
+            Clean all · ${totalCost.toLocaleString()}
+          </button>
+        ` : ""}
+      `;
+      cleaningStatus.querySelector("[data-clean-all]")?.addEventListener("click", cleanAllGear);
+
+      if (dirtyItems.length === 0) {
+        dirtyGear.innerHTML = `
+          <div class="empty-state">
+            <div class="icon">✨</div>
+            <h2>Everything is clean</h2>
+            <p>Armor and shields become dirty after being used for training.</p>
+          </div>
+        `;
+        return;
+      }
+      dirtyGear.innerHTML = dirtyItems.map(item => `
+        <article class="gear-card dirty" style="--rarity:${rarityInfo[item.rarity].color}">
+          <span class="rarity">${item.rarity}</span>
+          <div class="gear-icon">${equipmentIcons[item.type]}</div>
+          <h3>${item.name}</h3>
+          <span class="gear-condition dirty">Dirty</span>
+          <p>Cleaning restores this item for another training session.</p>
+          <button class="primary" type="button" data-clean-gear="${item.id}" ${state.coins < cleaningCosts[item.rarity] ? "disabled" : ""}>
+            Clean · ${cleaningCosts[item.rarity].toLocaleString()} coins
+          </button>
+        </article>
+      `).join("");
+      dirtyGear.querySelectorAll("[data-clean-gear]").forEach(button => {
+        button.addEventListener("click", () => cleanGear(button.dataset.cleanGear));
+      });
+    }
+
     function render() {
       renderStats();
       renderHeroPacks();
@@ -1628,6 +1859,8 @@
       renderRoster();
       renderCollection();
       renderEquipment();
+      renderTraining();
+      renderCleaning();
     }
 
     function weightedRarity(rarities) {
@@ -1719,7 +1952,8 @@
         type,
         rarity,
         name: equipmentNames[type][rarity],
-        value: equipmentValues[rarity][type]
+        value: equipmentValues[rarity][type],
+        dirty: false
       };
     }
 
@@ -1925,7 +2159,11 @@
           <div class="loot-reward" style="--rarity:${rarityInfo[loot.rarity].color}">
             <span class="rarity">${loot.rarity} loot</span>
             <strong>${equipmentIcons[loot.type]} ${loot.name}</strong>
-            <small>+${loot.value} ${equipmentStat[loot.type]}</small>
+            <small>
+              ${loot.type === "sword"
+                ? `+${loot.value} attack when equipped`
+                : `Training gear · +${trainingGain(loot)} permanent ${equipmentStat[loot.type]} per use`}
+            </small>
           </div>
           <p>Also received <strong>${coinsEarned} coins</strong>.</p>
         </div>
@@ -1936,10 +2174,103 @@
       resultClose.onclick = closeResultModal;
     }
 
+    function availableSwords(rarity) {
+      return state.inventory.filter(item =>
+        item.type === "sword" &&
+        item.rarity === rarity &&
+        !itemEquippedHero(item.id)
+      );
+    }
+
+    function mergeSwords(rarity) {
+      const rarityIndex = rarityOrder.indexOf(rarity);
+      const swords = availableSwords(rarity).slice(0, 3);
+      if (rarityIndex < 0 || rarityIndex >= rarityOrder.length - 1 || swords.length < 3) {
+        showToast("You need three unequipped matching swords to merge.");
+        return;
+      }
+      const nextRarity = rarityOrder[rarityIndex + 1];
+      const consumedIds = new Set(swords.map(sword => sword.id));
+      state.inventory = state.inventory.filter(item => !consumedIds.has(item.id));
+      const forgedSword = {
+        id: `${Date.now()}-${Math.random().toString(36).slice(2)}`,
+        type: "sword",
+        rarity: nextRarity,
+        name: equipmentNames.sword[nextRarity],
+        value: equipmentValues[nextRarity].sword,
+        dirty: false
+      };
+      state.inventory.push(forgedSword);
+      saveGame();
+      render();
+      showToast(`Forged ${forgedSword.name} with +${forgedSword.value} attack!`);
+    }
+
+    function trainingGain(item) {
+      return item.type === "armor"
+        ? Math.max(2, Math.round(item.value / 5))
+        : Math.max(1, Math.round(item.value / 3));
+    }
+
+    function trainWithGear(itemId) {
+      const item = state.inventory.find(candidate => candidate.id === itemId);
+      if (!item || item.type === "sword" || item.dirty) {
+        showToast("That gear is not ready for training.");
+        return;
+      }
+      const heroId = state.activeHeroId;
+      const stat = equipmentStat[item.type];
+      const gain = trainingGain(item);
+      state.training[heroId] ||= { health: 0, defense: 0 };
+      state.training[heroId][stat] += gain;
+      item.dirty = true;
+      saveGame();
+      render();
+      showToast(`${heroDefinition(heroId).name} gained +${gain} permanent ${stat}.`);
+    }
+
+    function cleanGear(itemId) {
+      const item = state.inventory.find(candidate => candidate.id === itemId);
+      if (!item || item.type === "sword" || !item.dirty) {
+        showToast("That gear does not need cleaning.");
+        return;
+      }
+      const cost = cleaningCosts[item.rarity];
+      if (state.coins < cost) {
+        showToast(`You need ${(cost - state.coins).toLocaleString()} more coins.`);
+        return;
+      }
+      state.coins -= cost;
+      item.dirty = false;
+      saveGame();
+      render();
+      showToast(`${item.name} is clean and ready for training.`);
+    }
+
+    function cleanAllGear() {
+      const dirtyItems = state.inventory.filter(item => item.type !== "sword" && item.dirty);
+      const totalCost = dirtyItems.reduce((total, item) => total + cleaningCosts[item.rarity], 0);
+      if (dirtyItems.length === 0) {
+        showToast("All gear is already clean.");
+        return;
+      }
+      if (state.coins < totalCost) {
+        showToast(`You need ${(totalCost - state.coins).toLocaleString()} more coins.`);
+        return;
+      }
+      state.coins -= totalCost;
+      dirtyItems.forEach(item => {
+        item.dirty = false;
+      });
+      saveGame();
+      render();
+      showToast(`${dirtyItems.length} items cleaned and ready.`);
+    }
+
     function toggleEquipment(itemId) {
       const item = state.inventory.find(candidate => candidate.id === itemId);
-      if (!item) {
-        showToast("That equipment could not be found.");
+      if (!item || item.type !== "sword") {
+        showToast("Only swords can be equipped to heroes.");
         return;
       }
       const equippedHeroId = itemEquippedHero(itemId);
