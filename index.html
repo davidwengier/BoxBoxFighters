@@ -1097,7 +1097,7 @@
         <li><strong>Hero Packs:</strong> spend coins to unlock stronger heroes. Pulling a hero again increases their level.</li>
         <li><strong>Fight Packs:</strong> choose a challenge, reveal its monster, and control your active hero in a turn-based battle.</li>
         <li><strong>During battle:</strong> use Attack for reliable damage, Power Strike for risky heavy damage, or Guard for light damage and protection.</li>
-        <li><strong>Winning:</strong> awards stronger loot. Losing still gives basic Common equipment. Fight Packs do not pay coins.</li>
+        <li><strong>Winning:</strong> improves your chances of stronger loot, but every rarity roll can still give Common gear. Losing always gives basic Common equipment. Fight Packs do not pay coins.</li>
         <li><strong>Fighters:</strong> choose which hero enters battles and see their total stats.</li>
         <li><strong>Collection:</strong> track every available hero, with collected heroes shown first.</li>
         <li><strong>Swords:</strong> equip one sword to each hero for bonus attack. Forging keeps your strongest sword, destroys every other sword, and adds part of their combined attack to it.</li>
@@ -1257,7 +1257,7 @@
         icon: "🏰",
         cost: 80,
         tier: 2,
-        description: "Tougher monsters with better victory loot."
+        description: "Tougher monsters with improved chances of uncommon victory loot."
       },
       {
         id: "dragonLair",
@@ -1265,7 +1265,7 @@
         icon: "🌋",
         cost: 240,
         tier: 3,
-        description: "Powerful monsters with Epic or Legendary victory loot."
+        description: "Powerful monsters with improved chances of Rare, Epic, or Legendary loot."
       },
       {
         id: "hauntedKeep",
@@ -1281,7 +1281,7 @@
         icon: "🌀",
         cost: 1400,
         tier: 5,
-        description: "The ultimate challenge. Victories always award Legendary equipment."
+        description: "The ultimate challenge, with the best chances of Epic or Legendary equipment."
       }
     ];
 
@@ -2248,18 +2248,18 @@
 
     function victoryRarities(tier) {
       if (tier >= 5) {
-        return ["Legendary"];
+        return ["Common", "Uncommon", "Rare", "Rare", "Epic", "Epic", "Epic", "Legendary", "Legendary", "Legendary", "Legendary"];
       }
       if (tier === 4) {
-        return ["Epic", "Epic", "Legendary", "Legendary"];
+        return ["Common", "Uncommon", "Uncommon", "Rare", "Rare", "Rare", "Epic", "Epic", "Epic", "Legendary", "Legendary"];
       }
       if (tier === 3) {
-        return ["Epic", "Epic", "Epic", "Legendary"];
+        return ["Common", "Common", "Uncommon", "Uncommon", "Uncommon", "Rare", "Rare", "Rare", "Epic", "Epic", "Legendary"];
       }
       if (tier === 2) {
-        return ["Rare", "Rare", "Rare", "Epic"];
+        return ["Common", "Common", "Common", "Uncommon", "Uncommon", "Uncommon", "Uncommon", "Rare", "Rare", "Epic"];
       }
-      return ["Uncommon", "Uncommon", "Uncommon", "Rare"];
+      return ["Common", "Common", "Common", "Common", "Common", "Uncommon", "Uncommon", "Uncommon", "Rare"];
     }
 
     function createLoot(rarity) {
@@ -2473,7 +2473,7 @@
           </div>
           <h2 id="resultTitle">${won ? "Victory!" : "Defeat"}</h2>
           <p>${won
-            ? `${battle.hero.name} defeated ${battle.monster.name} and found improved loot.`
+            ? `${battle.hero.name} defeated ${battle.monster.name}, improving the odds of stronger loot. This roll found ${loot.rarity} gear.`
             : `${battle.monster.name} won, but you still receive basic loot for trying.`}</p>
           <div class="loot-reward" style="--rarity:${rarityInfo[loot.rarity].color}">
             <span class="rarity">${loot.rarity} loot</span>
