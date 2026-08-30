@@ -355,6 +355,22 @@
       margin-top: auto;
     }
 
+    .pack-chances {
+      display: grid;
+      gap: 0.2rem;
+      margin-bottom: 0.8rem;
+      padding: 0.55rem;
+      border-radius: 0.6rem;
+      background: rgb(0 0 0 / 22%);
+      font-size: 0.75rem;
+    }
+
+    .pack-chances div {
+      display: flex;
+      justify-content: space-between;
+      gap: 0.5rem;
+    }
+
     .pack-label,
     .rarity {
       width: fit-content;
@@ -985,7 +1001,7 @@
       <section id="training" class="screen">
         <div class="section-head">
           <h2>Training facility</h2>
-          <p>Load armor and shields into stations. Customers train, pay halfway through, then return the gear for its next session.</p>
+          <p>Load armor and shields into stations. Customers pay when they arrive, train, then return the gear for its next session.</p>
         </div>
         <div id="trainingStatus" class="facility-panel"></div>
         <div id="trainingStations" class="station-grid"></div>
@@ -1009,14 +1025,14 @@
         <button id="helpClose" class="secondary" type="button">Close</button>
       </div>
       <ul>
-        <li><strong>Hero Packs:</strong> every fighter belongs to one specific pack. Pulling that fighter again increases their level.</li>
+        <li><strong>Hero Packs:</strong> every fighter belongs to one specific pack, and each card lists its fighter chances. Limited rarity has a fixed 0.5% total chance.</li>
         <li><strong>Fight Packs:</strong> choose a challenge, reveal its monster, and control your active hero in a turn-based battle. The free Wilds starter pack can only be claimed once.</li>
         <li><strong>During battle:</strong> use Attack for reliable damage, Power Strike for risky heavy damage, or Guard for light damage and protection.</li>
-        <li><strong>Winning:</strong> improves your chances of stronger loot, but every rarity roll can still give Common gear. Losing always gives basic Common equipment. Fight Packs do not pay coins.</li>
+        <li><strong>Winning:</strong> improves your chances of stronger loot, but every rarity roll can still give Common gear. Limited Arena victories have a fixed 0.5% chance of Limited gear.</li>
         <li><strong>Fighters:</strong> choose which hero enters battles and see their total stats.</li>
         <li><strong>Collection:</strong> track every available hero and every sword, armor, and shield you have discovered.</li>
         <li><strong>Swords:</strong> equip one sword to each hero for bonus attack. Forging keeps your strongest sword, destroys every other sword, and adds part of their combined attack to it.</li>
-        <li><strong>Training Facility:</strong> load armor or shields into an open station. A customer arrives, pays halfway through training, then returns the gear for reuse.</li>
+        <li><strong>Training Facility:</strong> load armor or shields into an open station. A customer pays as soon as they arrive, trains, then returns the gear for reuse.</li>
         <li><strong>Upgrades:</strong> improve customer speed, automatically load gear with Auto Trainer, and increase the chance of better Hero Pack and victory-loot rarities.</li>
       </ul>
     </div>
@@ -1160,6 +1176,22 @@
         skin: "#9b6248", hair: "#fef3c7", outfit: "#9a3412", accent: "#fde68a", hairStyle: "bald"
       },
       {
+        id: "prismRogue", name: "Prism Rogue", rarity: "Mythic", attack: 66, health: 126, defense: 18,
+        skin: "#d59a72", hair: "#4c1d95", outfit: "#6d28d9", accent: "#c4b5fd", hairStyle: "hood"
+      },
+      {
+        id: "galaxyGuardian", name: "Galaxy Guardian", rarity: "Mythic", attack: 58, health: 162, defense: 23,
+        skin: "#70402f", hair: "#e0e7ff", outfit: "#3730a3", accent: "#818cf8", hairStyle: "helmet"
+      },
+      {
+        id: "dreamHunter", name: "Dream Hunter", rarity: "Mythic", attack: 68, health: 120, defense: 17,
+        skin: "#edb98a", hair: "#831843", outfit: "#9d174d", accent: "#f9a8d4", hairStyle: "long"
+      },
+      {
+        id: "thunderColossus", name: "Thunder Colossus", rarity: "Mythic", attack: 61, health: 170, defense: 22,
+        skin: "#8f563b", hair: "#1e3a8a", outfit: "#075985", accent: "#7dd3fc", hairStyle: "mohawk"
+      },
+      {
         id: "neonVanguard", name: "Neon Vanguard", rarity: "Limited", attack: 72, health: 165, defense: 23,
         skin: "#d18b63", hair: "#082f49", outfit: "#0e7490", accent: "#22d3ee", hairStyle: "mohawk"
       },
@@ -1185,7 +1217,7 @@
         cost: 120,
         description: "The exclusive home of Rex, Bella, Bo, and Gus.",
         heroIds: ["rookie", "blade", "brawler", "guardian"],
-        rarities: ["Common", "Common", "Common", "Uncommon"]
+        rarityChances: { Common: 75, Uncommon: 25 }
       },
       {
         id: "wildguard",
@@ -1194,7 +1226,7 @@
         cost: 280,
         description: "The exclusive home of Ava, Monk, Ranger, and Tempest Scout.",
         heroIds: ["archer", "monk", "ranger", "tempestScout"],
-        rarities: ["Uncommon", "Uncommon", "Uncommon", "Rare"]
+        rarityChances: { Uncommon: 75, Rare: 25 }
       },
       {
         id: "mystic",
@@ -1203,7 +1235,7 @@
         cost: 600,
         description: "The exclusive home of Max, Ninja, Crystal Oracle, and Ember Witch.",
         heroIds: ["mage", "ninja", "crystalOracle", "emberWitch"],
-        rarities: ["Rare", "Rare", "Rare", "Epic"]
+        rarityChances: { Rare: 75, Epic: 25 }
       },
       {
         id: "champion",
@@ -1212,7 +1244,7 @@
         cost: 1050,
         description: "The exclusive home of Valkyrie, Paladin, Cyber Sam, and Iron Titan.",
         heroIds: ["valkyrie", "paladin", "cyber", "ironTitan"],
-        rarities: ["Epic", "Epic", "Epic", "Epic"]
+        rarityChances: { Epic: 100 }
       },
       {
         id: "legend",
@@ -1221,7 +1253,7 @@
         cost: 2000,
         description: "The exclusive home of Dragon Knight, Frost Queen, Sun Champion, and Shadow Empress.",
         heroIds: ["dragonKnight", "frostQueen", "sunChampion", "shadowEmpress"],
-        rarities: ["Legendary", "Legendary", "Legendary", "Legendary"]
+        rarityChances: { Legendary: 100 }
       },
       {
         id: "cosmic",
@@ -1230,7 +1262,7 @@
         cost: 2600,
         description: "Five exclusive fighters from beyond the arena.",
         heroIds: ["starCaptain", "voidWalker", "chronoKnight", "nebulaSage", "cometRider"],
-        rarities: ["Rare", "Epic", "Epic", "Legendary", "Legendary"]
+        rarityChances: { Rare: 20, Epic: 40, Legendary: 40 }
       },
       {
         id: "mythic",
@@ -1239,16 +1271,16 @@
         cost: 4500,
         description: "The exclusive home of four reality-shaping Mythic fighters.",
         heroIds: ["phoenixWarden", "leviathanLord", "runeWeaver", "celestialMonk"],
-        rarities: ["Mythic", "Mythic", "Mythic", "Mythic"]
+        rarityChances: { Mythic: 100 }
       },
       {
         id: "limited",
         name: "Limited Hero Pack",
         icon: "💠",
         cost: 8000,
-        description: "The exclusive home of the rarest Limited fighters.",
-        heroIds: ["neonVanguard", "eclipseQueen", "infinityKnight", "anniversaryAce"],
-        rarities: ["Limited", "Limited", "Limited", "Limited"]
+        description: "Eight exclusive fighters with a total 0.5% chance of Limited rarity.",
+        heroIds: ["prismRogue", "galaxyGuardian", "dreamHunter", "thunderColossus", "neonVanguard", "eclipseQueen", "infinityKnight", "anniversaryAce"],
+        rarityChances: { Mythic: 99.5, Limited: 0.5 }
       }
     ];
 
@@ -1331,7 +1363,7 @@
         icon: "💠",
         cost: 6000,
         tier: 7,
-        description: "The hardest battles and the best chance of Limited equipment."
+        description: "The hardest battles, with an exact 0.5% chance of Limited equipment after a victory."
       }
     ];
 
@@ -1840,7 +1872,7 @@
 
     function renderHeroPacks() {
       heroPacks.innerHTML = heroPackDefinitions.map(pack => {
-        const possibleHeroes = heroDefinitions.filter(hero => pack.heroIds.includes(hero.id));
+        const possibleHeroes = pack.heroIds.map(heroDefinition);
         const collectedCount = possibleHeroes.filter(hero => state.heroes[hero.id]).length;
         return `
           <article class="pack-card hero-pack">
@@ -1848,7 +1880,16 @@
             <div class="pack-icon">${pack.icon}</div>
             <h3>${pack.name}</h3>
             <p>${pack.description}</p>
-            <p><strong>Possible:</strong> ${[...new Set(pack.rarities)].join(", ")}</p>
+            <p><strong>Possible:</strong> ${Object.keys(pack.rarityChances).join(", ")}</p>
+            <div class="pack-chances">
+              <strong>Base fighter chances</strong>
+              ${possibleHeroes.map(hero => `
+                <div>
+                  <span>${hero.name} · ${hero.rarity}</span>
+                  <strong>${formatChance(heroPullChance(pack, hero))}%</strong>
+                </div>
+              `).join("")}
+            </div>
             <p><strong>Collection:</strong> ${collectedCount} / ${possibleHeroes.length} possible heroes owned</p>
             <button class="primary" type="button" data-hero-pack="${pack.id}" ${state.coins < pack.cost ? "disabled" : ""}>
               Open · ${pack.cost.toLocaleString()} coins
@@ -2098,7 +2139,7 @@
             <p>${equipmentIcons[item.type]} ${item.name}</p>
             <div class="station-progress"><span style="width:${percentage}%"></span></div>
             <small>${visitor ? `${station.progress} / ${duration} seconds` : "Customer arriving soon"}</small>
-            <div class="station-payment">${station.paid ? `Paid ${trainingPayment(item)} coins` : "Payment at halfway"}</div>
+            <div class="station-payment">${station.paid ? `Paid ${trainingPayment(item)} coins at start` : "Pays on arrival"}</div>
           </article>
         `;
       }).join("");
@@ -2174,7 +2215,7 @@
           id: "luck",
           icon: "🍀",
           name: "Luck",
-          description: `${state.upgrades.luck * 10}% chance to improve Hero Pack or victory-loot rarity.`,
+          description: `${state.upgrades.luck * 10}% chance to improve Hero Pack or victory-loot rarity up to Mythic. Limited stays fixed at 0.5%.`,
           next: state.upgrades.luck < 5
             ? `Next level: ${(state.upgrades.luck + 1) * 10}% upgrade chance`
             : "Luck is at its maximum."
@@ -2216,11 +2257,39 @@
       return rarities[Math.floor(Math.random() * rarities.length)];
     }
 
+    function weightedChance(chances) {
+      const roll = Math.random() * 100;
+      let cumulativeChance = 0;
+      for (const [rarity, chance] of Object.entries(chances)) {
+        cumulativeChance += chance;
+        if (roll < cumulativeChance) {
+          return rarity;
+        }
+      }
+      return Object.keys(chances).at(-1);
+    }
+
+    function heroPullChance(pack, hero) {
+      const heroesAtRarity = pack.heroIds
+        .map(heroDefinition)
+        .filter(candidate => candidate.rarity === hero.rarity).length;
+      return pack.rarityChances[hero.rarity] / heroesAtRarity;
+    }
+
+    function formatChance(chance) {
+      return Number.isInteger(chance)
+        ? chance
+        : chance.toFixed(3).replace(/0+$/, "").replace(/\.$/, "");
+    }
+
     function applyLuck(rarity, allowedRarities = rarityOrder) {
       if (Math.random() >= state.upgrades.luck * 0.1) {
         return rarity;
       }
       const nextRarity = rarityOrder[rarityInfo[rarity].rank + 1];
+      if (nextRarity === "Limited") {
+        return rarity;
+      }
       return nextRarity && allowedRarities.includes(nextRarity) ? nextRarity : rarity;
     }
 
@@ -2298,7 +2367,8 @@
         return;
       }
       state.coins -= pack.cost;
-      const rarity = applyLuck(weightedRarity(pack.rarities), [...new Set(pack.rarities)]);
+      const allowedRarities = Object.keys(pack.rarityChances);
+      const rarity = applyLuck(weightedChance(pack.rarityChances), allowedRarities);
       const candidates = heroDefinitions.filter(hero =>
         pack.heroIds.includes(hero.id) &&
         hero.rarity === rarity
@@ -2325,10 +2395,10 @@
 
     function victoryRarities(tier) {
       if (tier >= 7) {
-        return ["Common", "Uncommon", "Rare", "Epic", "Epic", "Legendary", "Legendary", "Legendary", "Mythic", "Mythic", "Mythic", "Mythic", "Limited", "Limited", "Limited", "Limited", "Limited"];
+        return ["Common", "Uncommon", "Rare", "Epic", "Epic", "Legendary", "Legendary", "Legendary", "Mythic", "Mythic", "Mythic", "Mythic"];
       }
       if (tier === 6) {
-        return ["Common", "Uncommon", "Rare", "Rare", "Epic", "Epic", "Epic", "Legendary", "Legendary", "Legendary", "Legendary", "Mythic", "Mythic", "Mythic", "Mythic", "Limited"];
+        return ["Common", "Uncommon", "Rare", "Rare", "Epic", "Epic", "Epic", "Legendary", "Legendary", "Legendary", "Legendary", "Mythic", "Mythic", "Mythic", "Mythic"];
       }
       if (tier >= 5) {
         return ["Common", "Uncommon", "Rare", "Rare", "Epic", "Epic", "Epic", "Legendary", "Legendary", "Legendary", "Legendary"];
@@ -2343,6 +2413,14 @@
         return ["Common", "Common", "Common", "Uncommon", "Uncommon", "Uncommon", "Uncommon", "Rare", "Rare", "Epic"];
       }
       return ["Common", "Common", "Common", "Common", "Common", "Uncommon", "Uncommon", "Uncommon", "Rare"];
+    }
+
+    function rollVictoryRarity(tier) {
+      if (tier >= 7 && Math.random() < 0.005) {
+        return "Limited";
+      }
+      const nonLimitedRarities = rarityOrder.filter(rarity => rarity !== "Limited");
+      return applyLuck(weightedRarity(victoryRarities(tier)), nonLimitedRarities);
     }
 
     function createLoot(rarity) {
@@ -2533,7 +2611,7 @@
     function finishBattle(won) {
       const battle = currentBattle;
       const rarity = won
-        ? applyLuck(weightedRarity(victoryRarities(battle.pack.tier)))
+        ? rollVictoryRarity(battle.pack.tier)
         : "Common";
       const loot = createLoot(rarity);
       state.inventory.push(loot);
@@ -2674,17 +2752,21 @@
         if (station.visitorIndex === null) {
           station.visitorIndex = Math.floor(Math.random() * visitorProfiles.length);
           station.progress = 0;
-          station.paid = false;
-          return;
-        }
-        station.progress += 1;
-        if (!station.paid && station.progress >= trainingDuration / 2) {
           const payment = trainingPayment(item);
           state.coins += payment;
           state.facility.earnings += payment;
           station.paid = true;
-          showToast(`${visitorProfiles[station.visitorIndex].name} paid ${payment} coins while training.`);
+          showToast(`${visitorProfiles[station.visitorIndex].name} paid ${payment} coins on arrival.`);
+          return;
         }
+        if (!station.paid) {
+          const payment = trainingPayment(item);
+          state.coins += payment;
+          state.facility.earnings += payment;
+          station.paid = true;
+          showToast(`${visitorProfiles[station.visitorIndex].name} paid ${payment} coins at the start.`);
+        }
+        station.progress += 1;
         if (station.progress >= trainingDuration) {
           state.facility.customersServed += 1;
           state.inventory = state.inventory.filter(candidate => candidate.id !== item.id);
