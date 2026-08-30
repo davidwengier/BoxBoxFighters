@@ -1,0 +1,511 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#111218">
+  <title>BoxBoxFighters</title>
+  <link rel="icon" href="favicon.svg" type="image/svg+xml">
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    :root {
+      color-scheme: dark;
+      font-family: Inter, system-ui, sans-serif;
+      background: #09090d;
+      color: #f4f4f5;
+    }
+
+    body {
+      min-width: 320px;
+      min-height: 100vh;
+      margin: 0;
+      background:
+        radial-gradient(circle at 15% 0%, rgb(220 38 38 / 18%), transparent 32rem),
+        radial-gradient(circle at 90% 12%, rgb(249 115 22 / 12%), transparent 30rem),
+        #09090d;
+    }
+
+    button {
+      font: inherit;
+    }
+
+    .app {
+      width: min(1180px, calc(100% - 2rem));
+      margin: 0 auto;
+      padding-bottom: 3rem;
+    }
+
+    header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1rem;
+      padding: 0.5rem 0 1rem;
+    }
+
+    .logo-side,
+    .header-side {
+      display: flex;
+      flex-direction: column;
+      gap: 0.6rem;
+    }
+
+    .header-side {
+      align-items: flex-end;
+    }
+
+    .logo {
+      margin: 0;
+      line-height: 0;
+    }
+
+    .logo-image {
+      width: clamp(13rem, 30vw, 22rem);
+      max-width: 100%;
+      height: auto;
+    }
+
+    .stats,
+    .header-actions {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: flex-end;
+      gap: 0.5rem;
+    }
+
+    .stat {
+      min-width: 7rem;
+      padding: 0.55rem 0.8rem;
+      border: 1px solid #493239;
+      border-radius: 0.65rem;
+      background: rgb(16 16 25 / 92%);
+      text-align: center;
+    }
+
+    .stat small {
+      display: block;
+      color: #a1a1aa;
+      font-size: 0.64rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+    }
+
+    .stat strong {
+      color: #fb923c;
+      font-size: 1.08rem;
+    }
+
+    .secondary,
+    .danger {
+      padding: 0.65rem 0.8rem;
+      border-radius: 0.6rem;
+      color: white;
+      font-weight: 850;
+      cursor: pointer;
+    }
+
+    .secondary {
+      width: 9rem;
+      border: 0;
+      background: #353040;
+    }
+
+    .secondary:hover {
+      background: #4a4258;
+    }
+
+    .danger {
+      width: fit-content;
+      border: 1px solid #713f4e;
+      background: transparent;
+      color: #fda4af;
+    }
+
+    nav {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.4rem;
+      margin-bottom: 1rem;
+      padding: 0.4rem;
+      border: 1px solid #27272f;
+      border-radius: 0.8rem;
+      background: #111218;
+    }
+
+    nav button {
+      min-width: 8rem;
+      padding: 0.75rem;
+      border: 0;
+      border-radius: 0.55rem;
+      background: transparent;
+      color: #a1a1aa;
+      cursor: pointer;
+      flex: 1;
+      font-weight: 850;
+      text-transform: uppercase;
+    }
+
+    nav button.active {
+      background: #dc2626;
+      color: white;
+    }
+
+    .screen {
+      display: none;
+    }
+
+    .screen.active {
+      display: block;
+      animation: screen-in 180ms ease-out;
+    }
+
+    .hero {
+      position: relative;
+      min-height: 19rem;
+      overflow: hidden;
+      padding: clamp(1.5rem, 5vw, 4rem);
+      border: 1px solid #4b3034;
+      border-radius: 1rem;
+      background:
+        linear-gradient(95deg, rgb(9 8 14 / 97%) 15%, rgb(9 8 14 / 42%)),
+        linear-gradient(135deg, #991b1b, #18181b 58%, #9a3412);
+      box-shadow: 0 1rem 3rem rgb(0 0 0 / 30%);
+    }
+
+    .hero::after {
+      position: absolute;
+      right: 7%;
+      bottom: -30%;
+      color: rgb(255 255 255 / 10%);
+      content: "🥊";
+      font-size: clamp(11rem, 30vw, 22rem);
+      line-height: 1;
+      transform: rotate(-12deg);
+    }
+
+    .hero-content {
+      position: relative;
+      z-index: 1;
+      max-width: 40rem;
+    }
+
+    .eyebrow {
+      color: #fdba74;
+      font-size: 0.8rem;
+      font-weight: 900;
+      letter-spacing: 0.17em;
+      text-transform: uppercase;
+    }
+
+    h2 {
+      margin: 0;
+      font-family: Georgia, serif;
+      font-size: clamp(1.8rem, 5vw, 3rem);
+    }
+
+    .hero h2 {
+      margin: 0.45rem 0;
+      font-size: clamp(2.3rem, 7vw, 5rem);
+      font-style: italic;
+      line-height: 0.95;
+    }
+
+    .hero p,
+    .section-head p,
+    .feature-card p {
+      color: #b8b5c0;
+      line-height: 1.6;
+    }
+
+    .section-head {
+      margin: 1.6rem 0 0.8rem;
+    }
+
+    .section-head p {
+      margin: 0.3rem 0 0;
+    }
+
+    .feature-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 0.85rem;
+    }
+
+    .feature-card {
+      min-height: 13rem;
+      padding: 1.1rem;
+      border: 1px solid #3f3f46;
+      border-radius: 0.85rem;
+      background: linear-gradient(145deg, #18151b, #101118);
+      box-shadow: inset 0 1px rgb(255 255 255 / 5%);
+    }
+
+    .feature-card .icon {
+      font-size: 2.5rem;
+    }
+
+    .feature-card h3 {
+      margin: 0.55rem 0 0;
+      font-family: Georgia, serif;
+      font-size: 1.35rem;
+    }
+
+    .empty-state {
+      padding: 3rem 1rem;
+      border: 1px dashed #52525b;
+      border-radius: 0.9rem;
+      background: rgb(17 18 24 / 72%);
+      text-align: center;
+    }
+
+    .empty-state .icon {
+      font-size: 4rem;
+    }
+
+    .empty-state p {
+      color: #a1a1aa;
+    }
+
+    .modal {
+      position: fixed;
+      inset: 0;
+      z-index: 20;
+      display: none;
+      padding: 1rem;
+      background: rgb(0 0 0 / 75%);
+      place-items: center;
+    }
+
+    .modal.open {
+      display: grid;
+    }
+
+    .modal-card {
+      width: min(40rem, 100%);
+      max-height: calc(100vh - 2rem);
+      overflow: auto;
+      padding: 1.25rem;
+      border: 1px solid #52525b;
+      border-radius: 1rem;
+      background: #15151d;
+      box-shadow: 0 1.5rem 4rem rgb(0 0 0 / 55%);
+    }
+
+    .modal-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1rem;
+    }
+
+    .modal-head button {
+      width: auto;
+    }
+
+    .modal-card li {
+      margin: 0.7rem 0;
+      color: #c4c1ca;
+      line-height: 1.5;
+    }
+
+    @keyframes screen-in {
+      from {
+        opacity: 0;
+        transform: translateY(0.4rem);
+      }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      .screen.active {
+        animation: none;
+      }
+    }
+
+    @media (max-width: 760px) {
+      header {
+        align-items: flex-start;
+        flex-direction: column;
+      }
+
+      .header-side {
+        width: 100%;
+        align-items: stretch;
+      }
+
+      .stats,
+      .header-actions {
+        justify-content: flex-start;
+      }
+
+      .header-actions .secondary {
+        width: auto;
+        flex: 1;
+      }
+
+      .feature-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="app">
+    <header>
+      <div class="logo-side">
+        <h1 class="logo">
+          <img class="logo-image" src="logo.svg" alt="Box Box Fighters">
+        </h1>
+        <button id="reset" class="danger" type="button">Reset game</button>
+      </div>
+      <div class="header-side">
+        <div class="stats">
+          <div class="stat"><small>Coins</small><strong id="coins">0</strong></div>
+          <div class="stat"><small>Wins</small><strong id="wins">0</strong></div>
+          <div class="stat"><small>Fighters</small><strong id="fighters">0</strong></div>
+        </div>
+        <div class="header-actions">
+          <button id="helpOpen" class="secondary" type="button">Help</button>
+        </div>
+      </div>
+    </header>
+
+    <nav aria-label="Game sections">
+      <button class="active" type="button" data-screen="arena">Arena</button>
+      <button type="button" data-screen="roster">Fighters</button>
+      <button type="button" data-screen="training">Training</button>
+    </nav>
+
+    <main>
+      <section id="arena" class="screen active">
+        <div class="hero">
+          <div class="hero-content">
+            <div class="eyebrow">Welcome to the arena</div>
+            <h2>Build your team. Win every fight.</h2>
+            <p>BoxBoxFighters is ready for its first game systems. Choose fighters, train their abilities, and battle your way to the top.</p>
+          </div>
+        </div>
+
+        <div class="section-head">
+          <h2>Game foundation</h2>
+          <p>The base layout is ready for the fighting mechanics, collection, and progression systems.</p>
+        </div>
+        <div class="feature-grid">
+          <article class="feature-card">
+            <div class="icon">⚔️</div>
+            <h3>Battle</h3>
+            <p>Fight controls, opponents, and rewards will live in the Arena.</p>
+          </article>
+          <article class="feature-card">
+            <div class="icon">🥋</div>
+            <h3>Collect</h3>
+            <p>Build a roster of unique fighters with their own stats and skills.</p>
+          </article>
+          <article class="feature-card">
+            <div class="icon">💪</div>
+            <h3>Improve</h3>
+            <p>Train your fighters and prepare them for tougher challenges.</p>
+          </article>
+        </div>
+      </section>
+
+      <section id="roster" class="screen">
+        <div class="section-head">
+          <h2>Your fighters</h2>
+          <p>Your collected fighters will appear here.</p>
+        </div>
+        <div class="empty-state">
+          <div class="icon">🥊</div>
+          <h2>No fighters yet</h2>
+          <p>The first fighter system can be added next.</p>
+        </div>
+      </section>
+
+      <section id="training" class="screen">
+        <div class="section-head">
+          <h2>Training gym</h2>
+          <p>Improve fighter stats and unlock abilities here.</p>
+        </div>
+        <div class="empty-state">
+          <div class="icon">🏋️</div>
+          <h2>Gym opening soon</h2>
+          <p>Training will become available after fighters are added.</p>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <div id="helpModal" class="modal" role="dialog" aria-modal="true" aria-labelledby="helpTitle">
+    <div class="modal-card">
+      <div class="modal-head">
+        <h2 id="helpTitle">How to play</h2>
+        <button id="helpClose" class="secondary" type="button">Close</button>
+      </div>
+      <ul>
+        <li><strong>Arena:</strong> enter fights and earn rewards.</li>
+        <li><strong>Fighters:</strong> view and manage your team.</li>
+        <li><strong>Training:</strong> make your fighters stronger.</li>
+        <li>More instructions will appear here as new systems are added.</li>
+      </ul>
+    </div>
+  </div>
+
+  <script>
+    const state = {
+      coins: 0,
+      wins: 0,
+      fighters: 0
+    };
+
+    function renderStats() {
+      document.querySelector("#coins").textContent = state.coins.toLocaleString();
+      document.querySelector("#wins").textContent = state.wins.toLocaleString();
+      document.querySelector("#fighters").textContent = state.fighters.toLocaleString();
+    }
+
+    function showScreen(screenId) {
+      document.querySelectorAll(".screen").forEach(screen => {
+        screen.classList.toggle("active", screen.id === screenId);
+      });
+      document.querySelectorAll("nav button").forEach(button => {
+        button.classList.toggle("active", button.dataset.screen === screenId);
+      });
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    }
+
+    document.querySelectorAll("nav button").forEach(button => {
+      button.addEventListener("click", () => showScreen(button.dataset.screen));
+    });
+
+    const helpModal = document.querySelector("#helpModal");
+    const helpOpen = document.querySelector("#helpOpen");
+    helpOpen.addEventListener("click", () => helpModal.classList.add("open"));
+    document.querySelector("#helpClose").addEventListener("click", () => {
+      helpModal.classList.remove("open");
+      helpOpen.focus();
+    });
+    helpModal.addEventListener("click", event => {
+      if (event.target === helpModal) {
+        helpModal.classList.remove("open");
+        helpOpen.focus();
+      }
+    });
+    document.addEventListener("keydown", event => {
+      if (event.key === "Escape" && helpModal.classList.contains("open")) {
+        helpModal.classList.remove("open");
+        helpOpen.focus();
+      }
+    });
+    document.querySelector("#reset").addEventListener("click", () => {
+      if (window.confirm("Reset all BoxBoxFighters progress?")) {
+        localStorage.removeItem("boxBoxFightersSave");
+        window.location.reload();
+      }
+    });
+
+    renderStats();
+  </script>
+</body>
+</html>

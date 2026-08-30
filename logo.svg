@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 180" role="img" aria-labelledby="title">
+  <title id="title">Box Box Fighters</title>
+  <defs>
+    <linearGradient id="badge" x1="0" y1="0" x2="1" y2="1">
+      <stop stop-color="#ef4444"/>
+      <stop offset="1" stop-color="#9a3412"/>
+    </linearGradient>
+  </defs>
+  <rect width="640" height="180" rx="30" fill="#111218"/>
+  <g transform="translate(24 20) rotate(-7 55 70)">
+    <rect width="110" height="140" rx="22" fill="url(#badge)" stroke="#fed7aa" stroke-width="4"/>
+    <path d="M23 75c0-15 9-25 21-25 9 0 15 5 17 13 3-8 9-13 18-13 11 0 18 9 18 22v16c0 14-10 24-24 24H48c-15 0-25-11-25-27Z" fill="#fff"/>
+    <path d="M35 51V36M49 49V32M67 51V34M83 55V41" fill="none" stroke="#fff" stroke-width="11" stroke-linecap="round"/>
+  </g>
+  <text x="155" y="79" fill="#fff" font-family="Arial, sans-serif" font-size="58" font-style="italic" font-weight="900">BOX BOX</text>
+  <text x="155" y="139" fill="#fb923c" font-family="Arial, sans-serif" font-size="58" font-style="italic" font-weight="900">FIGHTERS</text>
+</svg>
