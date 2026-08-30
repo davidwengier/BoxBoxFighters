@@ -620,6 +620,87 @@
       color: #f87171;
     }
 
+    .career-summary,
+    .stat-grid {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 0.75rem;
+    }
+
+    .career-summary {
+      margin-top: 1rem;
+    }
+
+    .career-metric,
+    .stat-card {
+      padding: 1rem;
+      border: 1px solid #423c4a;
+      border-radius: 0.8rem;
+      background: linear-gradient(145deg, #18161e, #0d0e14);
+      box-shadow: inset 0 1px rgb(255 255 255 / 6%);
+    }
+
+    .career-metric strong,
+    .stat-card strong {
+      display: block;
+      color: #fbbf24;
+      font-size: 1.45rem;
+    }
+
+    .career-metric span,
+    .stat-card span {
+      color: #aaa6b4;
+      font-size: 0.75rem;
+    }
+
+    .goal-card {
+      min-height: 14rem;
+    }
+
+    .goal-card.complete {
+      border-color: #16a34a;
+      background:
+        radial-gradient(circle at 100% 0%, rgb(34 197 94 / 18%), transparent 9rem),
+        linear-gradient(145deg, #171b19, #0d0e14);
+    }
+
+    .goal-card.claimed,
+    .achievement-card.locked {
+      opacity: 0.65;
+    }
+
+    .goal-progress {
+      height: 0.55rem;
+      margin: 0.8rem 0;
+      overflow: hidden;
+      border-radius: 999px;
+      background: #302d36;
+    }
+
+    .goal-progress span {
+      display: block;
+      height: 100%;
+      border-radius: inherit;
+      background: linear-gradient(90deg, #dc2626, #f97316, #facc15);
+    }
+
+    .achievement-state {
+      display: inline-block;
+      margin-top: 0.5rem;
+      padding: 0.25rem 0.5rem;
+      border-radius: 999px;
+      background: #3f3f46;
+      color: #d4d4d8;
+      font-size: 0.7rem;
+      font-weight: 900;
+      text-transform: uppercase;
+    }
+
+    .achievement-card.unlocked .achievement-state {
+      background: #14532d;
+      color: #86efac;
+    }
+
     .pack-opening {
       text-align: center;
       perspective: 70rem;
@@ -656,6 +737,31 @@
 
     .reveal-card.revealed {
       transform: rotateY(180deg);
+    }
+
+    .pack-opening.reveal-mythic .reveal-card {
+      border-color: #fb7185;
+      box-shadow:
+        0 0 2rem rgb(251 113 133 / 45%),
+        0 1.5rem 3rem rgb(0 0 0 / 55%);
+      animation: mythic-charge 1.1s ease-in-out infinite alternate;
+    }
+
+    .pack-opening.reveal-limited .reveal-card {
+      border-color: transparent;
+      background:
+        repeating-linear-gradient(45deg, transparent 0 0.8rem, rgb(255 255 255 / 8%) 0.8rem 1.6rem) padding-box,
+        linear-gradient(145deg, #111827, #18181b) padding-box,
+        linear-gradient(90deg, #ef4444, #facc15, #22c55e, #38bdf8, #a855f7, #ef4444) border-box;
+      box-shadow:
+        0 0 2.8rem rgb(34 211 238 / 48%),
+        0 1.5rem 3rem rgb(0 0 0 / 60%);
+      animation: limited-charge 700ms ease-in-out infinite alternate;
+    }
+
+    .pack-opening.reveal-mythic .reveal-card.revealed,
+    .pack-opening.reveal-limited .reveal-card.revealed {
+      animation: none;
     }
 
     .reveal-face {
@@ -735,7 +841,7 @@
 
     .battle-actions {
       display: grid;
-      grid-template-columns: repeat(3, 1fr);
+      grid-template-columns: repeat(4, 1fr);
       gap: 0.5rem;
       margin-top: 1rem;
     }
@@ -754,6 +860,13 @@
     .battle-action:hover {
       border-color: #fb923c;
       background: #3b3030;
+    }
+
+    .battle-action:disabled {
+      border-color: #3f3f46;
+      background: #202028;
+      color: #777482;
+      cursor: not-allowed;
     }
 
     .battle-action span {
@@ -780,6 +893,40 @@
       margin: 0.2rem 0;
     }
 
+    .battle-intent {
+      margin: 0.8rem 0;
+      padding: 0.7rem;
+      border: 1px solid #713f4e;
+      border-radius: 0.65rem;
+      background: rgb(127 29 29 / 20%);
+      color: #fecdd3;
+      font-size: 0.82rem;
+      font-weight: 800;
+    }
+
+    .battle-statuses {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 0.4rem;
+      margin-top: 0.6rem;
+    }
+
+    .battle-status {
+      padding: 0.22rem 0.45rem;
+      border-radius: 999px;
+      background: #3f2c46;
+      color: #f0abfc;
+      font-size: 0.68rem;
+      font-weight: 850;
+    }
+
+    .boss-phase {
+      color: #fbbf24;
+      font-weight: 900;
+      text-transform: uppercase;
+    }
+
     .loot-reward {
       margin: 1rem 0;
       padding: 0.8rem;
@@ -792,6 +939,34 @@
       display: block;
       margin-top: 0.25rem;
       font-size: 1.1rem;
+    }
+
+    .loot-reward.reward-mythic {
+      animation: mythic-charge 1s ease-in-out 3 alternate;
+      box-shadow: 0 0 2rem rgb(251 113 133 / 35%);
+    }
+
+    .loot-reward.reward-limited {
+      border-color: transparent;
+      background:
+        linear-gradient(#111118, #111118) padding-box,
+        linear-gradient(90deg, #ef4444, #facc15, #22c55e, #38bdf8, #a855f7) border-box;
+      animation: limited-charge 650ms ease-in-out 4 alternate;
+      box-shadow: 0 0 2.5rem rgb(34 211 238 / 45%);
+    }
+
+    @keyframes mythic-charge {
+      to {
+        filter: brightness(1.18);
+        transform: translateY(-0.3rem) scale(1.015);
+      }
+    }
+
+    @keyframes limited-charge {
+      to {
+        filter: hue-rotate(80deg) brightness(1.22);
+        transform: translateY(-0.35rem) scale(1.025);
+      }
     }
 
     #toast {
@@ -1357,6 +1532,13 @@
         animation: none;
         transition: none;
       }
+
+      .pack-opening.reveal-mythic .reveal-card,
+      .pack-opening.reveal-limited .reveal-card,
+      .loot-reward.reward-mythic,
+      .loot-reward.reward-limited {
+        animation: none;
+      }
     }
 
     @media (max-width: 760px) {
@@ -1413,7 +1595,9 @@
       .pack-grid,
       .hero-grid,
       .gear-grid,
-      .station-grid {
+      .station-grid,
+      .career-summary,
+      .stat-grid {
         grid-template-columns: 1fr;
       }
 
@@ -1483,6 +1667,7 @@
       <button type="button" data-screen="equipment">Swords</button>
       <button type="button" data-screen="training">Training Facility</button>
       <button type="button" data-screen="upgrades">Upgrades</button>
+      <button type="button" data-screen="career">Career</button>
     </nav>
 
     <main>
@@ -1558,6 +1743,32 @@
         </div>
         <div id="upgradeGrid" class="feature-grid"></div>
       </section>
+
+      <section id="career" class="screen">
+        <div class="section-head">
+          <h2>Manager career</h2>
+          <p>Complete goals, earn rewards, unlock achievements, and track every record from your fighting empire.</p>
+        </div>
+        <div id="careerSummary" class="career-summary"></div>
+
+        <div class="section-head">
+          <h2>Quests</h2>
+          <p>Claim each completed goal once. Quest rewards support progression without adding automatic fight payouts.</p>
+        </div>
+        <div id="questGrid" class="feature-grid"></div>
+
+        <div class="section-head">
+          <h2>Achievements</h2>
+          <p>Permanent milestones that show everything you have accomplished.</p>
+        </div>
+        <div id="achievementGrid" class="feature-grid"></div>
+
+        <div class="section-head">
+          <h2>Lifetime statistics</h2>
+          <p>Your strongest records across packs, battles, loot, forging, and the Training Facility.</p>
+        </div>
+        <div id="statGrid" class="stat-grid"></div>
+      </section>
     </main>
   </div>
 
@@ -1571,12 +1782,15 @@
         <li><strong>Hero Packs:</strong> every fighter belongs to one specific pack, and each card lists its fighter chances. Limited rarity has a fixed 0.5% total chance.</li>
         <li><strong>Fight Packs:</strong> choose a challenge, reveal its monster, and control your active hero in a turn-based battle. The free Wilds starter pack can only be claimed once.</li>
         <li><strong>During battle:</strong> use Attack for reliable damage, Power Strike for risky heavy damage, or Guard for light damage and protection.</li>
+        <li><strong>Tactics:</strong> read the monster's next move, use each fighter's special ability, and take advantage of healing, weakening, and burn effects.</li>
+        <li><strong>Boss Packs:</strong> survive every phase to earn guaranteed high-rarity gear. Later phases have stronger stats.</li>
         <li><strong>Winning:</strong> improves your chances of stronger loot, but every rarity roll can still give Common gear. Limited Arena victories have a fixed 0.5% chance of Limited gear.</li>
         <li><strong>Fighters:</strong> choose which hero enters battles and see their total stats.</li>
         <li><strong>Collection:</strong> track every available hero and every sword, armor, and shield you have discovered.</li>
         <li><strong>Swords:</strong> equip one sword to each hero for bonus attack. Forging keeps your strongest sword, destroys every other sword, and adds part of their combined attack to it.</li>
         <li><strong>Training Facility:</strong> load armor or shields into an open station. A customer pays as soon as they arrive, trains, then returns the gear for reuse.</li>
         <li><strong>Upgrades:</strong> improve customer speed, automatically load gear with Auto Trainer, and increase the chance of better Hero Pack and victory-loot rarities.</li>
+        <li><strong>Career:</strong> complete quests for balanced coin rewards, unlock achievements, and track lifetime records.</li>
       </ul>
       <button id="tutorialReplay" class="primary" type="button">Replay tutorial</button>
     </div>
@@ -2020,7 +2234,10 @@
       { id: "deepOne", name: "The Deep One", icon: "🔱", tier: 5, power: 430 },
       { id: "marbleColossus", name: "Marble Colossus", icon: "🗿", tier: 6, power: 490 },
       { id: "thunderMinotaur", name: "Thunder Minotaur", icon: "🐂", tier: 6, power: 525 },
-      { id: "arenaGod", name: "Arena God", icon: "⚡", tier: 6, power: 560 }
+      { id: "arenaGod", name: "Arena God", icon: "⚡", tier: 6, power: 560 },
+      { id: "ironWarlord", name: "Iron Warlord", icon: "🦾", tier: 4, power: 345 },
+      { id: "primalColossus", name: "Primal Colossus", icon: "🦖", tier: 6, power: 600 },
+      { id: "voidOverlord", name: "Void Overlord", icon: "🌌", tier: 7, power: 775 }
     ];
 
     const fightPackDefinitions = [
@@ -2124,6 +2341,42 @@
         tier: 6,
         monsterIds: ["marbleColossus", "thunderMinotaur", "arenaGod"],
         description: "Challenge three exclusive titans for improved Mythic loot chances."
+      },
+      {
+        id: "ironSiege",
+        name: "Iron Warlord Boss Pack",
+        icon: "🦾",
+        cost: 1000,
+        tier: 4,
+        monsterIds: ["ironWarlord"],
+        boss: true,
+        phases: 2,
+        guaranteedRarity: "Epic",
+        description: "A two-phase boss battle that guarantees Epic-or-better victory loot."
+      },
+      {
+        id: "primalTrial",
+        name: "Primal Colossus Boss Pack",
+        icon: "🦖",
+        cost: 4500,
+        tier: 6,
+        monsterIds: ["primalColossus"],
+        boss: true,
+        phases: 3,
+        guaranteedRarity: "Mythic",
+        description: "A three-phase titan battle that guarantees Mythic victory loot."
+      },
+      {
+        id: "voidThrone",
+        name: "Void Overlord Boss Pack",
+        icon: "🌌",
+        cost: 7500,
+        tier: 7,
+        monsterIds: ["voidOverlord"],
+        boss: true,
+        phases: 3,
+        guaranteedRarity: "Mythic",
+        description: "The ultimate three-phase boss, guaranteeing Mythic loot with the usual 0.5% Limited chance."
       }
     ];
 
@@ -2169,13 +2422,13 @@
       Limited: { sword: 60, armor: 180, shield: 36 }
     };
     const trainingPayments = {
-      Common: 35,
-      Uncommon: 80,
-      Rare: 180,
-      Epic: 400,
-      Legendary: 900,
-      Mythic: 1900,
-      Limited: 4000
+      Common: 30,
+      Uncommon: 65,
+      Rare: 145,
+      Epic: 320,
+      Legendary: 700,
+      Mythic: 1450,
+      Limited: 3000
     };
     const baseTrainingDuration = 12;
     const rarityOrder = Object.keys(rarityInfo);
@@ -2186,6 +2439,44 @@
       { name: "Noah", skin: "#edb98a", hair: "#6b3f24", shirt: "#15803d" },
       { name: "Zara", skin: "#70402f", hair: "#171717", shirt: "#c2410c" },
       { name: "Finn", skin: "#e0a77e", hair: "#d1d5db", shirt: "#4338ca" }
+    ];
+
+    const statDefaults = {
+      heroPacksOpened: 0,
+      fightPacksOpened: 0,
+      totalDamage: 0,
+      strongestHit: 0,
+      powerStrikes: 0,
+      guardsUsed: 0,
+      abilitiesUsed: 0,
+      bossesDefeated: 0,
+      gearLooted: 0,
+      swordsForged: 0,
+      coinsEarned: 0,
+      coinsSpent: 0
+    };
+
+    const questDefinitions = [
+      { id: "openPack", icon: "🎁", name: "Open for business", description: "Open 3 packs of any kind.", target: 3, reward: 150, progress: () => state.stats.heroPacksOpened + state.stats.fightPacksOpened },
+      { id: "winFights", icon: "🏆", name: "Arena regular", description: "Win 5 fights.", target: 5, reward: 300, progress: () => state.wins },
+      { id: "collectHeroes", icon: "🥊", name: "Build a roster", description: "Collect 10 different fighters.", target: 10, reward: 450, progress: () => Object.keys(state.heroes).length },
+      { id: "findGear", icon: "🛡️", name: "Stock the armory", description: "Find 10 pieces of gear.", target: 10, reward: 500, progress: () => state.stats.gearLooted },
+      { id: "serveCustomers", icon: "🏟️", name: "Popular facility", description: "Serve 10 training customers.", target: 10, reward: 600, progress: () => state.facility.customersServed },
+      { id: "forgeSword", icon: "⚔️", name: "Master smith", description: "Forge a sword once.", target: 1, reward: 350, progress: () => state.stats.swordsForged },
+      { id: "defeatBoss", icon: "👑", name: "Boss breaker", description: "Defeat your first boss.", target: 1, reward: 1000, progress: () => state.stats.bossesDefeated },
+      { id: "veteran", icon: "🌟", name: "Veteran manager", description: "Win 25 fights.", target: 25, reward: 1800, progress: () => state.wins }
+    ];
+
+    const achievementDefinitions = [
+      { icon: "🥉", name: "First victory", description: "Win one fight.", unlocked: () => state.wins >= 1 },
+      { icon: "🥈", name: "Monster hunter", description: "Win 25 fights.", unlocked: () => state.wins >= 25 },
+      { icon: "🥇", name: "Arena legend", description: "Win 100 fights.", unlocked: () => state.wins >= 100 },
+      { icon: "👥", name: "Team builder", description: "Collect 25 fighters.", unlocked: () => Object.keys(state.heroes).length >= 25 },
+      { icon: "🌍", name: "Full house", description: "Collect every fighter.", unlocked: () => Object.keys(state.heroes).length >= heroDefinitions.length },
+      { icon: "🔨", name: "Swordsmith", description: "Forge 10 swords.", unlocked: () => state.stats.swordsForged >= 10 },
+      { icon: "💥", name: "Heavy hitter", description: "Deal 100 damage in one hit.", unlocked: () => state.stats.strongestHit >= 100 },
+      { icon: "👑", name: "Boss hunter", description: "Defeat 10 bosses.", unlocked: () => state.stats.bossesDefeated >= 10 },
+      { icon: "💰", name: "Training tycoon", description: "Earn 25,000 coins from all sources.", unlocked: () => state.stats.coinsEarned >= 25000 }
     ];
 
     const state = {
@@ -2199,6 +2490,8 @@
       discoveredEquipment: {},
       starterFightClaimed: false,
       tutorialCompleted: false,
+      claimedQuests: {},
+      stats: { ...statDefaults },
       upgrades: {
         customerSpeed: 0,
         autoTrainer: 0,
@@ -2230,6 +2523,10 @@
     const trainingStations = document.querySelector("#trainingStations");
     const trainingGear = document.querySelector("#trainingGear");
     const upgradeGrid = document.querySelector("#upgradeGrid");
+    const careerSummary = document.querySelector("#careerSummary");
+    const questGrid = document.querySelector("#questGrid");
+    const achievementGrid = document.querySelector("#achievementGrid");
+    const statGrid = document.querySelector("#statGrid");
     const resultModal = document.querySelector("#resultModal");
     const resultContent = document.querySelector("#resultContent");
     const resultClose = document.querySelector("#resultClose");
@@ -2298,6 +2595,15 @@
         state.losses = Number.isInteger(parsed.losses) ? Math.max(0, parsed.losses) : 0;
         state.starterFightClaimed = Boolean(parsed.starterFightClaimed);
         state.tutorialCompleted = Boolean(parsed.tutorialCompleted);
+        state.claimedQuests = Object.fromEntries(questDefinitions
+          .filter(quest => parsed.claimedQuests?.[quest.id])
+          .map(quest => [quest.id, true]));
+        state.stats = Object.fromEntries(Object.entries(statDefaults).map(([key, defaultValue]) => {
+          const value = parsed.stats?.[key];
+          return [key, Number.isFinite(value) ? Math.max(0, Math.round(value)) : defaultValue];
+        }));
+        state.stats.gearLooted = Math.max(state.stats.gearLooted, Array.isArray(parsed.inventory) ? parsed.inventory.length : 0);
+        state.stats.coinsEarned = Math.max(state.stats.coinsEarned, Number(parsed.facility?.earnings) || 0);
         state.heroes = Object.fromEntries(heroDefinitions
           .filter(hero => Number.isInteger(parsed.heroes?.[hero.id]) && parsed.heroes[hero.id] > 0)
           .map(hero => [hero.id, parsed.heroes[hero.id]]));
@@ -2720,10 +3026,11 @@
         const starterClaimed = pack.id === "wilds" && state.starterFightClaimed;
         return `
         <article class="pack-card fight-pack fight-tier-${pack.tier} ${starterClaimed ? "claimed" : ""}">
-          <span class="pack-label">Fight Pack · Tier ${pack.tier}</span>
+          <span class="pack-label">${pack.boss ? `Boss Pack · ${pack.phases} phases` : `Fight Pack · Tier ${pack.tier}`}</span>
           <div class="pack-icon">${pack.icon}</div>
           <h3>${pack.name}</h3>
           <p>${pack.description}</p>
+          ${pack.guaranteedRarity ? `<p><strong>Guaranteed:</strong> ${pack.guaranteedRarity}-or-better victory loot</p>` : ""}
           <p><strong>Fighting:</strong> ${activeHero.name} · Power ${Math.round(heroPower(activeHero.id))}</p>
           <button class="primary" type="button" data-fight-pack="${pack.id}" ${state.coins < pack.cost || starterClaimed ? "disabled" : ""}>
             ${starterClaimed ? "Free fight already claimed" : pack.cost === 0 ? "Claim free fight" : `Fight · ${pack.cost.toLocaleString()} coins`}
@@ -3056,6 +3363,87 @@
       });
     }
 
+    function renderCareer() {
+      const completedQuests = questDefinitions.filter(quest => state.claimedQuests[quest.id]).length;
+      const unlockedAchievements = achievementDefinitions.filter(achievement => achievement.unlocked()).length;
+      careerSummary.innerHTML = `
+        <div class="career-metric"><strong>${completedQuests} / ${questDefinitions.length}</strong><span>Quests claimed</span></div>
+        <div class="career-metric"><strong>${unlockedAchievements} / ${achievementDefinitions.length}</strong><span>Achievements unlocked</span></div>
+        <div class="career-metric"><strong>${state.wins + state.losses}</strong><span>Total battles</span></div>
+        <div class="career-metric"><strong>${state.stats.bossesDefeated}</strong><span>Bosses defeated</span></div>
+      `;
+
+      questGrid.innerHTML = questDefinitions.map(quest => {
+        const progress = Math.min(quest.target, quest.progress());
+        const complete = progress >= quest.target;
+        const claimed = Boolean(state.claimedQuests[quest.id]);
+        return `
+          <article class="feature-card goal-card ${complete ? "complete" : ""} ${claimed ? "claimed" : ""}">
+            <div class="icon">${quest.icon}</div>
+            <h3>${quest.name}</h3>
+            <p>${quest.description}</p>
+            <div class="goal-progress"><span style="width:${progress / quest.target * 100}%"></span></div>
+            <p><strong>${progress.toLocaleString()} / ${quest.target.toLocaleString()}</strong> · ${quest.reward.toLocaleString()} coin reward</p>
+            <button class="primary" type="button" data-claim-quest="${quest.id}" ${!complete || claimed ? "disabled" : ""}>
+              ${claimed ? "Reward claimed" : complete ? `Claim ${quest.reward.toLocaleString()} coins` : "In progress"}
+            </button>
+          </article>
+        `;
+      }).join("");
+      questGrid.querySelectorAll("[data-claim-quest]").forEach(button => {
+        button.addEventListener("click", () => claimQuest(button.dataset.claimQuest));
+      });
+
+      achievementGrid.innerHTML = achievementDefinitions.map(achievement => {
+        const unlocked = achievement.unlocked();
+        return `
+          <article class="feature-card achievement-card ${unlocked ? "unlocked" : "locked"}">
+            <div class="icon">${unlocked ? achievement.icon : "🔒"}</div>
+            <h3>${achievement.name}</h3>
+            <p>${achievement.description}</p>
+            <span class="achievement-state">${unlocked ? "Unlocked" : "Locked"}</span>
+          </article>
+        `;
+      }).join("");
+
+      const statistics = [
+        ["🎁", state.stats.heroPacksOpened, "Hero Packs opened"],
+        ["👹", state.stats.fightPacksOpened, "Fight Packs opened"],
+        ["🏆", state.wins, "Battles won"],
+        ["💀", state.losses, "Battles lost"],
+        ["👑", state.stats.bossesDefeated, "Bosses defeated"],
+        ["💥", state.stats.totalDamage, "Total damage"],
+        ["⚡", state.stats.strongestHit, "Strongest hit"],
+        ["🌀", state.stats.abilitiesUsed, "Abilities used"],
+        ["🛡️", state.stats.guardsUsed, "Guards used"],
+        ["⚔️", state.stats.swordsForged, "Swords forged"],
+        ["🎒", state.stats.gearLooted, "Gear found"],
+        ["👥", state.facility.customersServed, "Customers served"],
+        ["🪙", state.stats.coinsEarned, "Coins earned"],
+        ["🧾", state.stats.coinsSpent, "Coins spent"]
+      ];
+      statGrid.innerHTML = statistics.map(([icon, value, label]) => `
+        <div class="stat-card">
+          <strong>${icon} ${value.toLocaleString()}</strong>
+          <span>${label}</span>
+        </div>
+      `).join("");
+    }
+
+    function claimQuest(questId) {
+      const quest = questDefinitions.find(candidate => candidate.id === questId);
+      if (!quest || state.claimedQuests[quest.id] || quest.progress() < quest.target) {
+        showToast("That quest reward is not ready to claim.");
+        return;
+      }
+      state.claimedQuests[quest.id] = true;
+      state.coins += quest.reward;
+      state.stats.coinsEarned += quest.reward;
+      saveGame();
+      render();
+      showToast(`${quest.name} complete! You earned ${quest.reward.toLocaleString()} coins.`);
+    }
+
     function render() {
       renderStats();
       renderHeroPacks();
@@ -3065,6 +3453,7 @@
       renderEquipment();
       renderTraining();
       renderUpgrades();
+      renderCareer();
     }
 
     function weightedRarity(rarities) {
@@ -3135,6 +3524,7 @@
         return;
       }
       state.coins -= cost;
+      state.stats.coinsSpent += cost;
       state.upgrades[upgradeId] += 1;
       state.facility.autoTrainerProgress = 0;
       saveGame();
@@ -3148,10 +3538,13 @@
       resultClose.onclick = null;
     }
 
-    function showPackReveal(title, faceMarkup, nextLabel, nextAction) {
+    function showPackReveal(title, faceMarkup, nextLabel, nextAction, rarity = null) {
       modalLocked = true;
+      const revealClass = rarity === "Mythic" || rarity === "Limited"
+        ? `reveal-${rarity.toLowerCase()}`
+        : "";
       resultContent.innerHTML = `
-        <div class="pack-opening">
+        <div class="pack-opening ${revealClass}">
           <h2 id="resultTitle">${title}</h2>
           <div class="reveal-card">
             <div class="reveal-face">${faceMarkup}</div>
@@ -3181,6 +3574,8 @@
         return;
       }
       state.coins -= pack.cost;
+      state.stats.coinsSpent += pack.cost;
+      state.stats.heroPacksOpened += 1;
       const allowedRarities = Object.keys(pack.rarityChances);
       const rarity = applyLuck(weightedChance(pack.rarityChances), allowedRarities);
       const candidates = heroDefinitions.filter(hero =>
@@ -3203,7 +3598,8 @@
             : "New hero joined your team!"}</p>
         `,
         "Keep hero",
-        closeResultModal
+        closeResultModal,
+        rarity
       );
     }
 
@@ -3270,6 +3666,8 @@
         return;
       }
       state.coins -= pack.cost;
+      state.stats.coinsSpent += pack.cost;
+      state.stats.fightPacksOpened += 1;
       if (pack.id === "wilds") {
         state.starterFightClaimed = true;
       }
@@ -3292,8 +3690,15 @@
         monsterStats,
         heroHp: heroBattleStats.health,
         monsterHp: monsterStats.health,
+        phase: 1,
+        phases: pack.phases || 1,
+        abilityCooldown: 0,
+        monsterWeakened: false,
+        burnTurns: 0,
+        intent: null,
         log: [`${hero.name} enters the arena against ${monster.name}.`]
       };
+      currentBattle.intent = chooseMonsterIntent(currentBattle);
       showPackReveal(
         pack.name,
         `
@@ -3313,6 +3718,43 @@
       renderBattle();
     }
 
+    function fighterAbility(hero) {
+      const rank = rarityInfo[hero.rarity].rank;
+      if (rank <= 1) {
+        return {
+          icon: "💚",
+          name: "Recovery Rush",
+          description: "Deal light damage and restore 22% health",
+          kind: "recover"
+        };
+      }
+      if (rank <= 3) {
+        return {
+          icon: "🌀",
+          name: "Disrupting Blow",
+          description: "Heavy damage and weaken the next attack",
+          kind: "weaken"
+        };
+      }
+      return {
+        icon: "🔥",
+        name: "Blazing Nova",
+        description: "Heavy damage and burn for 3 turns",
+        kind: "burn"
+      };
+    }
+
+    function chooseMonsterIntent(battle) {
+      const roll = Math.random();
+      if (battle.monsterHp < battle.monsterStats.health * 0.45 && roll < 0.18) {
+        return { type: "recover", icon: "💚", text: "Recover health" };
+      }
+      if (roll < (battle.pack.boss ? 0.55 : 0.38)) {
+        return { type: "heavy", icon: "💢", text: "Heavy attack" };
+      }
+      return { type: "strike", icon: "⚔️", text: "Normal attack" };
+    }
+
     function renderBattle() {
       if (!currentBattle) {
         return;
@@ -3320,9 +3762,11 @@
       const battle = currentBattle;
       const heroHealth = Math.max(0, battle.heroHp);
       const monsterHealth = Math.max(0, battle.monsterHp);
+      const ability = fighterAbility(battle.hero);
       resultContent.innerHTML = `
         <div class="battle-arena">
-          <h2 id="resultTitle">Fight!</h2>
+          <h2 id="resultTitle">${battle.pack.boss ? "Boss fight!" : "Fight!"}</h2>
+          ${battle.pack.boss ? `<div class="boss-phase">Phase ${battle.phase} of ${battle.phases}</div>` : ""}
           <div class="battle-versus">
             <div class="battle-side">
               ${heroPortrait(battle.hero)}
@@ -3338,6 +3782,12 @@
               <div class="health-bar"><span style="width:${monsterHealth / battle.monsterStats.health * 100}%"></span></div>
             </div>
           </div>
+          <div class="battle-statuses">
+            ${battle.burnTurns > 0 ? `<span class="battle-status">🔥 Burning · ${battle.burnTurns} turns</span>` : ""}
+            ${battle.monsterWeakened ? `<span class="battle-status">🌀 Weakened</span>` : ""}
+            ${battle.abilityCooldown > 0 ? `<span class="battle-status">⏳ Ability ready in ${battle.abilityCooldown}</span>` : ""}
+          </div>
+          <div class="battle-intent">${battle.intent.icon} ${battle.monster.name} intends to: ${battle.intent.text}</div>
           <div class="battle-log">
             ${battle.log.slice(-4).map(message => `<p>${message}</p>`).join("")}
           </div>
@@ -3354,6 +3804,10 @@
               🛡️ Guard
               <span>Light damage and block most of the counterattack</span>
             </button>
+            <button class="battle-action" type="button" data-battle-action="ability" ${battle.abilityCooldown > 0 ? "disabled" : ""}>
+              ${ability.icon} ${ability.name}
+              <span>${battle.abilityCooldown > 0 ? `Ready in ${battle.abilityCooldown} turns` : ability.description}</span>
+            </button>
           </div>
         </div>
       `;
@@ -3367,6 +3821,36 @@
       return Math.max(1, Math.round(attack * multiplier * roll - defense * 0.55));
     }
 
+    function recordDamage(battle, amount, countStrongest = true) {
+      const damage = Math.max(0, amount);
+      const appliedDamage = Math.min(battle.monsterHp, damage);
+      battle.monsterHp = Math.max(0, battle.monsterHp - appliedDamage);
+      state.stats.totalDamage += damage;
+      if (countStrongest) {
+        state.stats.strongestHit = Math.max(state.stats.strongestHit, damage);
+      }
+      return appliedDamage;
+    }
+
+    function advanceBossPhase(battle) {
+      if (!battle.pack.boss || battle.phase >= battle.phases) {
+        return false;
+      }
+      battle.phase += 1;
+      const baseStats = monsterBattleStats(battle.monster);
+      battle.monsterStats = {
+        attack: Math.round(baseStats.attack * (1 + (battle.phase - 1) * 0.12)),
+        health: Math.round(baseStats.health * (1 + (battle.phase - 1) * 0.18)),
+        defense: baseStats.defense + (battle.phase - 1) * 2
+      };
+      battle.monsterHp = battle.monsterStats.health;
+      battle.burnTurns = 0;
+      battle.monsterWeakened = false;
+      battle.intent = chooseMonsterIntent(battle);
+      battle.log.push(`${battle.monster.name} enters phase ${battle.phase} and grows stronger!`);
+      return true;
+    }
+
     function takeBattleTurn(action) {
       if (!currentBattle) {
         return;
@@ -3374,8 +3858,10 @@
       const battle = currentBattle;
       let guarded = false;
       let heroDamage = 0;
+      const burnWasActive = battle.burnTurns > 0;
 
       if (action === "power") {
+        state.stats.powerStrikes += 1;
         if (Math.random() < 0.7) {
           heroDamage = calculateDamage(
             battle.heroStats.attack,
@@ -3387,6 +3873,7 @@
           battle.log.push(`${battle.hero.name}'s Power Strike misses!`);
         }
       } else if (action === "guard") {
+        state.stats.guardsUsed += 1;
         guarded = true;
         heroDamage = calculateDamage(
           battle.heroStats.attack,
@@ -3394,6 +3881,30 @@
           0.55
         );
         battle.log.push(`${battle.hero.name} guards and counters for ${heroDamage} damage.`);
+      } else if (action === "ability") {
+        if (battle.abilityCooldown > 0) {
+          return;
+        }
+        const ability = fighterAbility(battle.hero);
+        state.stats.abilitiesUsed += 1;
+        battle.abilityCooldown = 3;
+        if (ability.kind === "recover") {
+          heroDamage = calculateDamage(battle.heroStats.attack, battle.monsterStats.defense, 0.75);
+          const healing = Math.min(
+            battle.heroStats.health - battle.heroHp,
+            Math.max(1, Math.round(battle.heroStats.health * 0.22))
+          );
+          battle.heroHp += healing;
+          battle.log.push(`${battle.hero.name} uses ${ability.name}, dealing ${heroDamage} damage and healing ${healing} health.`);
+        } else if (ability.kind === "weaken") {
+          heroDamage = calculateDamage(battle.heroStats.attack, battle.monsterStats.defense, 1.5);
+          battle.monsterWeakened = true;
+          battle.log.push(`${battle.hero.name} uses ${ability.name} for ${heroDamage} damage and weakens the counterattack.`);
+        } else {
+          heroDamage = calculateDamage(battle.heroStats.attack, battle.monsterStats.defense, 1.65);
+          battle.burnTurns = 3;
+          battle.log.push(`${battle.hero.name} uses ${ability.name} for ${heroDamage} damage and ignites the enemy.`);
+        }
       } else {
         heroDamage = calculateDamage(
           battle.heroStats.attack,
@@ -3403,40 +3914,79 @@
         battle.log.push(`${battle.hero.name} attacks for ${heroDamage} damage.`);
       }
 
-      battle.monsterHp = Math.max(0, battle.monsterHp - heroDamage);
+      heroDamage = recordDamage(battle, heroDamage);
+      if (burnWasActive && battle.monsterHp > 0) {
+        const burnDamage = Math.max(2, Math.round(battle.heroStats.attack * 0.18));
+        recordDamage(battle, burnDamage, false);
+        battle.burnTurns -= 1;
+        battle.log.push(`${battle.monster.name} takes ${burnDamage} burn damage.`);
+      }
+      if (action !== "ability" && battle.abilityCooldown > 0) {
+        battle.abilityCooldown -= 1;
+      }
       if (battle.monsterHp <= 0) {
+        if (advanceBossPhase(battle)) {
+          renderBattle();
+          return;
+        }
         finishBattle(true);
         return;
       }
 
-      let monsterDamage = calculateDamage(
-        battle.monsterStats.attack,
-        battle.heroStats.defense
-      );
-      if (guarded) {
-        monsterDamage = Math.max(1, Math.round(monsterDamage * 0.35));
+      if (battle.intent.type === "recover") {
+        const healing = Math.min(
+          battle.monsterStats.health - battle.monsterHp,
+          Math.max(1, Math.round(battle.monsterStats.health * 0.16))
+        );
+        battle.monsterHp += healing;
+        battle.log.push(`${battle.monster.name} recovers ${healing} health.`);
+      } else {
+        let monsterDamage = calculateDamage(
+          battle.monsterStats.attack,
+          battle.heroStats.defense,
+          battle.intent.type === "heavy" ? 1.55 : 1
+        );
+        if (battle.monsterWeakened) {
+          monsterDamage = Math.max(1, Math.round(monsterDamage * 0.55));
+          battle.monsterWeakened = false;
+        }
+        if (guarded) {
+          monsterDamage = Math.max(1, Math.round(monsterDamage * 0.35));
+        }
+        battle.heroHp = Math.max(0, battle.heroHp - monsterDamage);
+        battle.log.push(
+          `${battle.monster.name} ${battle.intent.type === "heavy" ? "unleashes a heavy attack" : "hits back"} for ${monsterDamage} damage${guarded ? " through your guard" : ""}.`
+        );
       }
-      battle.heroHp = Math.max(0, battle.heroHp - monsterDamage);
-      battle.log.push(
-        `${battle.monster.name} hits back for ${monsterDamage} damage${guarded ? " through your guard" : ""}.`
-      );
       if (battle.heroHp <= 0) {
         finishBattle(false);
         return;
       }
+      battle.intent = chooseMonsterIntent(battle);
       renderBattle();
     }
 
     function finishBattle(won) {
       const battle = currentBattle;
-      const rarity = won
+      let rarity = won
         ? rollVictoryRarity(battle.pack.tier)
         : "Common";
+      if (
+        won &&
+        battle.pack.guaranteedRarity &&
+        rarityInfo[rarity].rank < rarityInfo[battle.pack.guaranteedRarity].rank
+      ) {
+        rarity = battle.pack.guaranteedRarity;
+      }
       const loot = createLoot(rarity);
       state.inventory.push(loot);
       state.discoveredEquipment[equipmentCollectionKey(loot.type, loot.rarity, loot.name)] = true;
+      state.stats.gearLooted += 1;
       if (won) {
         state.wins += 1;
+        if (battle.pack.boss) {
+          state.stats.bossesDefeated += 1;
+        }
       } else {
         state.losses += 1;
       }
@@ -3463,7 +4013,7 @@
           <p>${won
             ? `${battle.hero.name} defeated ${battle.monster.name}, improving the odds of stronger loot. This roll found ${loot.rarity} gear.`
             : `${battle.monster.name} won, but you still receive basic loot for trying.`}</p>
-          <div class="loot-reward" style="--rarity:${rarityInfo[loot.rarity].color}">
+          <div class="loot-reward reward-${loot.rarity.toLowerCase()}" style="--rarity:${rarityInfo[loot.rarity].color}">
             <span class="rarity">${loot.rarity} loot</span>
             <strong>${equipmentIcons[loot.type]} ${loot.name}</strong>
             <small>
@@ -3509,6 +4059,7 @@
       });
       bestSword.value = Math.min(1000000, bestSword.value + forgeBonus);
       bestSword.forgeLevel = (bestSword.forgeLevel || 0) + sacrifices.length;
+      state.stats.swordsForged += 1;
       saveGame();
       render();
       showToast(`${swordDisplayName(bestSword)} gained ${forgeBonus} attack from ${sacrifices.length} destroyed swords.`);
@@ -3574,6 +4125,7 @@
           const payment = trainingPayment(item);
           state.coins += payment;
           state.facility.earnings += payment;
+          state.stats.coinsEarned += payment;
           station.paid = true;
           showToast(`${visitorProfiles[station.visitorIndex].name} paid ${payment} coins on arrival.`);
           return;
@@ -3582,6 +4134,7 @@
           const payment = trainingPayment(item);
           state.coins += payment;
           state.facility.earnings += payment;
+          state.stats.coinsEarned += payment;
           station.paid = true;
           showToast(`${visitorProfiles[station.visitorIndex].name} paid ${payment} coins at the start.`);
         }
@@ -3618,6 +4171,7 @@
       renderFightPacks();
       renderTraining();
       renderUpgrades();
+      renderCareer();
     }
 
     function toggleEquipment(itemId) {
