@@ -124,6 +124,28 @@
       color: #fda4af;
     }
 
+    .primary {
+      width: 100%;
+      padding: 0.72rem;
+      border: 0;
+      border-radius: 0.6rem;
+      background: #dc2626;
+      color: white;
+      font-weight: 850;
+      cursor: pointer;
+    }
+
+    .primary:hover {
+      background: #ef4444;
+    }
+
+    .primary:disabled,
+    .secondary:disabled {
+      background: #303039;
+      color: #7b7883;
+      cursor: not-allowed;
+    }
+
     nav {
       display: flex;
       flex-wrap: wrap;
@@ -254,6 +276,7 @@
     }
 
     .empty-state {
+      grid-column: 1 / -1;
       padding: 3rem 1rem;
       border: 1px dashed #52525b;
       border-radius: 0.9rem;
@@ -267,6 +290,232 @@
 
     .empty-state p {
       color: #a1a1aa;
+    }
+
+    .pack-grid,
+    .hero-grid,
+    .gear-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 0.85rem;
+    }
+
+    .pack-card,
+    .hero-card,
+    .gear-card,
+    .active-loadout {
+      padding: 1rem;
+      border: 1px solid #3f3f46;
+      border-radius: 0.85rem;
+      background: linear-gradient(145deg, #18151b, #101118);
+      box-shadow: inset 0 1px rgb(255 255 255 / 5%);
+    }
+
+    .pack-card {
+      display: flex;
+      min-height: 22rem;
+      flex-direction: column;
+    }
+
+    .pack-card.hero-pack {
+      border-color: #7c3aed;
+      background: linear-gradient(145deg, #2e1065, #111118);
+    }
+
+    .pack-card.fight-pack {
+      border-color: #b45309;
+      background: linear-gradient(145deg, #431407, #111118);
+    }
+
+    .pack-icon,
+    .hero-icon,
+    .gear-icon,
+    .battle-icon {
+      font-size: 3.5rem;
+      line-height: 1;
+    }
+
+    .pack-card h3,
+    .hero-card h3,
+    .gear-card h3 {
+      margin: 0.65rem 0 0.3rem;
+      font-family: Georgia, serif;
+      font-size: 1.35rem;
+    }
+
+    .pack-card p,
+    .hero-card p,
+    .gear-card p {
+      color: #aaa6b4;
+      font-size: 0.84rem;
+      line-height: 1.5;
+    }
+
+    .pack-card .primary {
+      margin-top: auto;
+    }
+
+    .pack-label,
+    .rarity {
+      width: fit-content;
+      padding: 0.25rem 0.45rem;
+      border-radius: 999px;
+      background: rgb(0 0 0 / 35%);
+      color: var(--rarity, #fdba74);
+      font-size: 0.68rem;
+      font-weight: 900;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    .stat-row {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 0.35rem;
+      margin: 0.75rem 0;
+    }
+
+    .stat-row span {
+      padding: 0.4rem;
+      border-radius: 0.45rem;
+      background: rgb(0 0 0 / 28%);
+      color: #a1a1aa;
+      font-size: 0.72rem;
+      text-align: center;
+    }
+
+    .stat-row strong {
+      display: block;
+      color: white;
+      font-size: 0.9rem;
+    }
+
+    .hero-card {
+      position: relative;
+      border-top: 3px solid var(--rarity);
+    }
+
+    .hero-card.active {
+      box-shadow: 0 0 0 2px #fb923c, 0 0 1.5rem rgb(251 146 60 / 20%);
+    }
+
+    .hero-card .primary {
+      margin-top: 0.5rem;
+    }
+
+    .equipment-list {
+      display: grid;
+      gap: 0.35rem;
+      margin: 0.75rem 0;
+    }
+
+    .equipment-list span {
+      padding: 0.42rem 0.5rem;
+      border-radius: 0.45rem;
+      background: #22222b;
+      color: #c4c1ca;
+      font-size: 0.75rem;
+    }
+
+    .active-loadout {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1rem;
+      margin-bottom: 1rem;
+      border-color: #9a3412;
+    }
+
+    .active-loadout h3 {
+      margin: 0;
+    }
+
+    .active-loadout p {
+      margin: 0.3rem 0 0;
+      color: #aaa6b4;
+    }
+
+    .gear-card {
+      border-top: 3px solid var(--rarity);
+    }
+
+    .gear-card.equipped {
+      background: linear-gradient(145deg, #293414, #101118);
+    }
+
+    .gear-card button {
+      margin-top: 0.5rem;
+    }
+
+    .battle-result {
+      text-align: center;
+    }
+
+    .battle-result.win h2 {
+      color: #4ade80;
+    }
+
+    .battle-result.loss h2 {
+      color: #f87171;
+    }
+
+    .battle-versus {
+      display: grid;
+      grid-template-columns: 1fr auto 1fr;
+      align-items: center;
+      gap: 0.7rem;
+      margin: 1rem 0;
+    }
+
+    .battle-side {
+      padding: 0.8rem;
+      border-radius: 0.7rem;
+      background: #202029;
+    }
+
+    .battle-side strong,
+    .battle-side small {
+      display: block;
+    }
+
+    .battle-side small {
+      margin-top: 0.25rem;
+      color: #a1a1aa;
+    }
+
+    .loot-reward {
+      margin: 1rem 0;
+      padding: 0.8rem;
+      border: 1px solid var(--rarity);
+      border-radius: 0.7rem;
+      background: rgb(0 0 0 / 28%);
+    }
+
+    .loot-reward strong {
+      display: block;
+      margin-top: 0.25rem;
+      font-size: 1.1rem;
+    }
+
+    #toast {
+      position: fixed;
+      right: 1rem;
+      bottom: 1rem;
+      z-index: 40;
+      max-width: min(24rem, calc(100% - 2rem));
+      padding: 0.8rem 1rem;
+      border: 1px solid #52525b;
+      border-radius: 0.65rem;
+      background: #202029;
+      opacity: 0;
+      pointer-events: none;
+      transform: translateY(0.5rem);
+      transition: 160ms ease;
+    }
+
+    #toast.show {
+      opacity: 1;
+      transform: translateY(0);
     }
 
     .modal {
@@ -345,8 +594,16 @@
         flex: 1;
       }
 
-      .feature-grid {
+      .feature-grid,
+      .pack-grid,
+      .hero-grid,
+      .gear-grid {
         grid-template-columns: 1fr;
+      }
+
+      .active-loadout {
+        align-items: flex-start;
+        flex-direction: column;
       }
     }
   </style>
@@ -373,66 +630,49 @@
     </header>
 
     <nav aria-label="Game sections">
-      <button class="active" type="button" data-screen="arena">Arena</button>
+      <button class="active" type="button" data-screen="packs">Packs</button>
       <button type="button" data-screen="roster">Fighters</button>
-      <button type="button" data-screen="training">Training</button>
+      <button type="button" data-screen="equipment">Equipment</button>
     </nav>
 
     <main>
-      <section id="arena" class="screen active">
+      <section id="packs" class="screen active">
         <div class="hero">
           <div class="hero-content">
-            <div class="eyebrow">Welcome to the arena</div>
-            <h2>Build your team. Win every fight.</h2>
-            <p>BoxBoxFighters is ready for its first game systems. Choose fighters, train their abilities, and battle your way to the top.</p>
+            <div class="eyebrow">Choose your next pack</div>
+            <h2>Find heroes. Fight monsters. Claim loot.</h2>
+            <p>Open Hero Packs to grow your team, then challenge the monsters hiding inside Fight Packs. Victories earn stronger equipment, but every battle gives you something.</p>
           </div>
         </div>
 
         <div class="section-head">
-          <h2>Game foundation</h2>
-          <p>The base layout is ready for the fighting mechanics, collection, and progression systems.</p>
+          <h2>Hero Packs</h2>
+          <p>Find new heroes or pull duplicates to level up heroes you already own.</p>
         </div>
-        <div class="feature-grid">
-          <article class="feature-card">
-            <div class="icon">⚔️</div>
-            <h3>Battle</h3>
-            <p>Fight controls, opponents, and rewards will live in the Arena.</p>
-          </article>
-          <article class="feature-card">
-            <div class="icon">🥋</div>
-            <h3>Collect</h3>
-            <p>Build a roster of unique fighters with their own stats and skills.</p>
-          </article>
-          <article class="feature-card">
-            <div class="icon">💪</div>
-            <h3>Improve</h3>
-            <p>Train your fighters and prepare them for tougher challenges.</p>
-          </article>
+        <div id="heroPacks" class="pack-grid"></div>
+
+        <div class="section-head">
+          <h2>Fight Packs</h2>
+          <p>Your active hero fights one monster. Win for better loot or lose and receive basic loot.</p>
         </div>
+        <div id="fightPacks" class="pack-grid"></div>
       </section>
 
       <section id="roster" class="screen">
         <div class="section-head">
           <h2>Your fighters</h2>
-          <p>Your collected fighters will appear here.</p>
+          <p>Choose the active hero who will enter your next Fight Pack.</p>
         </div>
-        <div class="empty-state">
-          <div class="icon">🥊</div>
-          <h2>No fighters yet</h2>
-          <p>The first fighter system can be added next.</p>
-        </div>
+        <div id="heroRoster" class="hero-grid"></div>
       </section>
 
-      <section id="training" class="screen">
+      <section id="equipment" class="screen">
         <div class="section-head">
-          <h2>Training gym</h2>
-          <p>Improve fighter stats and unlock abilities here.</p>
+          <h2>Equipment</h2>
+          <p>Equip swords, armor, and shields to improve your active hero.</p>
         </div>
-        <div class="empty-state">
-          <div class="icon">🏋️</div>
-          <h2>Gym opening soon</h2>
-          <p>Training will become available after fighters are added.</p>
-        </div>
+        <div id="activeLoadout" class="active-loadout"></div>
+        <div id="gearInventory" class="gear-grid"></div>
       </section>
     </main>
   </div>
@@ -444,25 +684,520 @@
         <button id="helpClose" class="secondary" type="button">Close</button>
       </div>
       <ul>
-        <li><strong>Arena:</strong> enter fights and earn rewards.</li>
-        <li><strong>Fighters:</strong> view and manage your team.</li>
-        <li><strong>Training:</strong> make your fighters stronger.</li>
-        <li>More instructions will appear here as new systems are added.</li>
+        <li><strong>Hero Packs:</strong> spend coins to unlock stronger heroes. Pulling a hero again increases their level.</li>
+        <li><strong>Fight Packs:</strong> choose a challenge and your active hero will automatically fight its monster.</li>
+        <li><strong>Winning:</strong> earns more coins and stronger loot. Losing still gives basic equipment and a few coins.</li>
+        <li><strong>Fighters:</strong> choose which hero enters battles and see their total stats.</li>
+        <li><strong>Equipment:</strong> equip one sword, one armor, and one shield to each hero. Gear can be moved between heroes.</li>
+        <li><strong>Swords</strong> add attack, <strong>armor</strong> adds health, and <strong>shields</strong> add defense.</li>
       </ul>
     </div>
   </div>
 
+  <div id="resultModal" class="modal" role="dialog" aria-modal="true" aria-labelledby="resultTitle">
+    <div class="modal-card">
+      <div id="resultContent"></div>
+      <button id="resultClose" class="primary" type="button">Continue</button>
+    </div>
+  </div>
+
+  <div id="toast" role="status"></div>
+
   <script>
-    const state = {
-      coins: 0,
-      wins: 0,
-      fighters: 0
+    const rarityInfo = {
+      Common: { color: "#d4d4d8", rank: 0 },
+      Uncommon: { color: "#4ade80", rank: 1 },
+      Rare: { color: "#60a5fa", rank: 2 },
+      Epic: { color: "#c084fc", rank: 3 },
+      Legendary: { color: "#fbbf24", rank: 4 }
     };
+
+    const heroDefinitions = [
+      { id: "rookie", name: "Rookie Rex", icon: "🥊", rarity: "Common", attack: 12, health: 70, defense: 4 },
+      { id: "blade", name: "Blade Bella", icon: "🤺", rarity: "Common", attack: 15, health: 62, defense: 3 },
+      { id: "guardian", name: "Guardian Gus", icon: "🛡️", rarity: "Uncommon", attack: 14, health: 85, defense: 8 },
+      { id: "archer", name: "Arrow Ava", icon: "🏹", rarity: "Uncommon", attack: 19, health: 68, defense: 5 },
+      { id: "mage", name: "Mystic Max", icon: "🧙", rarity: "Rare", attack: 25, health: 72, defense: 6 },
+      { id: "ninja", name: "Night Ninja", icon: "🥷", rarity: "Rare", attack: 28, health: 67, defense: 5 },
+      { id: "valkyrie", name: "Storm Valkyrie", icon: "⚡", rarity: "Epic", attack: 34, health: 92, defense: 9 },
+      { id: "paladin", name: "Golden Paladin", icon: "👑", rarity: "Epic", attack: 30, health: 110, defense: 13 },
+      { id: "dragonKnight", name: "Dragon Knight", icon: "🐲", rarity: "Legendary", attack: 43, health: 125, defense: 15 }
+    ];
+
+    const heroPackDefinitions = [
+      {
+        id: "recruit",
+        name: "Recruit Hero Pack",
+        icon: "🎒",
+        cost: 120,
+        description: "A dependable pack with Common, Uncommon, and Rare heroes.",
+        rarities: ["Common", "Common", "Common", "Uncommon", "Uncommon", "Rare"]
+      },
+      {
+        id: "elite",
+        name: "Elite Hero Pack",
+        icon: "💎",
+        cost: 450,
+        description: "Improved odds for Rare and Epic heroes, with a chance at Legendary.",
+        rarities: ["Uncommon", "Rare", "Rare", "Rare", "Epic", "Epic", "Legendary"]
+      }
+    ];
+
+    const monsterDefinitions = [
+      { id: "slime", name: "Grumpy Slime", icon: "🟢", tier: 1, power: 72 },
+      { id: "goblin", name: "Sneaky Goblin", icon: "👺", tier: 1, power: 82 },
+      { id: "wolf", name: "Shadow Wolf", icon: "🐺", tier: 1, power: 92 },
+      { id: "skeleton", name: "Bone Warrior", icon: "💀", tier: 2, power: 112 },
+      { id: "ogre", name: "Cave Ogre", icon: "👹", tier: 2, power: 130 },
+      { id: "sorcerer", name: "Dark Sorcerer", icon: "🧛", tier: 2, power: 145 },
+      { id: "golem", name: "Iron Golem", icon: "🗿", tier: 3, power: 170 },
+      { id: "demon", name: "Flame Demon", icon: "😈", tier: 3, power: 195 },
+      { id: "dragon", name: "Ancient Dragon", icon: "🐉", tier: 3, power: 225 }
+    ];
+
+    const fightPackDefinitions = [
+      {
+        id: "wilds",
+        name: "Wilds Fight Pack",
+        icon: "🌲",
+        cost: 0,
+        tier: 1,
+        winCoins: 70,
+        loseCoins: 20,
+        description: "A free fight against a basic monster. A safe place to build your hero."
+      },
+      {
+        id: "dungeon",
+        name: "Dungeon Fight Pack",
+        icon: "🏰",
+        cost: 80,
+        tier: 2,
+        winCoins: 220,
+        loseCoins: 30,
+        description: "Tougher monsters with better victory loot."
+      },
+      {
+        id: "dragonLair",
+        name: "Dragon Lair Fight Pack",
+        icon: "🌋",
+        cost: 240,
+        tier: 3,
+        winCoins: 650,
+        loseCoins: 45,
+        description: "The strongest monsters and the best equipment rewards."
+      }
+    ];
+
+    const equipmentNames = {
+      sword: {
+        Common: "Wooden Sword",
+        Uncommon: "Steel Sword",
+        Rare: "Knight's Blade",
+        Epic: "Flame Sword",
+        Legendary: "Dragon Slayer"
+      },
+      armor: {
+        Common: "Cloth Armor",
+        Uncommon: "Chain Armor",
+        Rare: "Knight's Armor",
+        Epic: "Titan Armor",
+        Legendary: "Dragon Plate"
+      },
+      shield: {
+        Common: "Wooden Shield",
+        Uncommon: "Steel Shield",
+        Rare: "Guardian Shield",
+        Epic: "Aegis Shield",
+        Legendary: "Dragon Guard"
+      }
+    };
+
+    const equipmentIcons = { sword: "⚔️", armor: "🥋", shield: "🛡️" };
+    const equipmentStat = { sword: "attack", armor: "health", shield: "defense" };
+    const equipmentValues = {
+      Common: { sword: 3, armor: 10, shield: 2 },
+      Uncommon: { sword: 6, armor: 20, shield: 4 },
+      Rare: { sword: 10, armor: 35, shield: 7 },
+      Epic: { sword: 16, armor: 55, shield: 11 },
+      Legendary: { sword: 25, armor: 85, shield: 17 }
+    };
+
+    const state = {
+      coins: 400,
+      wins: 0,
+      losses: 0,
+      heroes: { rookie: 1 },
+      activeHeroId: "rookie",
+      inventory: [],
+      equipment: {}
+    };
+
+    const heroPacks = document.querySelector("#heroPacks");
+    const fightPacks = document.querySelector("#fightPacks");
+    const heroRoster = document.querySelector("#heroRoster");
+    const activeLoadout = document.querySelector("#activeLoadout");
+    const gearInventory = document.querySelector("#gearInventory");
+    const resultModal = document.querySelector("#resultModal");
+    const resultContent = document.querySelector("#resultContent");
+    const toast = document.querySelector("#toast");
+    let toastTimer;
+
+    function saveGame() {
+      localStorage.setItem("boxBoxFightersSave", JSON.stringify(state));
+    }
+
+    function loadGame() {
+      const saved = localStorage.getItem("boxBoxFightersSave");
+      if (!saved) {
+        return;
+      }
+      try {
+        const parsed = JSON.parse(saved);
+        state.coins = Number.isFinite(parsed.coins) ? Math.max(0, parsed.coins) : state.coins;
+        state.wins = Number.isInteger(parsed.wins) ? Math.max(0, parsed.wins) : 0;
+        state.losses = Number.isInteger(parsed.losses) ? Math.max(0, parsed.losses) : 0;
+        state.heroes = Object.fromEntries(heroDefinitions
+          .filter(hero => Number.isInteger(parsed.heroes?.[hero.id]) && parsed.heroes[hero.id] > 0)
+          .map(hero => [hero.id, parsed.heroes[hero.id]]));
+        if (Object.keys(state.heroes).length === 0) {
+          state.heroes = { rookie: 1 };
+        }
+        state.activeHeroId = state.heroes[parsed.activeHeroId]
+          ? parsed.activeHeroId
+          : Object.keys(state.heroes)[0];
+        state.inventory = Array.isArray(parsed.inventory)
+          ? parsed.inventory.filter(item =>
+            typeof item?.id === "string" &&
+            equipmentNames[item.type]?.[item.rarity] &&
+            item.value === equipmentValues[item.rarity][item.type]
+          )
+          : [];
+        const inventoryIds = new Set(state.inventory.map(item => item.id));
+        state.equipment = {};
+        Object.keys(state.heroes).forEach(heroId => {
+          const loadout = parsed.equipment?.[heroId];
+          if (!loadout || typeof loadout !== "object") {
+            return;
+          }
+          Object.keys(equipmentNames).forEach(type => {
+            const itemId = loadout[type];
+            const item = state.inventory.find(candidate => candidate.id === itemId);
+            if (inventoryIds.has(itemId) && item?.type === type) {
+              state.equipment[heroId] ||= {};
+              state.equipment[heroId][type] = itemId;
+              inventoryIds.delete(itemId);
+            }
+          });
+        });
+      } catch {
+        localStorage.removeItem("boxBoxFightersSave");
+      }
+    }
+
+    function heroDefinition(heroId) {
+      return heroDefinitions.find(hero => hero.id === heroId);
+    }
+
+    function equippedItem(heroId, type) {
+      const itemId = state.equipment[heroId]?.[type];
+      return state.inventory.find(item => item.id === itemId);
+    }
+
+    function heroStats(heroId) {
+      const hero = heroDefinition(heroId);
+      const level = state.heroes[heroId];
+      return {
+        attack: hero.attack + (level - 1) * 3 + (equippedItem(heroId, "sword")?.value || 0),
+        health: hero.health + (level - 1) * 8 + (equippedItem(heroId, "armor")?.value || 0),
+        defense: hero.defense + (level - 1) * 2 + (equippedItem(heroId, "shield")?.value || 0)
+      };
+    }
+
+    function heroPower(heroId) {
+      const stats = heroStats(heroId);
+      return stats.attack * 2.5 + stats.health + stats.defense * 4;
+    }
+
+    function showToast(message) {
+      toast.textContent = message;
+      toast.classList.add("show");
+      clearTimeout(toastTimer);
+      toastTimer = setTimeout(() => toast.classList.remove("show"), 2600);
+    }
 
     function renderStats() {
       document.querySelector("#coins").textContent = state.coins.toLocaleString();
       document.querySelector("#wins").textContent = state.wins.toLocaleString();
-      document.querySelector("#fighters").textContent = state.fighters.toLocaleString();
+      document.querySelector("#fighters").textContent = Object.keys(state.heroes).length.toLocaleString();
+    }
+
+    function renderHeroPacks() {
+      heroPacks.innerHTML = heroPackDefinitions.map(pack => `
+        <article class="pack-card hero-pack">
+          <span class="pack-label">Hero Pack</span>
+          <div class="pack-icon">${pack.icon}</div>
+          <h3>${pack.name}</h3>
+          <p>${pack.description}</p>
+          <p><strong>Possible:</strong> ${[...new Set(pack.rarities)].join(", ")}</p>
+          <button class="primary" type="button" data-hero-pack="${pack.id}" ${state.coins < pack.cost ? "disabled" : ""}>
+            Open · ${pack.cost.toLocaleString()} coins
+          </button>
+        </article>
+      `).join("");
+      heroPacks.querySelectorAll("[data-hero-pack]").forEach(button => {
+        button.addEventListener("click", () => openHeroPack(button.dataset.heroPack));
+      });
+    }
+
+    function renderFightPacks() {
+      const activeHero = heroDefinition(state.activeHeroId);
+      fightPacks.innerHTML = fightPackDefinitions.map(pack => `
+        <article class="pack-card fight-pack">
+          <span class="pack-label">Fight Pack · Tier ${pack.tier}</span>
+          <div class="pack-icon">${pack.icon}</div>
+          <h3>${pack.name}</h3>
+          <p>${pack.description}</p>
+          <p><strong>Fighting:</strong> ${activeHero.name} · Power ${Math.round(heroPower(activeHero.id))}</p>
+          <p><strong>Victory reward:</strong> ${pack.winCoins} coins and improved loot</p>
+          <button class="primary" type="button" data-fight-pack="${pack.id}" ${state.coins < pack.cost ? "disabled" : ""}>
+            ${pack.cost === 0 ? "Open free fight" : `Fight · ${pack.cost.toLocaleString()} coins`}
+          </button>
+        </article>
+      `).join("");
+      fightPacks.querySelectorAll("[data-fight-pack]").forEach(button => {
+        button.addEventListener("click", () => openFightPack(button.dataset.fightPack));
+      });
+    }
+
+    function renderRoster() {
+      const ownedHeroes = heroDefinitions
+        .filter(hero => state.heroes[hero.id])
+        .sort((left, right) => rarityInfo[left.rarity].rank - rarityInfo[right.rarity].rank);
+      heroRoster.innerHTML = ownedHeroes.map(hero => {
+        const level = state.heroes[hero.id];
+        const stats = heroStats(hero.id);
+        const loadout = Object.keys(equipmentNames).map(type => {
+          const item = equippedItem(hero.id, type);
+          return `<span>${equipmentIcons[type]} ${item ? item.name : `No ${type}`}</span>`;
+        }).join("");
+        return `
+          <article class="hero-card ${hero.id === state.activeHeroId ? "active" : ""}" style="--rarity:${rarityInfo[hero.rarity].color}">
+            <span class="rarity">${hero.rarity}</span>
+            <div class="hero-icon">${hero.icon}</div>
+            <h3>${hero.name}</h3>
+            <p>Level ${level} · Power ${Math.round(heroPower(hero.id))}</p>
+            <div class="stat-row">
+              <span>Attack<strong>${stats.attack}</strong></span>
+              <span>Health<strong>${stats.health}</strong></span>
+              <span>Defense<strong>${stats.defense}</strong></span>
+            </div>
+            <div class="equipment-list">${loadout}</div>
+            <button class="primary" type="button" data-active-hero="${hero.id}" ${hero.id === state.activeHeroId ? "disabled" : ""}>
+              ${hero.id === state.activeHeroId ? "Active fighter" : "Choose fighter"}
+            </button>
+          </article>
+        `;
+      }).join("");
+      heroRoster.querySelectorAll("[data-active-hero]").forEach(button => {
+        button.addEventListener("click", () => {
+          state.activeHeroId = button.dataset.activeHero;
+          saveGame();
+          render();
+          showToast(`${heroDefinition(state.activeHeroId).name} is ready to fight.`);
+        });
+      });
+    }
+
+    function itemEquippedHero(itemId) {
+      return Object.keys(state.equipment).find(heroId =>
+        Object.values(state.equipment[heroId]).includes(itemId)
+      );
+    }
+
+    function renderEquipment() {
+      const hero = heroDefinition(state.activeHeroId);
+      const stats = heroStats(hero.id);
+      activeLoadout.innerHTML = `
+        <div>
+          <h3>${hero.icon} Equipping ${hero.name}</h3>
+          <p>Level ${state.heroes[hero.id]} · ${stats.attack} attack · ${stats.health} health · ${stats.defense} defense</p>
+        </div>
+        <button class="secondary" type="button" data-go-roster>Change fighter</button>
+      `;
+      activeLoadout.querySelector("[data-go-roster]").addEventListener("click", () => showScreen("roster"));
+
+      if (state.inventory.length === 0) {
+        gearInventory.innerHTML = `
+          <div class="empty-state">
+            <div class="icon">🎁</div>
+            <h2>No equipment yet</h2>
+            <p>Open a Fight Pack to earn your first sword, armor, or shield.</p>
+          </div>
+        `;
+        return;
+      }
+
+      const sortedInventory = [...state.inventory].sort((left, right) =>
+        rarityInfo[right.rarity].rank - rarityInfo[left.rarity].rank
+      );
+      gearInventory.innerHTML = sortedInventory.map(item => {
+        const equippedHeroId = itemEquippedHero(item.id);
+        const equippedHero = equippedHeroId ? heroDefinition(equippedHeroId) : null;
+        const equippedToActive = equippedHeroId === state.activeHeroId;
+        return `
+          <article class="gear-card ${equippedHero ? "equipped" : ""}" style="--rarity:${rarityInfo[item.rarity].color}">
+            <span class="rarity">${item.rarity}</span>
+            <div class="gear-icon">${equipmentIcons[item.type]}</div>
+            <h3>${item.name}</h3>
+            <p>+${item.value} ${equipmentStat[item.type]}</p>
+            <p>${equippedHero ? `Equipped to ${equippedHero.name}` : "Not equipped"}</p>
+            <button class="${equippedToActive ? "secondary" : "primary"}" type="button" data-equip-item="${item.id}">
+              ${equippedToActive ? "Unequip" : `Equip to ${hero.name}`}
+            </button>
+          </article>
+        `;
+      }).join("");
+      gearInventory.querySelectorAll("[data-equip-item]").forEach(button => {
+        button.addEventListener("click", () => toggleEquipment(button.dataset.equipItem));
+      });
+    }
+
+    function render() {
+      renderStats();
+      renderHeroPacks();
+      renderFightPacks();
+      renderRoster();
+      renderEquipment();
+    }
+
+    function weightedRarity(rarities) {
+      return rarities[Math.floor(Math.random() * rarities.length)];
+    }
+
+    function openHeroPack(packId) {
+      const pack = heroPackDefinitions.find(candidate => candidate.id === packId);
+      if (!pack || state.coins < pack.cost) {
+        showToast("You do not have enough coins for that pack.");
+        return;
+      }
+      state.coins -= pack.cost;
+      const rarity = weightedRarity(pack.rarities);
+      const candidates = heroDefinitions.filter(hero => hero.rarity === rarity);
+      const hero = candidates[Math.floor(Math.random() * candidates.length)];
+      const alreadyOwned = Boolean(state.heroes[hero.id]);
+      state.heroes[hero.id] = (state.heroes[hero.id] || 0) + 1;
+      saveGame();
+      render();
+      resultContent.innerHTML = `
+        <div class="battle-result">
+          <span class="rarity" style="--rarity:${rarityInfo[hero.rarity].color}">${hero.rarity} hero</span>
+          <div class="battle-icon">${hero.icon}</div>
+          <h2 id="resultTitle">${hero.name}</h2>
+          <p>${alreadyOwned
+            ? `Duplicate hero! ${hero.name} upgraded to level ${state.heroes[hero.id]}.`
+            : `${hero.name} joined your team at level 1.`}</p>
+        </div>
+      `;
+      resultModal.classList.add("open");
+    }
+
+    function victoryRarities(tier) {
+      if (tier === 3) {
+        return ["Epic", "Epic", "Epic", "Legendary"];
+      }
+      if (tier === 2) {
+        return ["Rare", "Rare", "Rare", "Epic"];
+      }
+      return ["Uncommon", "Uncommon", "Uncommon", "Rare"];
+    }
+
+    function createLoot(rarity) {
+      const types = Object.keys(equipmentNames);
+      const type = types[Math.floor(Math.random() * types.length)];
+      return {
+        id: `${Date.now()}-${Math.random().toString(36).slice(2)}`,
+        type,
+        rarity,
+        name: equipmentNames[type][rarity],
+        value: equipmentValues[rarity][type]
+      };
+    }
+
+    function openFightPack(packId) {
+      const pack = fightPackDefinitions.find(candidate => candidate.id === packId);
+      if (!pack || state.coins < pack.cost) {
+        showToast("You do not have enough coins for that fight.");
+        return;
+      }
+      state.coins -= pack.cost;
+      const monsters = monsterDefinitions.filter(monster => monster.tier === pack.tier);
+      const monster = monsters[Math.floor(Math.random() * monsters.length)];
+      const hero = heroDefinition(state.activeHeroId);
+      const heroRoll = heroPower(hero.id) * (0.88 + Math.random() * 0.24);
+      const monsterRoll = monster.power * (0.88 + Math.random() * 0.24);
+      const won = heroRoll >= monsterRoll;
+      const rarity = won ? weightedRarity(victoryRarities(pack.tier)) : "Common";
+      const loot = createLoot(rarity);
+      const coinsEarned = won ? pack.winCoins : pack.loseCoins;
+      state.coins += coinsEarned;
+      state.inventory.push(loot);
+      if (won) {
+        state.wins += 1;
+      } else {
+        state.losses += 1;
+      }
+      saveGame();
+      render();
+      resultContent.innerHTML = `
+        <div class="battle-result ${won ? "win" : "loss"}">
+          <div class="battle-versus">
+            <div class="battle-side">
+              <div class="battle-icon">${hero.icon}</div>
+              <strong>${hero.name}</strong>
+              <small>Battle power ${Math.round(heroRoll)}</small>
+            </div>
+            <strong>VS</strong>
+            <div class="battle-side">
+              <div class="battle-icon">${monster.icon}</div>
+              <strong>${monster.name}</strong>
+              <small>Battle power ${Math.round(monsterRoll)}</small>
+            </div>
+          </div>
+          <h2 id="resultTitle">${won ? "Victory!" : "Defeat"}</h2>
+          <p>${won
+            ? `${hero.name} defeated ${monster.name} and found improved loot.`
+            : `${monster.name} won, but you still receive basic loot for trying.`}</p>
+          <div class="loot-reward" style="--rarity:${rarityInfo[loot.rarity].color}">
+            <span class="rarity">${loot.rarity} loot</span>
+            <strong>${equipmentIcons[loot.type]} ${loot.name}</strong>
+            <small>+${loot.value} ${equipmentStat[loot.type]}</small>
+          </div>
+          <p>Also received <strong>${coinsEarned} coins</strong>.</p>
+        </div>
+      `;
+      resultModal.classList.add("open");
+    }
+
+    function toggleEquipment(itemId) {
+      const item = state.inventory.find(candidate => candidate.id === itemId);
+      if (!item) {
+        showToast("That equipment could not be found.");
+        return;
+      }
+      const equippedHeroId = itemEquippedHero(itemId);
+      if (equippedHeroId === state.activeHeroId) {
+        delete state.equipment[equippedHeroId][item.type];
+        showToast(`${item.name} unequipped.`);
+      } else {
+        if (equippedHeroId) {
+          delete state.equipment[equippedHeroId][item.type];
+        }
+        state.equipment[state.activeHeroId] ||= {};
+        state.equipment[state.activeHeroId][item.type] = item.id;
+        showToast(`${item.name} equipped to ${heroDefinition(state.activeHeroId).name}.`);
+      }
+      saveGame();
+      render();
     }
 
     function showScreen(screenId) {
@@ -492,8 +1227,16 @@
         helpOpen.focus();
       }
     });
+    document.querySelector("#resultClose").addEventListener("click", () => {
+      resultModal.classList.remove("open");
+    });
     document.addEventListener("keydown", event => {
-      if (event.key === "Escape" && helpModal.classList.contains("open")) {
+      if (event.key !== "Escape") {
+        return;
+      }
+      if (resultModal.classList.contains("open")) {
+        resultModal.classList.remove("open");
+      } else if (helpModal.classList.contains("open")) {
         helpModal.classList.remove("open");
         helpOpen.focus();
       }
@@ -505,7 +1248,8 @@
       }
     });
 
-    renderStats();
+    loadGame();
+    render();
   </script>
 </body>
 </html>
